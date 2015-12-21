@@ -27,6 +27,13 @@
     <Source>avam/locations/admin.py</Source>
     <Source>avam/locations/__init__.py</Source>
     <Source>avam/locations/migrations/__init__.py</Source>
+    <Source>avam/asset_types/tests.py</Source>
+    <Source>avam/asset_types/models.py</Source>
+    <Source>avam/asset_types/apps.py</Source>
+    <Source>avam/asset_types/views.py</Source>
+    <Source>avam/asset_types/admin.py</Source>
+    <Source>avam/asset_types/__init__.py</Source>
+    <Source>avam/asset_types/migrations/__init__.py</Source>
   </Sources>
   <Forms/>
   <Translations/>
