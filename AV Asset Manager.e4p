@@ -20,6 +20,13 @@
     <Source>avam/avam/local_settings.py</Source>
     <Source>avam/avam/urls.py</Source>
     <Source>avam/avam/__init__.py</Source>
+    <Source>avam/locations/tests.py</Source>
+    <Source>avam/locations/models.py</Source>
+    <Source>avam/locations/apps.py</Source>
+    <Source>avam/locations/views.py</Source>
+    <Source>avam/locations/admin.py</Source>
+    <Source>avam/locations/__init__.py</Source>
+    <Source>avam/locations/migrations/__init__.py</Source>
   </Sources>
   <Forms/>
   <Translations/>
