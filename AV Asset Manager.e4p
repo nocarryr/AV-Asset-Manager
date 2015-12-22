@@ -35,6 +35,7 @@
     <Source>avam/assettypes/admin.py</Source>
     <Source>avam/assettypes/__init__.py</Source>
     <Source>avam/assettypes/migrations/__init__.py</Source>
+    <Source>avam/assettypes/migrations/0001_initial.py</Source>
   </Sources>
   <Forms/>
   <Translations/>
