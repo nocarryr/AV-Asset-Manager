@@ -46,6 +46,14 @@ class WatchedModel(models.Model):
     def __unicode__(self):
         return self.content_type.name
     
+def add_model_history(*models):
+    for m in models:
+        content_type = ContentType.objects.get_for_model(m)
+        if WatchedModel.objects.get(content_type=content_type).exists():
+            continue
+        wm = WatchedModel(content_type=content_type)
+        wm.save()
+    
 @receiver(post_save)
 def on_all_post_save(sender, **kwargs):
     if kwargs.get('raw'):
