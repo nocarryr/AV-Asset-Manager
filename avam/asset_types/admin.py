@@ -2,7 +2,6 @@ from django.contrib import admin
 
 from asset_types.models import (
     Manufacturer,
-    ModelType,
     GenericAsset,
     GenericAccessory,
     LampAsset,
@@ -14,10 +13,6 @@ from asset_types.models import (
 
 @admin.register(Manufacturer)
 class ManufacturerAdmin(admin.ModelAdmin):
-    pass
-
-@admin.register(ModelType)
-class ModelTypeAdmin(admin.ModelAdmin):
     pass
 
 @admin.register(GenericAsset)

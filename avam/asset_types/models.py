@@ -7,31 +7,25 @@ class Manufacturer(models.Model):
     def __unicode__(self):
         return self.name
     
-class ModelType(models.Model):
-    name = models.CharField(max_length=100)
-    manufacturer = models.ForeignKey(Manufacturer, related_name='models')
-    class Meta:
-        unique_together = ('manufacturer', 'name')
-    def __unicode__(self):
-        return self.name
-    
-class AssetBase(models.Model):
-    model_type = models.ForeignKey(ModelType)
+class ModelBase(models.Model):
+    model_name = models.CharField(max_length=100)
+    manufacturer = models.ForeignKey(Manufacturer)
     other_accessories = models.ManyToManyField('asset_types.GenericAccessory', blank=True)
     class Meta:
+        unique_together = ('manufacturer', 'model_name')
         abstract = True
     def __unicode__(self):
-        return unicode(self.model_type)
+        return self.model_name
     
-class AccessoryAsset(AssetBase):
+class AccessoryAsset(ModelBase):
     class Meta:
         abstract = True
 
-class LightingAssetBase(AssetBase):
+class LightingAssetBase(ModelBase):
     class Meta:
         abstract = True
     
-class GenericAsset(AssetBase):
+class GenericAsset(ModelBase):
     pass
     
 class GenericAccessory(AccessoryAsset):
@@ -50,7 +44,7 @@ class FilterAsset(AccessoryAsset):
     max_hours = models.PositiveIntegerField(blank=True, null=True)
     replaceable = models.BooleanField(default=False)
 
-class ProjectorAsset(AssetBase):
+class ProjectorAsset(ModelBase):
     lamp_count = models.PositiveIntegerField(default=1)
     lamp_type = models.ForeignKey(LampAsset)
     filter_type = models.ForeignKey(FilterAsset, blank=True, null=True)
