@@ -10,31 +10,31 @@ class Manufacturer(models.Model):
 class ModelBase(models.Model):
     model_name = models.CharField(max_length=100)
     manufacturer = models.ForeignKey(Manufacturer)
-    other_accessories = models.ManyToManyField('asset_types.GenericAccessory', blank=True)
+    other_accessories = models.ManyToManyField('asset_types.GenericAccessoryModel', blank=True)
     class Meta:
         unique_together = ('manufacturer', 'model_name')
         abstract = True
     def __unicode__(self):
         return self.model_name
     
-class AccessoryAsset(ModelBase):
+class AccessoryModel(ModelBase):
     class Meta:
         abstract = True
 
-class LightingAssetBase(ModelBase):
+class LightingModelBase(ModelBase):
     class Meta:
         abstract = True
     
-class GenericAsset(ModelBase):
+class GenericModel(ModelBase):
     pass
     
-class GenericAccessory(AccessoryAsset):
+class GenericAccessoryModel(AccessoryModel):
     pass
     
-class LampAsset(AccessoryAsset):
+class LampModel(AccessoryModel):
     max_hours = models.PositiveIntegerField()
 
-class FilterAsset(AccessoryAsset):
+class FilterModel(AccessoryModel):
     filter_type_choices = (
         ('w', 'Washable'),
         ('c', 'Cartridge'),
@@ -44,13 +44,13 @@ class FilterAsset(AccessoryAsset):
     max_hours = models.PositiveIntegerField(blank=True, null=True)
     replaceable = models.BooleanField(default=False)
 
-class ProjectorAsset(ModelBase):
+class ProjectorModel(ModelBase):
     lamp_count = models.PositiveIntegerField(default=1)
-    lamp_type = models.ForeignKey(LampAsset)
-    filter_type = models.ForeignKey(FilterAsset, blank=True, null=True)
+    lamp_type = models.ForeignKey(LampModel)
+    filter_type = models.ForeignKey(FilterModel, blank=True, null=True)
 
-class MovingLightAsset(LightingAssetBase):
-    lamp_type = models.ForeignKey(LampAsset)
+class MovingLightModel(LightingModelBase):
+    lamp_type = models.ForeignKey(LampModel)
 
-class LEDLightAsset(LightingAssetBase):
+class LEDLightModel(LightingModelBase):
     pass

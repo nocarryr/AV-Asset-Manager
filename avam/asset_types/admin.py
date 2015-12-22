@@ -2,43 +2,43 @@ from django.contrib import admin
 
 from asset_types.models import (
     Manufacturer,
-    GenericAsset,
-    GenericAccessory,
-    LampAsset,
-    FilterAsset,
-    ProjectorAsset,
-    MovingLightAsset,
-    LEDLightAsset,
+    GenericModel,
+    GenericAccessoryModel,
+    LampModel,
+    FilterModel,
+    ProjectorModel,
+    MovingLightModel,
+    LEDLightModel,
 )
 
 @admin.register(Manufacturer)
 class ManufacturerAdmin(admin.ModelAdmin):
     pass
 
-@admin.register(GenericAsset)
-class GenericAssetAdmin(admin.ModelAdmin):
+@admin.register(GenericModel)
+class GenericModelAdmin(admin.ModelAdmin):
     pass
 
-@admin.register(GenericAccessory)
-class GenericAccessoryAdmin(admin.ModelAdmin):
+@admin.register(GenericAccessoryModel)
+class GenericAccessoryModelAdmin(admin.ModelAdmin):
     pass
 
-@admin.register(ProjectorAsset)
-class ProjectorAssetAdmin(admin.ModelAdmin):
+@admin.register(ProjectorModel)
+class ProjectorModelAdmin(admin.ModelAdmin):
     pass
 
-@admin.register(MovingLightAsset)
-class MovingLightAssetAdmin(admin.ModelAdmin):
+@admin.register(MovingLightModel)
+class MovingLightModelAdmin(admin.ModelAdmin):
     pass
 
-@admin.register(LEDLightAsset)
-class LEDLightAssetAdmin(admin.ModelAdmin):
+@admin.register(LEDLightModel)
+class LEDLightModelAdmin(admin.ModelAdmin):
     pass
 
-@admin.register(LampAsset)
-class LampAssetAdmin(admin.ModelAdmin):
+@admin.register(LampModel)
+class LampModelAdmin(admin.ModelAdmin):
     pass
 
-@admin.register(FilterAsset)
-class FilterAssetAdmin(admin.ModelAdmin):
+@admin.register(FilterModel)
+class FilterModelAdmin(admin.ModelAdmin):
     pass
