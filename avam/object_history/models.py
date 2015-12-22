@@ -49,7 +49,7 @@ class WatchedModel(models.Model):
 def add_model_history(*models):
     for m in models:
         content_type = ContentType.objects.get_for_model(m)
-        if WatchedModel.objects.get(content_type=content_type).exists():
+        if WatchedModel.objects.filter(content_type=content_type).exists():
             continue
         wm = WatchedModel(content_type=content_type)
         wm.save()
@@ -61,7 +61,7 @@ def on_all_post_save(sender, **kwargs):
     if issubclass(sender, (WatchedModel, ObjectUpdate, ObjectChange)):
         return
     content_type = ContentType.objects.get_for_model(sender)
-    if not WatchedModel.objects.get(content_type=content_type):
+    if not WatchedModel.objects.filter(content_type=content_type).exists():
         return
     obj = kwargs.get('instance')
     object_update = ObjectUpdate(content_object=obj)
