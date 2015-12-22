@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'locations',
     'assettypes',
+    'object_history',
 ]
 
 MIDDLEWARE_CLASSES = [

@@ -43,6 +43,7 @@
     <Source>avam/object_history/admin.py</Source>
     <Source>avam/object_history/__init__.py</Source>
     <Source>avam/object_history/migrations/__init__.py</Source>
+    <Source>avam/object_history/migrations/0001_initial.py</Source>
   </Sources>
   <Forms/>
   <Translations/>
