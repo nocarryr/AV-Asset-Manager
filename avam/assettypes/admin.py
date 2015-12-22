@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from asset_types.models import (
+from assettypes.models import (
     Manufacturer,
     GenericModel,
     GenericAccessoryModel,

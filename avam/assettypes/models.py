@@ -10,7 +10,7 @@ class Manufacturer(models.Model):
 class ModelBase(models.Model):
     model_name = models.CharField(max_length=100)
     manufacturer = models.ForeignKey(Manufacturer)
-    other_accessories = models.ManyToManyField('asset_types.GenericAccessoryModel', blank=True)
+    other_accessories = models.ManyToManyField('assettypes.GenericAccessoryModel', blank=True)
     class Meta:
         unique_together = ('manufacturer', 'model_name')
         abstract = True
