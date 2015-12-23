@@ -16,7 +16,7 @@ def iter_fields(obj, query_lookup=None):
         else:
             fname = '__'.join([query_lookup, f.name])
         if f.is_relation:
-            content_type = ContentType.get_for_model(f.related_model)
+            content_type = ContentType.objects.get_for_model(f.related_model)
             watched = WatchedModel.objects.filter(content_type=content_type).exists()
             if f.many_to_many:
                 for _obj in getattr(obj, f.name).all():
