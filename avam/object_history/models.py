@@ -52,14 +52,25 @@ def add_model_history(*models):
         wm = WatchedModel(content_type=content_type)
         wm.save()
     
+class ObjectUpdateManager(models.Manager):
+    def get_for_object(self, obj):
+        q = self.get_queryset()
+        if isinstance(obj, ObjectUpdate):
+            q = q.filter(content_type=obj.content_type, object_id=obj.object_id)
+        else:
+            content_type = ContentType.objects.get_for_model(obj._meta.model)
+            q = q.filter(content_type=content_type, object_id=obj.pk)
+        return q
+
 class ObjectUpdate(models.Model):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
     datetime = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True)
+    objects = ObjectUpdateManager()
     def get_previous(self):
-        q = self._meta.model.objects.filter(content_object=self.content_object)
+        q = self._meta.model.objects.get_for_object(self.content_object)
         q = q.filter(datetime__lt=self.datetime)
         if not q.exists():
             return None
