@@ -4,8 +4,6 @@ import datetime
 
 from django.conf import settings
 from django.db import models
-from django.db.models.signals import post_save
-from django.dispatch import receiver
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.utils import timezone
@@ -53,19 +51,6 @@ def add_model_history(*models):
             continue
         wm = WatchedModel(content_type=content_type)
         wm.save()
-    
-@receiver(post_save)
-def on_all_post_save(sender, **kwargs):
-    if kwargs.get('raw'):
-        return
-    if issubclass(sender, (WatchedModel, ObjectUpdate, ObjectChange)):
-        return
-    content_type = ContentType.objects.get_for_model(sender)
-    if not WatchedModel.objects.filter(content_type=content_type).exists():
-        return
-    obj = kwargs.get('instance')
-    object_update = ObjectUpdate(content_object=obj)
-    object_update.save()
     
 class ObjectUpdate(models.Model):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
