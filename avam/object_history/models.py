@@ -104,6 +104,8 @@ class ObjectUpdate(models.Model):
         super(ObjectUpdate, self).save(*args, **kwargs)
         if created:
             ObjectChange.find_changes(self)
+    def __unicode__(self):
+        return u'%s: %s' % (self.content_object, self.datetime)
 
 PY_TYPES = dict(
     int=int,
@@ -178,5 +180,7 @@ class ObjectChange(models.Model):
                 obj_change.save()
     def get_value(self):
         return str_to_value(self.str_value, self.py_type)
+    def __unicode__(self):
+        return u' = '.join([self.field_name, self.str_value])
 
     
