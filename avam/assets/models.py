@@ -2,6 +2,8 @@ from __future__ import unicode_literals
 import datetime
 
 from django.db import models
+from django.db.models.signals import post_save
+from django.utils import timezone
 
 from locations.models import Location
 from assettypes import models as asset_models
@@ -11,15 +13,38 @@ class AssetBase(models.Model):
     in_use = models.BooleanField(default=True)
     retired = models.BooleanField(default=False)
     notes = models.TextField(blank=True)
-    date_acquired = models.DateTimeField(auto_now_add=True, editable=True)
+    date_acquired = models.DateTimeField(blank=True, null=True)
     class Meta:
         abstract = True
+    @classmethod
+    def iter_subclasses(cls):
+        def is_abstract(_cls):
+            return getattr(_cls._meta, 'abstract', False)
+        if not is_abstract(cls):
+            yield cls
+        for subcls in cls.__subclasses__():
+            for _cls in subcls.iter_subclasses():
+                yield _cls
+    @classmethod
+    def connect_post_save(cls):
+        for cls in AssetBase.iter_subclasses():
+            post_save.connect(on_asset_base_post_save, sender=cls)
     def save(self, *args, **kwargs):
         if self.retired and self.in_use:
             self.in_use = False
         super(AssetBase, self).save(*args, **kwargs)
     def __unicode__(self):
         return unicode(self.asset_model)
+
+def on_asset_base_post_save(sender, **kwargs):
+    if kwargs.get('raw'):
+        return
+    if not kwargs.get('created'):
+        return
+    obj = kwargs.get('instance')
+    if obj.date_acquired is None:
+        obj.date_acquired = timezone.now()
+        obj.save()
 
 class LifeTrackedAsset(AssetBase):
     current_usage = models.DurationField(default=datetime.timedelta())
