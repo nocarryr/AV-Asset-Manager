@@ -116,9 +116,9 @@ PY_TYPES = dict(
 
 def str_to_value(s, py_type):
     if 'datetime' in py_type:
-        dtcls = py_type.split('.')
+        dtcls = py_type.split('.')[1]
         if dtcls == 'datetime':
-            dt_fmt = '%Y-%m-%d %H:%M:%S.f+00:00'
+            dt_fmt = '%Y-%m-%d %H:%M:%S.%f+00:00'
             dt = datetime.datetime.strptime(s, dt_fmt)
             value = timezone.utc.localize(dt)
         elif dtcls == 'time':
@@ -155,20 +155,24 @@ class ObjectChange(models.Model):
         prev_update = object_update.get_previous()
         for fname, fdata in prev_update.get_all_fields():
             if fdata.get('created'):
+                py_type = str(type(fdata['value']))
+                py_type = py_type.lstrip("<type '").rstrip("'>")
                 obj_change = cls(
                     update=object_update,
                     field_name=fname,
-                    py_type=type(fdata['value']),
+                    py_type=py_type,
                     str_value=value_to_str(fdata['value']),
                 )
                 obj_change.save()
                 continue
             current_val = get_query_value(instance, fname)
+            py_type = str(type(current_val))
+            py_type = py_type.lstrip("<type '").rstrip("'>")
             if current_val != fdata['value']:
                 obj_change = cls(
                     update=object_update,
                     field_name=fname,
-                    py_type=type(current_val),
+                    py_type=py_type,
                     str_value=value_to_str(current_val),
                 )
                 obj_change.save()
