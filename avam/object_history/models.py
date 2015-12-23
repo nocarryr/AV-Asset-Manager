@@ -167,12 +167,13 @@ class ObjectChange(models.Model):
             current_val = get_query_value(instance, fname)
             py_type = str(type(current_val))
             py_type = py_type.lstrip("<type '").rstrip("'>")
-            if current_val != fdata['value']:
+            str_value = value_to_str(current_val)
+            if str_value != value_to_str(fdata['value']):
                 obj_change = cls(
                     update=object_update,
                     field_name=fname,
                     py_type=py_type,
-                    str_value=value_to_str(current_val),
+                    str_value=str_value,
                 )
                 obj_change.save()
     def get_value(self):
