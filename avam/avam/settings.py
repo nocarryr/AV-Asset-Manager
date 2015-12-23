@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'locations',
     'assettypes',
     'object_history',
+    'assets',
 ]
 
 MIDDLEWARE_CLASSES = [

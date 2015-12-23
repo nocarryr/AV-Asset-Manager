@@ -45,6 +45,14 @@
     <Source>avam/object_history/migrations/__init__.py</Source>
     <Source>avam/object_history/migrations/0001_initial.py</Source>
     <Source>avam/assettypes/migrations/0002_auto_20151223_1125.py</Source>
+    <Source>avam/assets/tests.py</Source>
+    <Source>avam/assets/models.py</Source>
+    <Source>avam/assets/apps.py</Source>
+    <Source>avam/assets/views.py</Source>
+    <Source>avam/assets/admin.py</Source>
+    <Source>avam/assets/__init__.py</Source>
+    <Source>avam/assets/migrations/__init__.py</Source>
+    <Source>avam/assets/migrations/0001_initial.py</Source>
   </Sources>
   <Forms/>
   <Translations/>
