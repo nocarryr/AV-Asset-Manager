@@ -152,8 +152,7 @@ class ObjectChange(models.Model):
     @classmethod
     def find_changes(cls, object_update):
         instance = object_update.content_object
-        prev_update = object_update.get_previous()
-        for fname, fdata in prev_update.get_all_fields():
+        for fname, fdata in object_update.get_all_fields().items():
             if fdata.get('created'):
                 py_type = str(type(fdata['value']))
                 py_type = py_type.lstrip("<type '").rstrip("'>")
