@@ -72,6 +72,7 @@ class ObjectUpdate(models.Model):
     def get_previous(self):
         q = self._meta.model.objects.get_for_object(self.content_object)
         q = q.filter(datetime__lt=self.datetime)
+        q = q.exclude(id=self.id)
         if not q.exists():
             return None
         return q.latest('datetime')
@@ -89,7 +90,10 @@ class ObjectUpdate(models.Model):
                     try:
                         obj_change = prev_update.changes.get(field_name=fname)
                     except ObjectChange.DoesNotExist:
-                        prev_update = self.get_previous()
+                        obj_change = None
+                    if obj_change is not None:
+                        break
+                    prev_update = prev_update.get_previous()
             if obj_change is not None:
                 fields[fname] = {'value':obj_change.get_value()}
             else:
