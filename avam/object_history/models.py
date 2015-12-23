@@ -9,7 +9,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.utils import timezone
 
 def iter_fields(obj, query_lookup=None):
-    m = obj._meta.model
+    m = obj._meta
     for f in m.get_fields():
         if query_lookup is None:
             fname = f.name
