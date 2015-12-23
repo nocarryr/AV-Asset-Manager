@@ -4,9 +4,10 @@ from assettypes.models import (
     Manufacturer,
     GenericModel,
     GenericAccessoryModel,
-    LampModel,
-    FilterModel,
+    ProjectorLampModel,
+    ProjectorFilterModel,
     ProjectorModel,
+    MovingLightLampModel,
     MovingLightModel,
     LEDLightModel,
 )
@@ -35,10 +36,14 @@ class MovingLightModelAdmin(admin.ModelAdmin):
 class LEDLightModelAdmin(admin.ModelAdmin):
     pass
 
-@admin.register(LampModel)
-class LampModelAdmin(admin.ModelAdmin):
+@admin.register(ProjectorLampModel)
+class ProjectorLampModelAdmin(admin.ModelAdmin):
     pass
 
-@admin.register(FilterModel)
-class FilterModelAdmin(admin.ModelAdmin):
+@admin.register(ProjectorFilterModel)
+class ProjectorFilterModelAdmin(admin.ModelAdmin):
+    pass
+
+@admin.register(MovingLightLampModel)
+class MovingLightLampModelAdmin(admin.ModelAdmin):
     pass

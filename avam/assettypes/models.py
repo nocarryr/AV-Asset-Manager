@@ -31,10 +31,12 @@ class GenericModel(ModelBase):
 class GenericAccessoryModel(AccessoryModel):
     pass
     
-class LampModel(AccessoryModel):
+class LampModelBase(AccessoryModel):
     max_hours = models.PositiveIntegerField()
+    class Meta:
+        abstract = True
 
-class FilterModel(AccessoryModel):
+class FilterModelBase(AccessoryModel):
     filter_type_choices = (
         ('w', 'Washable'),
         ('c', 'Cartridge'),
@@ -43,14 +45,25 @@ class FilterModel(AccessoryModel):
     filter_type = models.CharField(max_length=1, choices=filter_type_choices)
     max_hours = models.PositiveIntegerField(blank=True, null=True)
     replaceable = models.BooleanField(default=False)
+    class Meta:
+        abstract = True
+
+class ProjectorLampModel(LampModelBase):
+    pass
+
+class ProjectorFilterModel(FilterModelBase):
+    pass
 
 class ProjectorModel(ModelBase):
     lamp_count = models.PositiveIntegerField(default=1)
-    lamp_type = models.ForeignKey(LampModel)
-    filter_type = models.ForeignKey(FilterModel, blank=True, null=True)
+    lamp_type = models.ForeignKey(ProjectorLampModel)
+    filter_type = models.ForeignKey(ProjectorFilterModel, blank=True, null=True)
+
+class MovingLightLampModel(LampModelBase):
+    pass
 
 class MovingLightModel(LightingModelBase):
-    lamp_type = models.ForeignKey(LampModel)
+    lamp_type = models.ForeignKey(MovingLightLampModel)
 
 class LEDLightModel(LightingModelBase):
     pass
