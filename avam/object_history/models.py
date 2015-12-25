@@ -120,7 +120,10 @@ def str_to_value(s, py_type):
     if 'datetime' in py_type:
         dtcls = py_type.split('.')[1]
         if dtcls == 'datetime':
-            dt_fmt = '%Y-%m-%d %H:%M:%S.%f+00:00'
+            dt_fmt = '%Y-%m-%d %H:%M:%S'
+            if '.' in s:
+                dt_fmt = '.'.join([dt_fmt, '%f'])
+            dt_fmt = '+'.join([dt_fmt, '00:00'])
             dt = datetime.datetime.strptime(s, dt_fmt)
             value = timezone.utc.localize(dt)
         elif dtcls == 'time':
