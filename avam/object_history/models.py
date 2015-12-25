@@ -16,19 +16,11 @@ def iter_fields(obj, query_lookup=None):
         else:
             fname = '__'.join([query_lookup, f.name])
         if f.is_relation:
-            content_type = ContentType.objects.get_for_model(f.related_model)
-            watched = WatchedModel.objects.filter(content_type=content_type).exists()
             if f.many_to_many or f.one_to_many:
                 for _obj in getattr(obj, f.name).all():
-                    if False:#not watched:
-                        yield iter_fields(_obj, fname)
-                    else:
-                        yield m, fname, f, _obj.pk
+                    yield m, fname, f, _obj.pk
             else:
-                if False:#watched:
-                    yield iter_fields(getattr(obj, f.name), fname)
-                else:
-                    yield m, fname, f, getattr(obj, f.name).pk
+                yield m, fname, f, getattr(obj, f.name).pk
         else:
             yield m, fname, f, getattr(obj, f.name)
     
