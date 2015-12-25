@@ -26,7 +26,12 @@ def iter_fields(obj, query_lookup=None):
     
 def get_query_value(obj, query_lookup):
     if '__' not in query_lookup:
-        return getattr(obj, query_lookup)
+        value = getattr(obj, query_lookup)
+        f = obj._meta.get_field(query_lookup)
+        if f.is_relation:
+            return value.pk
+        else:
+            return value
     attr = query_lookup.split('__')[0]
     query_lookup = '__'.join(query_lookup.split('__')[1:])
     return get_query_value(getattr(obj, attr), query_lookup)
