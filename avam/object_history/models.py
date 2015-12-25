@@ -137,6 +137,8 @@ def str_to_value(s, py_type):
         elif dtcls == 'timedelta':
             value = datetime.timedelta(float(s))
     else:
+        if py_type == 'bool':
+            return {'True':True, 'False':False}.get(s)
         py_type = PY_TYPES.get(py_type)
         if py_type is None:
             value = None
