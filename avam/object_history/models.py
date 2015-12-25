@@ -80,25 +80,24 @@ class ObjectUpdate(models.Model):
         instance = self.content_object
         fields = {}
         for m, fname, f, value in iter_fields(instance):
-            try:
-                obj_change = self.changes.get(field_name=fname)
-            except ObjectChange.DoesNotExist:
-                obj_change = None
-            if obj_change is None:
-                prev_update = self.get_previous()
-                while prev_update is not None:
-                    try:
-                        obj_change = prev_update.changes.get(field_name=fname)
-                    except ObjectChange.DoesNotExist:
-                        obj_change = None
-                    if obj_change is not None:
-                        break
-                    prev_update = prev_update.get_previous()
-            if obj_change is not None:
-                fields[fname] = {'value':obj_change.get_value()}
+            stored_value = self.get_field(fname)
+            if stored_value is not None:
+                fields[fname] = {'value':stored_value, 'stored':True}
             else:
                 fields[fname] = {'value':value, 'created':True}
         return fields
+    def get_field(self, field_name):
+        try:
+            obj_change = self.changes.get(field_name=field_name)
+        except ObjectChange.DoesNotExist:
+            obj_change = None
+        if obj_change is not None:
+            return obj_change.get_value()
+        else:
+            prev_update = self.get_previous()
+            if prev_update is not None:
+                return prev_update.get_field(field_name)
+        return None
     def save(self, *args, **kwargs):
         created = self.pk is None
         super(ObjectUpdate, self).save(*args, **kwargs)
