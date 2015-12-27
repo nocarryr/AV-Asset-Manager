@@ -72,6 +72,15 @@ class ObjectUpdate(models.Model):
         obj_change = self.get_change(field_name)
         if obj_change is not None:
             return obj_change.get_value()
+    def reconstruct(self):
+        q = self._meta.model.objects.get_for_object(self.content_object)
+        field_names = set(q.values_list('changes__field_name', flat=True))
+        d = {'instance':self.content_object, 'updates':{}, 'values':{}}
+        for fname in field_names:
+            obj_change = self.get_change(fname)
+            d['updates'][fname] = obj_change.update
+            d['values'][fname] = obj_change.get_model_value()
+        return d
     def save(self, *args, **kwargs):
         created = self.pk is None
         super(ObjectUpdate, self).save(*args, **kwargs)
@@ -113,8 +122,28 @@ class ObjectChange(models.Model):
                     str_value=str_value,
                 )
                 obj_change.save()
+    @property
+    def instance(self):
+        instance = getattr(self, '_instance_object', None)
+        if instance is None:
+            instance = self._instance_object = self.update.content_object
+        return instance
+    @property
+    def model_field(self):
+        f = getattr(self, '_model_field', None)
+        if f is None:
+            instance = self.instance
+            f = self._model_field = instance._meta.get_field(self.field_name)
+        return f
     def get_value(self):
         return str_to_value(self.str_value, self.py_type)
+    def get_model_value(self):
+        f = self.model_field
+        v = self.get_value()
+        if f.is_relation:
+            m = f.related_model
+            return m.objects.get(pk=v)
+        return v
     def __unicode__(self):
         return u' = '.join([self.field_name, self.str_value])
 
