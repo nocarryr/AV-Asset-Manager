@@ -55,6 +55,7 @@
     <Source>avam/assets/migrations/0001_initial.py</Source>
     <Source>avam/assets/signals.py</Source>
     <Source>avam/object_history/signals.py</Source>
+    <Source>avam/object_history/utils.py</Source>
   </Sources>
   <Forms/>
   <Translations/>
