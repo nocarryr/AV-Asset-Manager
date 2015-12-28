@@ -151,7 +151,10 @@ class ObjectChange(models.Model):
         v = self.get_value()
         if f.is_relation:
             m = f.related_model
-            return m.objects.get(pk=v)
+            try:
+                v = m.objects.get(pk=v)
+            except m.DoesNotExist:
+                v = None
         return v
     def __unicode__(self):
         return u' = '.join([self.field_name, self.str_value])
