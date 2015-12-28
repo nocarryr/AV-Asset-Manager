@@ -1,0 +1,28 @@
+.object_history{
+  display: flex;
+}
+
+.object_update_view{
+  width: 80%;
+}
+
+.object_update_form{
+
+}
+
+.object_history_panel{
+  background-color: rgba(212, 212, 212, 0.6);
+  padding-right: 10px;
+}
+
+.object_history_list{
+  list-style-type: none;
+  padding-left: 10px;
+}
+
+.object_history_list_item{
+  margin-bottom: .25em;
+  padding: .25em;
+  border-radius: 10%;
+  background-color: rgb(255, 255, 255);
+}

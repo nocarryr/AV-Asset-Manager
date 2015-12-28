@@ -1,0 +1,30 @@
+{% load static %}
+<html>
+<head>
+  <link rel="stylesheet" href="{% static 'object_history/css/object_history.css' %}">
+</head>
+<body>
+<div class="object_history">
+  <div class="object_update_view">
+    {% block object_form %}
+    <form class="object_update_form">
+      {{ object_form.as_p }}
+    </form>
+    {% endblock %}
+  </div>
+  <div class="object_history_panel">
+    {% block object_history_list %}
+    <ul class="object_history_list">
+    {% for obj_update in object_history_queryset %}
+      <li class="object_history_list_item">
+        <span><a href="{% url 'object_history:object_history' pk=obj_update.pk %}">
+          {% include "object_history/includes/object_update.html" with object_update=obj_update %}
+        </a></span>
+      </li>
+    {% endfor %}
+    </ul>
+    {% endblock %}
+  </div>
+</div>
+</body>
+</html>

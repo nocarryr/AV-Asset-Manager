@@ -1,0 +1,5 @@
+<div data-objectid="{{ object_update.id }}"
+  <h4>{{ object_update.datetime|date:"SHORT_DATE_FORMAT" }}</h4>
+  <p>{{ object_update.datetime|time }}</p>
+  {% if object_update.user %}<p>{{ object_update.user }}</p>{% endif %}
+</div>
