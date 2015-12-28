@@ -41,6 +41,7 @@ class SingleObjectUpdateMixin(SingleObjectMixin, ObjectUpdateMixin):
         obj_id = self.kwargs.get('object_id')
         if ctype_pk is None and obj_id is None:
             obj_update = super(SingleObjectUpdateMixin, self).get_object(queryset)
+            self.object_update = obj_update
             return obj_update.content_object
         content_type = ContentType.objects.get(pk=ctype_pk)
         m = content_type.model_class()
