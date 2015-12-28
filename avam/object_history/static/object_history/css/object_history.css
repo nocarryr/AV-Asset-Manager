@@ -34,3 +34,7 @@
   border-radius: 10%;
   background-color: rgb(255, 255, 255);
 }
+
+.object_history_list_item_active{
+  background-color: rgb(173, 255, 173);
+}

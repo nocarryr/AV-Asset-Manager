@@ -11,7 +11,7 @@ class ObjectUpdateMixin(object):
     def get_object_history_queryset(self, object_update=None):
         if object_update is not None:
             object_update = self.object_update
-        q = object_update.get_update_queryset(datetime__lte=object_update.datetime)
+        q = object_update.get_update_queryset()
         return q
 
 class SingleObjectUpdateMixin(SingleObjectMixin, ObjectUpdateMixin):

@@ -18,8 +18,9 @@
     {% block object_history_list %}
     <ul class="object_history_list">
     {% for obj_update in object_history_queryset %}
-      <li class="object_history_list_item">
-        <span><a href="{% url 'object_history:object_history' pk=obj_update.pk %}">
+    {% url 'object_history:object_history' pk=obj_update.pk as update_url %}
+      <li class="object_history_list_item{% if request.path == update_url %} object_history_list_item_active{% endif %}">
+        <span><a href="{{ update_url }}">
           {% include "object_history/includes/object_update.html" with object_update=obj_update %}
         </a></span>
       </li>
