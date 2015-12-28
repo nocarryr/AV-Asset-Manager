@@ -39,6 +39,8 @@ class ObjectUpdate(models.Model):
     datetime = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True)
     objects = ObjectUpdateManager()
+    class Meta:
+        ordering = ['-datetime']
     def get_update_queryset(self, queryset=None, **kwargs):
         if queryset is None:
             queryset = self._meta.model.objects.get_for_object(self.content_object)
