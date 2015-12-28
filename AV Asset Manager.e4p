@@ -56,6 +56,8 @@
     <Source>avam/assets/signals.py</Source>
     <Source>avam/object_history/signals.py</Source>
     <Source>avam/object_history/utils.py</Source>
+    <Source>avam/object_history/forms.py</Source>
+    <Source>avam/object_history/urls.py</Source>
   </Sources>
   <Forms/>
   <Translations/>
