@@ -82,11 +82,13 @@ class ObjectUpdate(models.Model):
     def reconstruct(self):
         q = self._meta.model.objects.get_for_object(self.content_object)
         field_names = set(q.values_list('changes__field_name', flat=True))
-        d = {'instance':self.content_object, 'updates':{}, 'values':{}}
+        d = {'instance':self.content_object, 'updates':{}, 'values':{}, 'changed':[]}
         for fname in field_names:
             obj_change = self.get_change(fname)
             d['updates'][fname] = obj_change.update
             d['values'][fname] = obj_change.get_model_value()
+            if obj_change.update is self:
+                d['changed'].append(fname)
         return d
     def save(self, *args, **kwargs):
         created = self.pk is None
