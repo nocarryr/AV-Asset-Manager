@@ -8,7 +8,9 @@
   <div class="object_update_view">
     {% block object_form %}
     <form class="object_update_form">
-      {{ object_form.as_p }}
+    {% for field, is_changed in object_form.iter_with_changes %}
+      {% include "object_history/includes/formfield.html" %}
+    {% endfor %}
     </form>
     {% endblock %}
   </div>

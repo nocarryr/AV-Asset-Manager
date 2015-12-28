@@ -10,6 +10,14 @@
 
 }
 
+.object_history_formfield{
+
+}
+
+.object_history_formfield_altered{
+  background-color: rgba(255, 255, 0, 0.25);
+}
+
 .object_history_panel{
   background-color: rgba(212, 212, 212, 0.6);
   padding-right: 10px;
