@@ -37,8 +37,8 @@ class AssetTagImage(object):
         self.template = kwargs.get('template')
         self.image_format = kwargs.get('image_format', 'svg')
         self.qr_img = build_qr_svg(self.asset_tag.code)
-        self.qr_img._img.set('width', '80%')
-        self.qr_img._img.set('height', '80%')
+        self.qr_img._img.set('width', '100%')
+        self.qr_img._img.set('height', '100%')
     @property
     def qr_svg_bytes(self):
         b = getattr(self, '_qr_svg_bytes', None)
