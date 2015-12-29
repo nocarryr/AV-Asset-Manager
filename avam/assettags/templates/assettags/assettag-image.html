@@ -1,0 +1,30 @@
+<html>
+<head>
+  <style>
+    .assettag-image {
+      text-align: center;
+      width: {{ image_template.width }}px;
+      height: {{ image_template.height }}px;
+      border-style: solid;
+      border-width: 1px;
+    }
+    .assettag-image p{
+      margin-bottom: .2em;
+      margin-top: 0;
+    }
+  </style>
+<body>
+  <div class="assettag-image">
+    {% if image_template.header_text %}
+      <h1>{{ image_template.header_text }}</h1>
+    {% endif %}
+    {% if image_template.code_text_location == "a" %}
+      <p>{{ asset_tag.code }}</p>
+    {% endif %}
+    {{ image.qr_svg_bytes|safe }}
+    {% if image_template.code_text_location == "b" %}
+      <p>{{ asset_tag.code }}</p>
+    {% endif %}
+  </div>
+</body>
+</html>
