@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'assettypes',
     'object_history',
     'assets',
+    'assettags',
 ]
 
 MIDDLEWARE_CLASSES = [

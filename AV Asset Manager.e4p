@@ -58,6 +58,16 @@
     <Source>avam/object_history/utils.py</Source>
     <Source>avam/object_history/forms.py</Source>
     <Source>avam/object_history/urls.py</Source>
+    <Source>avam/assettags/tests.py</Source>
+    <Source>avam/assettags/models.py</Source>
+    <Source>avam/assettags/apps.py</Source>
+    <Source>avam/assettags/views.py</Source>
+    <Source>avam/assettags/admin.py</Source>
+    <Source>avam/assettags/__init__.py</Source>
+    <Source>avam/assettags/migrations/__init__.py</Source>
+    <Source>avam/assettags/migrations/0001_initial.py</Source>
+    <Source>avam/assettags/settings.py</Source>
+    <Source>avam/assettags/qrcode.py</Source>
   </Sources>
   <Forms/>
   <Translations/>

@@ -7,8 +7,9 @@ from django.utils import timezone
 
 from locations.models import Location
 from assettypes import models as asset_models
+from assettags.models import AssetTaggedMixin
 
-class AssetBase(models.Model):
+class AssetBase(models.Model, AssetTaggedMixin):
     location = models.ForeignKey(Location)
     in_use = models.BooleanField(default=True)
     retired = models.BooleanField(default=False)
