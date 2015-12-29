@@ -1,3 +1,4 @@
 django>=1.9
 pytz
 django-safe-project
+qrcode
