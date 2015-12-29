@@ -67,7 +67,7 @@
     <Source>avam/assettags/migrations/__init__.py</Source>
     <Source>avam/assettags/migrations/0001_initial.py</Source>
     <Source>avam/assettags/settings.py</Source>
-    <Source>avam/assettags/qrcode.py</Source>
+    <Source>avam/assettags/tag_handler.py</Source>
   </Sources>
   <Forms/>
   <Translations/>

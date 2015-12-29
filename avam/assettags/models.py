@@ -4,7 +4,7 @@ from django.db import models
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 
-from assettags import qrcode
+from assettags import tag_handler
 
 class AssetTagError(Exception):
     def __init__(self, msg, asset_tag=None):
@@ -21,9 +21,9 @@ class AssetTagManager(models.Manager):
         q = self.get_queryset()
         codes = set()
         while len(codes) < num_tags:
-            code = qrcode.generate_code()
+            code = tag_handler.generate_code()
             while q.filter(code=code).exists() or code in codes:
-                code = qrcode.generate_code()
+                code = tag_handler.generate_code()
             codes.add(code)
         q.bulk_create([AssetTag(code=c) for c in codes])
         return codes
