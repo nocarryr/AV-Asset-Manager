@@ -18,6 +18,7 @@ from django.conf.urls import url, include
 from django.contrib import admin
 
 from object_history import urls as object_history_urls
+from assettags import urls as assettags_urls
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
@@ -26,6 +27,13 @@ urlpatterns = [
             object_history_urls,
             namespace='object_history',
             app_name='object_history',
+        )
+    ),
+    url(r'^assettags/',
+        include(
+            assettags_urls,
+            namespace='assettags',
+            app_name='assettags',
         )
     ),
 ]
