@@ -68,6 +68,8 @@
     <Source>avam/assettags/migrations/0001_initial.py</Source>
     <Source>avam/assettags/settings.py</Source>
     <Source>avam/assettags/tag_handler.py</Source>
+    <Source>avam/assettags/urls.py</Source>
+    <Source>avam/assettags/migrations/0002_auto_20151229_1336.py</Source>
   </Sources>
   <Forms/>
   <Translations/>
