@@ -108,6 +108,16 @@ class AssetTagImageTemplate(models.Model):
         choices=location_choices,
         default='b',
     )
+    @classmethod
+    def get_default_template(cls):
+        try:
+            obj = cls.objects.get(name='default')
+        except cls.DoesNotExist:
+            obj = None
+        if obj is None:
+            obj = cls(name='default', width=100, height=100)
+            obj.save()
+        return obj
     def __unicode__(self):
         return self.name
 
