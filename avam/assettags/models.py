@@ -84,3 +84,83 @@ class AssetTaggedMixin(object):
         if not isinstance(asset_tag, AssetTag):
             asset_tag, created = AssetTag.objects.get_or_create(code=asset_tag)
         asset_tag.assign_asset(self)
+
+
+
+class AssetTagImageTemplate(models.Model):
+    name = models.CharField(max_length=30, unique=True)
+    width = models.IntegerField()
+    height = models.IntegerField()
+    header_text = models.CharField(max_length=100, blank=True, null=True)
+    qr_code_size = models.CharField(
+        max_length=30,
+        blank=True,
+        null=True,
+        help_text='Size of the QR Code. (Can be in percent "%") Leave blank for "auto"',
+    )
+    location_choices = (
+        ('a', 'Above'),
+        ('b', 'Below'),
+        ('n', 'None'),
+    )
+    code_text_location = models.CharField(
+        max_length=1,
+        choices=location_choices,
+        default='b',
+    )
+    def __unicode__(self):
+        return self.name
+
+class PaperFormat(models.Model):
+    name = models.CharField(max_length=30, unique=True)
+    width = models.FloatField(default=8.5, help_text='Page Width (inches)')
+    height = models.FloatField(default=11.0, help_text='Page Height (inches')
+    top_margin = models.FloatField(default=0.5)
+    bottom_margin = models.FloatField(default=0.5)
+    left_margin = models.FloatField(default=0.2)
+    right_margin = models.FloatField(default=0.2)
+    def __unicode__(self):
+        return self.name
+    
+class AssetTagPrintTemplate(models.Model):
+    name = models.CharField(max_length=30, unique=True)
+    paper_format = models.ForeignKey(PaperFormat)
+    asset_tag_template = models.ForeignKey(AssetTagImageTemplate)
+    dpi = models.FloatField(default=300.0, help_text='Dots per inch')
+    columns_per_row = models.IntegerField()
+    column_spacing = models.CharField(
+        max_length=30,
+        blank=True,
+        null=True,
+        help_text='Space between columns. Can be pixels (px) or inches (in, "). Leave blank for no spacing',
+    )
+    rows_per_page = models.IntegerField()
+    row_spacing = models.CharField(
+        max_length=30,
+        blank=True,
+        null=True,
+        help_text='Space between rows. Can be pixels (px) or inches (in, "). Leave blank for no spacing',
+    )
+    def get_spacing(self):
+        dpi = self.dpi
+        def parse(s):
+            if not s:
+                return 0.
+            val = None
+            units = ['in', '"']
+            for unit in units:
+                if unit in s.lower():
+                    val = float(s.lower().split(unit[0]))
+                    break
+            if val is not None:
+                return val / dpi
+            if 'px' in s.lower():
+                s = s.lower().split('px')[0]
+            return float(s)
+        d = {}
+        for attr in ['column_spacing', 'row_spacing']:
+            val = parse(getattr(self, attr))
+            d[attr] = val
+        return d
+    def __unicode__(self):
+        return self.name
