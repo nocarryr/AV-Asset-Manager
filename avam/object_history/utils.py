@@ -1,6 +1,9 @@
+import sys
 import datetime
 
 from django.utils import timezone
+
+PY2 = sys.version_info.major == 2
 
 def iter_fields(obj, query_lookup=None):
     m = obj._meta
@@ -33,11 +36,13 @@ def get_query_value(obj, query_lookup):
 PY_TYPES = dict(
     int=int,
     str=str,
-    unicode=unicode,
     float=float,
     bool=bool,
     NoneType=None,
 )
+
+if PY2:
+    PY_TYPES['unicode'] = unicode
 
 def str_to_value(s, py_type):
     if 'datetime' in py_type:
