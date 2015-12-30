@@ -7,7 +7,7 @@ env:
   - DJANGO_VERSION=1.8.7
   - DJANGO_VERSION=1.9
 install:
-  - pip install -q requirements-test.txt
+  - pip install -q requirements-tests.txt
   - pip install -q Django==$DJANGO_VERSION
 script:
   - py.test tests.py
