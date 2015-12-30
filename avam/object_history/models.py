@@ -129,7 +129,7 @@ class ObjectChange(models.Model):
         for fname, fdata in object_update.get_all_fields().items():
             if fdata.get('created'):
                 py_type = str(type(fdata['value']))
-                py_type = py_type.lstrip("<type '").rstrip("'>")
+                py_type = py_type.split("'")[1]
                 obj_change = cls(
                     update=object_update,
                     field_name=fname,
@@ -140,7 +140,7 @@ class ObjectChange(models.Model):
                 continue
             current_val = get_query_value(instance, fname)
             py_type = str(type(current_val))
-            py_type = py_type.lstrip("<type '").rstrip("'>")
+            py_type = py_type.split("'")[1]
             str_value = value_to_str(current_val)
             if str_value != value_to_str(fdata['value']):
                 obj_change = cls(
