@@ -4,11 +4,13 @@ import datetime
 from django.db import models
 from django.db.models.signals import post_save
 from django.utils import timezone
+from django.utils.encoding import python_2_unicode_compatible
 
 from locations.models import Location
 from assettypes import models as asset_models
 from assettags.models import AssetTaggedMixin
 
+@python_2_unicode_compatible
 class AssetBase(models.Model, AssetTaggedMixin):
     location = models.ForeignKey(Location)
     in_use = models.BooleanField(default=True)
@@ -34,7 +36,7 @@ class AssetBase(models.Model, AssetTaggedMixin):
         if self.retired and self.in_use:
             self.in_use = False
         super(AssetBase, self).save(*args, **kwargs)
-    def __unicode__(self):
+    def __str__(self):
         return unicode(self.asset_model)
 
 def on_asset_base_post_save(sender, **kwargs):

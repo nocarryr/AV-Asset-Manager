@@ -1,12 +1,15 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.utils.encoding import python_2_unicode_compatible
 
+@python_2_unicode_compatible
 class Manufacturer(models.Model):
     name = models.CharField(max_length=100, unique=True)
-    def __unicode__(self):
+    def __str__(self):
         return self.name
     
+@python_2_unicode_compatible
 class ModelBase(models.Model):
     model_name = models.CharField(max_length=100)
     manufacturer = models.ForeignKey(Manufacturer)
@@ -14,7 +17,7 @@ class ModelBase(models.Model):
     class Meta:
         unique_together = ('manufacturer', 'model_name')
         abstract = True
-    def __unicode__(self):
+    def __str__(self):
         return self.model_name
     
 class AccessoryModel(ModelBase):

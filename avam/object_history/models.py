@@ -4,6 +4,7 @@ from django.conf import settings
 from django.db import models
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
+from django.utils.encoding import python_2_unicode_compatible
 
 from object_history.utils import (
     iter_fields, get_query_value, value_to_str, str_to_value
@@ -32,6 +33,7 @@ class ObjectUpdateManager(models.Manager):
             q = q.filter(content_type=content_type, object_id=obj.pk)
         return q
 
+@python_2_unicode_compatible
 class ObjectUpdate(models.Model):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
@@ -95,10 +97,10 @@ class ObjectUpdate(models.Model):
         super(ObjectUpdate, self).save(*args, **kwargs)
         if created:
             ObjectChange.find_changes(self)
-    def __unicode__(self):
+    def __str__(self):
         return u'%s: %s' % (self.content_object, self.datetime)
 
-
+@python_2_unicode_compatible
 class ObjectChange(models.Model):
     update = models.ForeignKey(ObjectUpdate, related_name='changes')
     field_name = models.CharField(max_length=100)
@@ -156,7 +158,7 @@ class ObjectChange(models.Model):
             except m.DoesNotExist:
                 v = None
         return v
-    def __unicode__(self):
+    def __str__(self):
         return u' = '.join([self.field_name, self.str_value])
 
     

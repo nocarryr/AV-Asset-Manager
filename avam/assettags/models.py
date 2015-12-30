@@ -3,6 +3,7 @@ from __future__ import unicode_literals
 from django.db import models
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
+from django.utils.encoding import python_2_unicode_compatible
 
 from assettags import tag_handler
 
@@ -39,6 +40,7 @@ class AssetTagManager(models.Manager):
                 return None
         return asset_tag.content_object
     
+@python_2_unicode_compatible
 class AssetTag(models.Model):
     code = models.CharField(max_length=50, unique=True)
     content_type = models.ForeignKey(
@@ -69,7 +71,7 @@ class AssetTag(models.Model):
             )
         self.content_object = instance
         self.save()
-    def __unicode__(self):
+    def __str__(self):
         return self.code
     
 class AssetTaggedMixin(object):
@@ -86,7 +88,7 @@ class AssetTaggedMixin(object):
         asset_tag.assign_asset(self)
 
 
-
+@python_2_unicode_compatible
 class AssetTagImageTemplate(models.Model):
     name = models.CharField(max_length=30, unique=True)
     width = models.IntegerField()
@@ -118,9 +120,10 @@ class AssetTagImageTemplate(models.Model):
             obj = cls(name='default', width=100, height=100)
             obj.save()
         return obj
-    def __unicode__(self):
+    def __str__(self):
         return self.name
 
+@python_2_unicode_compatible
 class PaperFormat(models.Model):
     name = models.CharField(max_length=30, unique=True)
     width = models.FloatField(default=8.5, help_text='Page Width (inches)')
@@ -129,9 +132,10 @@ class PaperFormat(models.Model):
     bottom_margin = models.FloatField(default=0.5)
     left_margin = models.FloatField(default=0.2)
     right_margin = models.FloatField(default=0.2)
-    def __unicode__(self):
+    def __str__(self):
         return self.name
     
+@python_2_unicode_compatible
 class AssetTagPrintTemplate(models.Model):
     name = models.CharField(max_length=30, unique=True)
     paper_format = models.ForeignKey(PaperFormat)
@@ -172,5 +176,5 @@ class AssetTagPrintTemplate(models.Model):
             val = parse(getattr(self, attr))
             d[attr] = val
         return d
-    def __unicode__(self):
+    def __str__(self):
         return self.name
