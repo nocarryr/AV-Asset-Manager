@@ -92,6 +92,23 @@ class ObjectUpdate(models.Model):
             if obj_change.update is self:
                 d['changed'].append(fname)
         return d
+    def get_full_history(self):
+        q = self._meta.model.objects.get_for_object(self.content_object)
+        field_names = set(q.values_list('changes__field_name', flat=True))
+        field_names = list(field_names)
+        updates = []
+        updates.append(field_names)
+        for obj_update in q.order_by('datetime'):
+            changes = []
+            for fname in field_names:
+                try:
+                    change = obj_update.changes.get(field_name=fname)
+                    value = change.get_value()
+                except ObjectChange.DoesNotExist:
+                    value = '*'
+                changes.append(value)
+            updates.append(changes)
+        return updates
     def save(self, *args, **kwargs):
         created = self.pk is None
         super(ObjectUpdate, self).save(*args, **kwargs)
