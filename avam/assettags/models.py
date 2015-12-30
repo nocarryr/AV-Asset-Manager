@@ -13,7 +13,7 @@ class AssetTagError(Exception):
     def __str__(self):
         s = self.msg
         if self.asset_tag is not None:
-            s = '%s (asset_tag=%s' % (s, self.asset_tag)
+            s = '%s (asset_tag=%s)' % (s, self.asset_tag)
         return s
 
 class AssetTagManager(models.Manager):
