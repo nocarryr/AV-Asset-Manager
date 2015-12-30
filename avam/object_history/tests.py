@@ -7,12 +7,14 @@ from assets.tests import build_test_fixtures as build_asset_fixtures
 class ObjectHistoryTestCase(TestCase):
     def setUp(self):
         self.assets = build_asset_fixtures()
+    def rebuild_history(self):
         ObjectUpdate.objects.all().delete()
         for wm in WatchedModel.objects.all():
             m = wm.content_type.model_class()
             for obj in m.objects.all():
                 obj_update = ObjectUpdate(content_object=obj)
                 obj_update.save()
+                obj.save()
     def get_object_update(self, obj):
         q = ObjectUpdate.objects.get_for_object(obj)
         return q.latest('datetime')
@@ -37,8 +39,8 @@ class ObjectHistoryTestCase(TestCase):
         if self.debug:
             print('test1')
             print('-'*60)
+        self.rebuild_history()
         proj = self.assets['projector']
-        proj.save()
         if self.debug:
             self.print_changes(proj)
         self.check_reconstruction(proj)
@@ -46,8 +48,8 @@ class ObjectHistoryTestCase(TestCase):
         if self.debug:
             print('test2')
             print('-'*60)
+        self.rebuild_history()
         proj = self.assets['projector']
-        proj.save()
         proj.notes = 'test 2'
         proj.save()
         if self.debug:
