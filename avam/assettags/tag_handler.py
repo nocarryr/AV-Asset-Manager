@@ -1,5 +1,5 @@
 import random
-from StringIO import StringIO
+import xml.etree.ElementTree as ET
 
 import qrcode
 from qrcode.image.svg import SvgPathFillImage
@@ -21,6 +21,9 @@ def generate_code(num_chars=None):
 class SvgScaledImage(SvgPathFillImage):
     def __init__(self, *args, **kwargs):
         super(SvgScaledImage, self).__init__(*args, **kwargs)
+    def to_string(self):
+        self._img.append(self.make_path())
+        return ET.tostring(self._img)
 #    def _svg(self, viewBox=None, **kwargs):
 #        elem = super(SvgScaledImage, self)._svg(viewBox, **kwargs)
 #        elem.set('width', self.scale)
@@ -46,8 +49,4 @@ class AssetTagImage(object):
             b = self._qr_svg_bytes = self.get_qr_svg_bytes()
         return b
     def get_qr_svg_bytes(self):
-        fh = StringIO()
-        self.qr_img.save(fh)
-        s = fh.getvalue()
-        fh.close()
-        return s
+        return self.qr_img.to_string()
