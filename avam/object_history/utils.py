@@ -73,6 +73,8 @@ def str_to_value(s, py_type):
     else:
         if py_type == 'bool':
             return {'True':True, 'False':False}.get(s)
+        if py_type == 'unicode' and not PY2:
+            py_type = 'str'
         py_type = PY_TYPES.get(py_type)
         if py_type is None:
             value = None
