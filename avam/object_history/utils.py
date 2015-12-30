@@ -77,4 +77,6 @@ def str_to_value(s, py_type):
 def value_to_str(value):
     if isinstance(value, datetime.timedelta):
         value = value.total_seconds()
-    return unicode(value)
+    if PY2:
+        return unicode(value)
+    return str(value)

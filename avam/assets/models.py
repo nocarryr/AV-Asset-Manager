@@ -1,4 +1,5 @@
 from __future__ import unicode_literals
+import sys
 import datetime
 
 from django.db import models
@@ -9,6 +10,8 @@ from django.utils.encoding import python_2_unicode_compatible
 from locations.models import Location
 from assettypes import models as asset_models
 from assettags.models import AssetTaggedMixin
+
+PY2 = sys.version_info.major == 2
 
 @python_2_unicode_compatible
 class AssetBase(models.Model, AssetTaggedMixin):
@@ -37,7 +40,9 @@ class AssetBase(models.Model, AssetTaggedMixin):
             self.in_use = False
         super(AssetBase, self).save(*args, **kwargs)
     def __str__(self):
-        return unicode(self.asset_model)
+        if PY2:
+            return unicode(self.asset_model)
+        return str(self.asset_model)
 
 def on_asset_base_post_save(sender, **kwargs):
     if kwargs.get('raw'):
