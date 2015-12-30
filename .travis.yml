@@ -9,4 +9,4 @@ env:
 install:
   - pip install -q Django==$DJANGO_VERSION
 script:
-  - py.test tests
+  - py.test tests.py
