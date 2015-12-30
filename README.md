@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/nocarryr/AV-Asset-Manager.svg?branch=master)](https://travis-ci.org/nocarryr/AV-Asset-Manager)
+
 # AV-Asset-Manager
 Django-based asset management for audio/visual use
 
