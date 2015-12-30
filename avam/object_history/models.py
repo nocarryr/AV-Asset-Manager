@@ -153,10 +153,15 @@ class ObjectChange(models.Model):
         v = self.get_value()
         if f.is_relation:
             m = f.related_model
-            try:
-                v = m.objects.get(pk=v)
-            except m.DoesNotExist:
-                v = None
+            if f.many_to_many or f.one_to_many:
+                if not isinstance(v, list):
+                    v = [v]
+                v = m.objects.filter(pk__in=v)
+            else:
+                try:
+                    v = m.objects.get(pk=v)
+                except m.DoesNotExist:
+                    v = None
         return v
     def __str__(self):
         return u' = '.join([self.field_name, self.str_value])

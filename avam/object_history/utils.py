@@ -1,5 +1,6 @@
 import sys
 import datetime
+import json
 
 from django.utils import timezone
 
@@ -26,7 +27,10 @@ def get_query_value(obj, query_lookup):
         value = getattr(obj, query_lookup)
         f = obj._meta.get_field(query_lookup)
         if f.is_relation:
-            return value.pk
+            if f.many_to_many or f.one_to_many:
+                return [_obj.pk for _obj in value.all()]
+            else:
+                return value.pk
         else:
             return value
     attr = query_lookup.split('__')[0]
@@ -64,6 +68,8 @@ def str_to_value(s, py_type):
             value = datetime.date(*args)
         elif dtcls == 'timedelta':
             value = datetime.timedelta(float(s))
+    elif py_type == 'list':
+        return json.loads(s)
     else:
         if py_type == 'bool':
             return {'True':True, 'False':False}.get(s)
@@ -75,6 +81,8 @@ def str_to_value(s, py_type):
     return value
 
 def value_to_str(value):
+    if isinstance(value, list):
+        return json.dumps(value)
     if isinstance(value, datetime.timedelta):
         value = value.total_seconds()
     if PY2:
