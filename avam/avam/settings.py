@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
 import os
+import warnings
 try:
     import local_settings
 except ImportError:
@@ -18,6 +19,7 @@ except ImportError:
         SECRET_KEY = 'secret'
         DEBUG = True
         DATABASES = {}
+    warnings.warn('local_settings module not found. Using unsafe defaults', ImportWarning)
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
