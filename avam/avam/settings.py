@@ -44,9 +44,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'object_history',
     'locations',
     'assettypes',
-    'object_history',
     'assets',
     'assettags',
 ]
