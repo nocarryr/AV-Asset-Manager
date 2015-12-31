@@ -160,6 +160,12 @@ class PaperFormat(models.Model):
     bottom_margin = models.FloatField(default=0.5)
     left_margin = models.FloatField(default=0.2)
     right_margin = models.FloatField(default=0.2)
+    def get_printable_area(self):
+        w = self.width
+        h = self.height
+        w -= self.left_margin + self.right_margin
+        h -= self.top_margin + self.bottom_margin
+        return Box(x=self.left_margin, y=self.top_margin, w=w, h=h)
     def __str__(self):
         return self.name
     
@@ -204,5 +210,9 @@ class AssetTagPrintTemplate(models.Model):
             val = parse(getattr(self, attr))
             d[attr] = val
         return d
+    def get_printable_area(self):
+        box = self.paper_format.get_printable_area()
+        box *= self.dpi
+        return box
     def __str__(self):
         return self.name
