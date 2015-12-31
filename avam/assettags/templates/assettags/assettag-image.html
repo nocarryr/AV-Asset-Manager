@@ -1,42 +1,5 @@
 <html>
-<head>
-  <style>
-    .assettag-image {
-      display: flex;
-      flex-direction: column;
-      text-align: center;
-      width: {{ image_template.width }}px;
-      height: {{ image_template.height }}px;
-      border-style: solid;
-      border-width: 1px;
-    }
-    .assettag-image h6{
-      margin-top: .1em;
-      margin-bottom: 0;
-      flex: auto;
-    }
-    .assettag-image p{
-      margin-bottom: .1em;
-      margin-top: 0;
-      font-size: .5em;
-      flex: auto;
-    }
-    .assettag-image svg{
-      flex: auto;
-    }
-  </style>
 <body>
-  <div class="assettag-image">
-    {% if image_template.header_text %}
-      <h6>{{ image_template.header_text }}</h6>
-    {% endif %}
-    {% if image_template.code_text_location == "a" %}
-      <p>{{ asset_tag.code }}</p>
-    {% endif %}
-    {{ image.qr_svg_bytes|safe }}
-    {% if image_template.code_text_location == "b" %}
-      <p>{{ asset_tag.code }}</p>
-    {% endif %}
-  </div>
+  {{ image.qr_svg_bytes|safe }}
 </body>
 </html>
