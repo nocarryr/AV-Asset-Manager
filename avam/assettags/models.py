@@ -164,7 +164,7 @@ class AssetTagPrintTemplate(models.Model):
             units = ['in', '"']
             for unit in units:
                 if unit in s.lower():
-                    val = float(s.lower().split(unit[0]))
+                    val = float(s.lower().split(unit)[0])
                     break
             if val is not None:
                 return val / dpi
