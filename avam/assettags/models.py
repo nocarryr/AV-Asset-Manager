@@ -214,5 +214,29 @@ class AssetTagPrintTemplate(models.Model):
         box = self.paper_format.get_printable_area()
         box *= self.dpi
         return box
+    def get_cells(self):
+        full_box = self.get_printable_area()
+        spacing = self.get_spacing()
+        num_cols = self.columns_per_row
+        col_gaps = num_cols - 1
+        col_size = full_box.w / num_cols
+        col_size -= col_gaps * spacing['column_spacing']
+        num_rows = self.rows_per_page
+        row_gaps = num_rows - 1
+        row_size = full_box.h / num_rows
+        row_size -= row_gaps * spacing['row_spacing']
+        cells = []
+        y = full_box.y
+        for r in range(num_rows):
+            last_col = None
+            for c in range(num_cols):
+                if last_col is not None:
+                    x = last_col.right + spacing['column_spacing']
+                else:
+                    x = full_box.x
+                last_col = Box(x=x, y=y, w=col_size, h=row_size)
+                cells.append(last_col)
+            y += row_size + spacing['row_spacing']
+        return cells
     def __str__(self):
         return self.name
