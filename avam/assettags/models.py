@@ -117,11 +117,39 @@ class AssetTagImageTemplate(models.Model):
         except cls.DoesNotExist:
             obj = None
         if obj is None:
-            obj = cls(name='default', width=100, height=100)
+            obj = cls(name='default', width=200, height=100)
             obj.save()
         return obj
     def __str__(self):
         return self.name
+
+class Box(object):
+    def __init__(self, **kwargs):
+        self.x = kwargs.get('x', 0.)
+        self.y = kwargs.get('y', 0.)
+        self.w = kwargs.get('w')
+        self.h = kwargs.get('h')
+    @property
+    def right(self):
+        return self.x + self.w
+    @property
+    def bottom(self):
+        return self.y + self.h
+    def __mul__(self, other):
+        keys = ['x', 'y', 'w', 'h']
+        kwargs = {k:getattr(self, k) * other for k in keys}
+        return Box(**kwargs)
+    def __imul__(self, other):
+        self.x *= other
+        self.y *= other
+        self.w *= other
+        self.h *= other
+        return self
+    def __repr__(self):
+        return 'Box %s' % (self)
+    def __str__(self):
+        return str([getattr(self, k) for k in ['x', 'y', 'w', 'h']])
+
 
 @python_2_unicode_compatible
 class PaperFormat(models.Model):
