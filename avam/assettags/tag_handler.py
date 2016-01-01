@@ -146,3 +146,79 @@ class AssetTagImage(object):
         g = self.qr_img.get_path_centered()
         g.set('transform', 'matrix(%s, 0, 0, %s, %s, %s)' % (scale, scale, x, y))
         return g
+
+class AssetTagSheet(object):
+    def __init__(self, **kwargs):
+        self.asset_tags = kwargs.get('asset_tags')
+        self.asset_tag_template = kwargs.get('asset_tag_template')
+        self.page_template = kwargs.get('page_template')
+        self.full_area = self.page_template.get_full_area()
+        self.print_area = self.page_template.get_printable_area()
+        self.cells = self.page_template.get_cells()
+        self.tag_scale = self.calc_tag_scale()
+    def build_all(self):
+        svgs = []
+        svg, tags = self.build_svg()
+        svgs.append(svg)
+        while len(tags):
+            svg, tags = self.build_svg(tags)
+            svgs.append(svg)
+        return svgs
+    def build_svg(self, asset_tags=None):
+        if asset_tags is None:
+            asset_tags = self.asset_tags
+        box = self.full_area
+        root = ET.Element(
+            'svg',
+            width='%spx' % (box.w),
+            height='%spx' % (box.h),
+            viewBox='0 0 %s %s' % (box.w, box.h),
+            version='1.1',
+        )
+        root.set('xmlns', SvgPathFillImage._SVG_namespace)
+        cells, tags_remaining = self.build_cells(asset_tags)
+        root.extend(cells)
+        return root, tags_remaining
+    def build_cells(self, asset_tags):
+        built_cells = []
+        asset_tags = list(asset_tags)[:]
+        for cell in self.cells:
+            if not len(asset_tags):
+                break
+            asset_tag = asset_tags[0]
+            asset_tags = asset_tags[1:]
+            built_cells.append(self.build_cell(asset_tag, cell))
+        return built_cells, asset_tags
+    def build_cell(self, asset_tag, cell):
+        g = ET.Element(
+            'g',
+            width=str(cell.w),
+            height=str(cell.h),
+            transform='translate(%s,%s)' % (cell.x, cell.y),
+        )
+        rect = ET.Element(
+            'rect',
+            width=str(cell.w),
+            height=str(cell.h),
+            style='fill:white;stroke:black;',
+        )
+        g.append(rect)
+        t = self.asset_tag_template
+        x = (cell.w / 2.) - (t.width / 2.)
+        y = (cell.h / 2.) - (t.height / 2.)
+        sub_g = ET.Element(
+            'g',
+            transform='translate(%s,%s)' % (x, y),
+        )
+        timage = AssetTagImage(asset_tag=asset_tag, template=self.asset_tag_template)
+        sub_g.extend(timage.build_svg_content())
+        g.append(sub_g)
+        return g
+    def calc_tag_scale(self):
+        cell = self.cells[0]
+        template = self.asset_tag_template
+        wscale = cell.w / template.width
+        hscale = cell.h / template.height
+        if template.width * wscale > cell.w or template.height * wscale > cell.h:
+            return hscale
+        return wscale
