@@ -222,3 +222,14 @@ class AssetTagSheet(object):
         if template.width * wscale > cell.w or template.height * wscale > cell.h:
             return hscale
         return wscale
+
+def sheet_test():
+    from assettags.models import AssetTag,AssetTagImageTemplate,AssetTagPrintTemplate
+    ts = AssetTagSheet(
+        asset_tags=AssetTag.objects.all(),
+        asset_tag_template=AssetTagImageTemplate.get_default_template(),
+        page_template=AssetTagPrintTemplate.objects.first(),
+    )
+    svg, tags = ts.build_svg()
+    t = ET.ElementTree(svg)
+    t.write('sheettest2.svg')
