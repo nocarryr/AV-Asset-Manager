@@ -7,4 +7,8 @@ urlpatterns = [
         views.AssetTagImageView.as_view(),
         name='assettag_image',
     ),
+    url(r'^print/$',
+        views.print_tags,
+        name='print_tags',
+    ),
 ]

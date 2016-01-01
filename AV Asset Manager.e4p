@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE Project SYSTEM "Project-5.1.dtd">
 <!-- eric project file for project AV Asset Manager -->
-<!-- Copyright (C) 2015 ,  -->
+<!-- Copyright (C) 2016 ,  -->
 <Project version="5.1">
   <Language></Language>
   <Hash>311aa99d65a388ae1b54ea75843431fcc0a42de2</Hash>
@@ -70,6 +70,7 @@
     <Source>avam/assettags/tag_handler.py</Source>
     <Source>avam/assettags/urls.py</Source>
     <Source>avam/assettags/migrations/0002_auto_20151229_1336.py</Source>
+    <Source>avam/assettags/forms.py</Source>
   </Sources>
   <Forms/>
   <Translations/>
