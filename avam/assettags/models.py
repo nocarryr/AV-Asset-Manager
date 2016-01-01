@@ -135,6 +135,12 @@ class Box(object):
     @property
     def bottom(self):
         return self.y + self.h
+    @property
+    def center_x(self):
+        return self.width / 2. + self.x
+    @property
+    def center_y(self):
+        return self.height / 2. + self.y
     def __mul__(self, other):
         keys = ['x', 'y', 'w', 'h']
         kwargs = {k:getattr(self, k) * other for k in keys}
@@ -160,6 +166,8 @@ class PaperFormat(models.Model):
     bottom_margin = models.FloatField(default=0.5)
     left_margin = models.FloatField(default=0.2)
     right_margin = models.FloatField(default=0.2)
+    def get_full_area(self):
+        return Box(x=0., y=0., w=self.width, h=self.height)
     def get_printable_area(self):
         w = self.width
         h = self.height
@@ -210,6 +218,10 @@ class AssetTagPrintTemplate(models.Model):
             val = parse(getattr(self, attr))
             d[attr] = val
         return d
+    def get_full_area(self):
+        box = self.paper_format.get_full_area()
+        box *= self.dpi
+        return box
     def get_printable_area(self):
         box = self.paper_format.get_printable_area()
         box *= self.dpi
