@@ -135,6 +135,12 @@ class Box(object):
     @property
     def bottom(self):
         return self.y + self.h
+    @property
+    def center_x(self):
+        return self.width / 2. + self.x
+    @property
+    def center_y(self):
+        return self.height / 2. + self.y
     def __mul__(self, other):
         keys = ['x', 'y', 'w', 'h']
         kwargs = {k:getattr(self, k) * other for k in keys}
