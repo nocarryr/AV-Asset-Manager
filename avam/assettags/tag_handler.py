@@ -72,21 +72,26 @@ class AssetTagImage(object):
             version='1.1',
         )
         root.set('xmlns', SvgPathFillImage._SVG_namespace)
-        rect = ET.Element(
+        root.extend(self.build_svg_content())
+        return root
+    def build_svg_content(self):
+        elems = []
+        w = self.template.width
+        h = self.template.height
+        elems.append(ET.Element(
             'rect',
             width=str(w),
             height=str(h),
             id='bg-rect',
             style='fill:white;stroke:black;',
-        )
-        root.append(rect)
+        ))
         if self.template.header_text:
-            root.append(self.build_header())
+            elems.append(self.build_header())
         code_text = self.build_code_text()
         if code_text is not None:
-            root.append(code_text)
-        root.append(self.build_qr_group())
-        return root
+            elems.append(code_text)
+        elems.append(self.build_qr_group())
+        return elems
     def build_header(self):
         w = self.template.width
         g = ET.Element('g', id='header-group', transform='translate(%s, 0.0)' % (w / 2.))
