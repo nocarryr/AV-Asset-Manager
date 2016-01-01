@@ -156,15 +156,15 @@ class AssetTagSheet(object):
         self.print_area = self.page_template.get_printable_area()
         self.cells = self.page_template.get_cells()
         self.tag_scale = self.calc_tag_scale()
-    def build_all(self):
+    def build_all(self, as_string=False):
         svgs = []
-        svg, tags = self.build_svg()
+        svg, tags = self.build_svg(as_string=as_string)
         svgs.append(svg)
         while len(tags):
-            svg, tags = self.build_svg(tags)
+            svg, tags = self.build_svg(tags, as_string)
             svgs.append(svg)
         return svgs
-    def build_svg(self, asset_tags=None):
+    def build_svg(self, asset_tags=None, as_string=False):
         if asset_tags is None:
             asset_tags = self.asset_tags
         box = self.full_area
@@ -178,6 +178,8 @@ class AssetTagSheet(object):
         root.set('xmlns', SvgPathFillImage._SVG_namespace)
         cells, tags_remaining = self.build_cells(asset_tags)
         root.extend(cells)
+        if as_string:
+            root = ET.tostring(root)
         return root, tags_remaining
     def build_cells(self, asset_tags):
         built_cells = []
