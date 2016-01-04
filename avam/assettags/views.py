@@ -1,5 +1,14 @@
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import StringIO
+
 from django.shortcuts import render
+from django.http import HttpResponse
+from django.template.loader import render_to_string
 from django.views.generic import DetailView
+
+from xhtml2pdf import pisa
 
 from assettags.models import (
     AssetTag,
@@ -43,7 +52,16 @@ def print_tags(request):
                 print_box=page_tmpl.get_printable_area(96),
                 cell_iter=data['page_template'].iter_cells(tag_imgs),
             )
-            return render(request, 'assettags/assettag-table.html', context)
+            #return render(request, 'assettags/assettag-table.html', context)
+            return render_pdf('assettags/print-tags-result.html', context)
     else:
         form = TagPrintForm()
     return render(request, 'assettags/print-tags.html', {'form':form})
+    
+def render_pdf(template_name, context_data):
+    html = render_to_string(template_name, context_data)
+    fh = StringIO()
+    pdf = pisa.pisaDocument(html, dest=fh)
+    r = HttpResponse(fh.getvalue(), content_type='application/pdf')
+    fh.close()
+    return r

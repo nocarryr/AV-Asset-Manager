@@ -1,7 +1,26 @@
-<html>
-<body>
-  {% for svg in svgs %}
-    {{ svg|safe }}
-  {% endfor %}
-</body>
-</html>
+{% extends "assettags/assettag-table.html" %}
+{% block head %}
+{{ block.super }}
+  <style>
+  {% with fmt=page_template.paper_format %}
+    @page {
+      size:{{ fmt.width }}in {{ fmt.height }}in portrait;
+      {% comment %}
+      margin-left: {{ fmt.left_margin }}in;
+      margin-right: {{ fmt.right_margin }}in;
+      margin-top: {{ fmt.top_margin }};
+      margin-bottom: {{ fmt.bottom_margin }};
+      {% for cell in cells %}
+        @frame cell_frame_{{ forloop.counter0 }} {
+          left: {{ cell.x }}pt;
+          width: {{ cell.w }}pt;
+          top: {{ cell.y }}pt;
+          height: {{ cell.h }};
+          -pdf-frame-content: cell_content_{{ forloop.counter0 }};
+        }
+      {% endfor %}
+      {% endcomment %}
+    }
+  {% endwith %}
+  </style>
+{% endblock %}
