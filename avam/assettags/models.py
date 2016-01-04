@@ -210,7 +210,7 @@ class AssetTagPrintTemplate(models.Model):
                     val = float(s.lower().split(unit)[0])
                     break
             if val is not None:
-                return val / dpi
+                return val * dpi
             if 'px' in s.lower():
                 s = s.lower().split('px')[0]
             return float(s)
