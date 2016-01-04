@@ -1,0 +1,49 @@
+<html>
+<head>
+  <style>
+    {% with padding=page_template.get_html_padding %}
+    .tag-page{
+      width: {{ print_box.w }}px;
+      height: {{ print_box.h }}px;
+      padding-left: {{ print_box.x }}px;
+      padding-top: {{ print_box.y }}px;
+    }
+    .tag-table {
+      border-collapse: collapse;
+      /*border-style: solid;*/
+      border-width: 0px;
+      text-align: center;
+    }
+    .tag-table td {
+      padding-top: {{ padding.top }}px;
+      padding-bottom: {{ padding.bottom }}px;
+      padding-left: {{ padding.left }}px;
+      padding-right: {{ padding.right }}px;
+    }
+    .tag-table tr:first-child td{padding-top: 0px;}
+    .tag-table tr:last-child td{padding-bottom: 0px;}
+    .tag-table td:first-child{padding-left: 0px;}
+    .tag-table td:last-child{padding-right: 0px;}
+    {% endwith %}
+  </style>
+</head>
+<body>
+  <div class="tag-page">
+    <table class="tag-table">
+      <tr>
+      {% for page, row, col, tag in cell_iter %}
+        {# Close the previous 'tr' tag on a new row and opens a new one #}
+        {% ifchanged row %}
+          {% if not forloop.first %}
+            </tr>
+            <tr>
+          {% endif %}
+        {% endifchanged %}
+          <td>{% if tag %}{{ tag|safe }}{% endif %}</td>
+        {# Make sure we close the last tr tag #}
+        {% if forloop.last %}</tr>{% endif %}
+      {% endfor %}
+    </table>
+  </div>
+</body>
+</html>

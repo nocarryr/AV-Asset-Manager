@@ -32,13 +32,17 @@ def print_tags(request):
             if data['tags_to_create']:
                 codes |= AssetTag.objects.generate_tags(data['tags_to_create'])
             q = AssetTag.objects.filter(code__in=codes)
-            img_gen = AssetTagSheet(
-                asset_tags=list(q),
-                asset_tag_template=data['tag_template'],
-                page_template=data['page_template'],
+            page_tmpl = data['page_template']
+            tag_tmpl = data['tag_template']
+            svgs = [AssetTagImage(asset_tag=t, template=tag_tmpl).qr_svg_bytes for t in q]
+            context = dict(
+                svgs=svgs,
+                page_template=page_tmpl,
+                page_box=page_tmpl.get_full_area(96),
+                print_box=page_tmpl.get_printable_area(96),
+                cell_iter=data['page_template'].iter_cells(svgs),
             )
-            svgs = img_gen.build_all(as_string=True)
-            return render(request, 'assettags/print-tags-result.html', {'svgs':svgs})
+            return render(request, 'assettags/assettag-table.html', context)
     else:
         form = TagPrintForm()
     return render(request, 'assettags/print-tags.html', {'form':form})
