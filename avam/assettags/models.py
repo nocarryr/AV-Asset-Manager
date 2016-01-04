@@ -267,5 +267,39 @@ class AssetTagPrintTemplate(models.Model):
                 cells.append(last_col)
             y += row_size + spacing['row_spacing']
         return cells
+    def iter_cells(self, asset_tags=None, full_page=True):
+        rows = self.rows_per_page
+        cols = self.columns_per_row
+        if asset_tags is not None:
+            if hasattr(asset_tags, 'iterator'):
+                tag_iter = asset_tags.iterator()
+            else:
+                tag_iter = asset_tags
+        else:
+            tag_iter = range(rows * cols)
+        if isinstance(tag_iter, list):
+            tag_iter = iter(tag_iter)
+        tag = None
+        page = 0
+        while tag is not False:
+            for row in range(rows):
+                for col in range(cols):
+                    try:
+                        tag = next(tag_iter)
+                    except StopIteration:
+                        if full_page:
+                            tag = None
+                        else:
+                            tag = False
+                            break
+                    if asset_tags is not None:
+                        yield page, row, col, tag
+                    else:
+                        yield page, row, col
+                if tag is False:
+                    break
+            if tag is None:
+                tag = False
+            page += 1
     def __str__(self):
         return self.name
