@@ -120,6 +120,16 @@ class AssetTagImageTemplate(models.Model):
             obj = cls(name='default', width=200, height=100)
             obj.save()
         return obj
+    @property
+    def calc_qr_size(self):
+        size = getattr(self, '_calc_qr_size', None)
+        if size is not None:
+            return size
+        size = self.qr_code_size
+        if not size:
+            size = '%spx' % (self.height * .75)
+        self._calc_qr_size = size
+        return size
     def __str__(self):
         return self.name
 
