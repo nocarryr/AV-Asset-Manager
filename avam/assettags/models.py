@@ -197,8 +197,9 @@ class AssetTagPrintTemplate(models.Model):
         null=True,
         help_text='Space between rows. Can be pixels (px) or inches (in, "). Leave blank for no spacing',
     )
-    def get_spacing(self):
-        dpi = self.dpi
+    def get_spacing(self, dpi=None):
+        if dpi is None:
+            dpi = self.dpi
         def parse(s):
             if not s:
                 return 0.
@@ -218,13 +219,17 @@ class AssetTagPrintTemplate(models.Model):
             val = parse(getattr(self, attr))
             d[attr] = val
         return d
-    def get_full_area(self):
+    def get_full_area(self, dpi=None):
+        if dpi is None:
+            dpi = self.dpi
         box = self.paper_format.get_full_area()
-        box *= self.dpi
+        box *= dpi
         return box
-    def get_printable_area(self):
+    def get_printable_area(self, dpi=None):
+        if dpi is None:
+            dpi = self.dpi
         box = self.paper_format.get_printable_area()
-        box *= self.dpi
+        box *= dpi
         return box
     def get_cells(self):
         full_box = self.get_printable_area()
