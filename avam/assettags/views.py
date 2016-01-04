@@ -34,13 +34,14 @@ def print_tags(request):
             q = AssetTag.objects.filter(code__in=codes)
             page_tmpl = data['page_template']
             tag_tmpl = data['tag_template']
-            svgs = [AssetTagImage(asset_tag=t, template=tag_tmpl).qr_svg_bytes for t in q]
+            tag_imgs = [AssetTagImage(asset_tag=t, template=tag_tmpl) for t in q]
             context = dict(
-                svgs=svgs,
+                use_png=True,
+                tag_template=tag_tmpl,
                 page_template=page_tmpl,
                 page_box=page_tmpl.get_full_area(96),
                 print_box=page_tmpl.get_printable_area(96),
-                cell_iter=data['page_template'].iter_cells(svgs),
+                cell_iter=data['page_template'].iter_cells(tag_imgs),
             )
             return render(request, 'assettags/assettag-table.html', context)
     else:

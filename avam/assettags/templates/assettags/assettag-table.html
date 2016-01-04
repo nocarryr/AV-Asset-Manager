@@ -1,5 +1,6 @@
 <html>
 <head>
+  {% block head %}
   <style>
     {% with padding=page_template.get_html_padding %}
     .tag-page{
@@ -26,8 +27,15 @@
     .tag-table td:last-child{padding-right: 0px;}
     {% endwith %}
   </style>
+  {% if use_png %}
+  <style>
+    {% include 'assettags/includes/png-image-css.html' %}
+  </style>
+  {% endif %}
+  {% endblock %}
 </head>
 <body>
+{% block body %}
   <div class="tag-page">
     <table class="tag-table">
       <tr>
@@ -39,11 +47,20 @@
             <tr>
           {% endif %}
         {% endifchanged %}
-          <td>{% if tag %}{{ tag|safe }}{% endif %}</td>
+          <td>
+          {% if tag %}
+            {% if use_png %}
+              {% include 'assettags/includes/png-image.html' %}
+            {% else %}
+              {{ tag.qr_svg_bytes|safe }}
+            {% endif %}
+          {% endif %}
+          </td>
         {# Make sure we close the last tr tag #}
         {% if forloop.last %}</tr>{% endif %}
       {% endfor %}
     </table>
   </div>
+{% endblock %}
 </body>
 </html>
