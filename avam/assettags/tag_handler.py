@@ -1,5 +1,7 @@
+from io import BytesIO
 import random
 import xml.etree.ElementTree as ET
+from base64 import b64encode
 
 import qrcode
 from qrcode.image.svg import SvgPathFillImage
@@ -44,6 +46,9 @@ def build_qr_svg(code_str, **kwargs):
     kwargs.setdefault('image_factory', SvgScaledImage)
     return qrcode.make(code_str, **kwargs)
 
+def build_qr_png(code_str):
+    return qrcode.make(code_str)
+
 class AssetTagImage(object):
     def __init__(self, **kwargs):
         self.asset_tag = kwargs.get('asset_tag')
@@ -61,6 +66,19 @@ class AssetTagImage(object):
         return b
     def get_qr_svg_bytes(self):
         return ET.tostring(self.svg)
+    @property
+    def png(self):
+        png = getattr(self, '_png', None)
+        if png is None:
+            png = self._png = build_qr_png(self.asset_tag.code)
+        return png._img
+    def get_png_string(self):
+        fh = BytesIO()
+        self.png.save(fh, 'PNG')
+        return fh.getvalue()
+    def get_png_b64_string(self):
+        s = self.get_png_string()
+        return b64encode(s)
     def build_svg(self):
         w = self.template.width
         h = self.template.height

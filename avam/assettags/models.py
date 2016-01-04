@@ -120,6 +120,16 @@ class AssetTagImageTemplate(models.Model):
             obj = cls(name='default', width=200, height=100)
             obj.save()
         return obj
+    @property
+    def calc_qr_size(self):
+        size = getattr(self, '_calc_qr_size', None)
+        if size is not None:
+            return size
+        size = self.qr_code_size
+        if not size:
+            size = '%spx' % (self.height * .75)
+        self._calc_qr_size = size
+        return size
     def __str__(self):
         return self.name
 
@@ -197,8 +207,9 @@ class AssetTagPrintTemplate(models.Model):
         null=True,
         help_text='Space between rows. Can be pixels (px) or inches (in, "). Leave blank for no spacing',
     )
-    def get_spacing(self):
-        dpi = self.dpi
+    def get_spacing(self, dpi=None):
+        if dpi is None:
+            dpi = self.dpi
         def parse(s):
             if not s:
                 return 0.
@@ -209,7 +220,7 @@ class AssetTagPrintTemplate(models.Model):
                     val = float(s.lower().split(unit)[0])
                     break
             if val is not None:
-                return val / dpi
+                return val * dpi
             if 'px' in s.lower():
                 s = s.lower().split('px')[0]
             return float(s)
@@ -218,14 +229,30 @@ class AssetTagPrintTemplate(models.Model):
             val = parse(getattr(self, attr))
             d[attr] = val
         return d
-    def get_full_area(self):
+    def get_full_area(self, dpi=None):
+        if dpi is None:
+            dpi = self.dpi
         box = self.paper_format.get_full_area()
-        box *= self.dpi
+        box *= dpi
         return box
-    def get_printable_area(self):
+    def get_printable_area(self, dpi=None):
+        if dpi is None:
+            dpi = self.dpi
         box = self.paper_format.get_printable_area()
-        box *= self.dpi
+        box *= dpi
         return box
+    def get_html_padding(self, dpi=96):
+        spacing = self.get_spacing(dpi)
+        keymap = {
+            'column_spacing':['left', 'right'],
+            'row_spacing':['top', 'bottom'],
+        }
+        d = {}
+        for spkey, padkeys in keymap.items():
+            val = spacing[spkey] / 2.
+            for padkey in padkeys:
+                d[padkey] = val
+        return d
     def get_cells(self):
         full_box = self.get_printable_area()
         spacing = self.get_spacing()
@@ -250,5 +277,39 @@ class AssetTagPrintTemplate(models.Model):
                 cells.append(last_col)
             y += row_size + spacing['row_spacing']
         return cells
+    def iter_cells(self, asset_tags=None, full_page=True):
+        rows = self.rows_per_page
+        cols = self.columns_per_row
+        if asset_tags is not None:
+            if hasattr(asset_tags, 'iterator'):
+                tag_iter = asset_tags.iterator()
+            else:
+                tag_iter = asset_tags
+        else:
+            tag_iter = range(rows * cols)
+        if isinstance(tag_iter, list):
+            tag_iter = iter(tag_iter)
+        tag = None
+        page = 0
+        while tag is not False:
+            for row in range(rows):
+                for col in range(cols):
+                    try:
+                        tag = next(tag_iter)
+                    except StopIteration:
+                        if full_page:
+                            tag = None
+                        else:
+                            tag = False
+                            break
+                    if asset_tags is not None:
+                        yield page, row, col, tag
+                    else:
+                        yield page, row, col
+                if tag is False:
+                    break
+            if tag is None:
+                tag = False
+            page += 1
     def __str__(self):
         return self.name

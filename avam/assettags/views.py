@@ -1,5 +1,14 @@
+try:
+    from StringIO import StringIO
+except ImportError:
+    from io import StringIO
+
 from django.shortcuts import render
+from django.http import HttpResponse
+from django.template.loader import render_to_string
 from django.views.generic import DetailView
+
+from xhtml2pdf import pisa
 
 from assettags.models import (
     AssetTag,
@@ -32,13 +41,27 @@ def print_tags(request):
             if data['tags_to_create']:
                 codes |= AssetTag.objects.generate_tags(data['tags_to_create'])
             q = AssetTag.objects.filter(code__in=codes)
-            img_gen = AssetTagSheet(
-                asset_tags=list(q),
-                asset_tag_template=data['tag_template'],
-                page_template=data['page_template'],
+            page_tmpl = data['page_template']
+            tag_tmpl = data['tag_template']
+            tag_imgs = [AssetTagImage(asset_tag=t, template=tag_tmpl) for t in q]
+            context = dict(
+                use_png=True,
+                tag_template=tag_tmpl,
+                page_template=page_tmpl,
+                page_box=page_tmpl.get_full_area(96),
+                print_box=page_tmpl.get_printable_area(96),
+                cell_iter=data['page_template'].iter_cells(tag_imgs),
             )
-            svgs = img_gen.build_all(as_string=True)
-            return render(request, 'assettags/print-tags-result.html', {'svgs':svgs})
+            #return render(request, 'assettags/assettag-table.html', context)
+            return render_pdf('assettags/print-tags-result.html', context)
     else:
         form = TagPrintForm()
     return render(request, 'assettags/print-tags.html', {'form':form})
+    
+def render_pdf(template_name, context_data):
+    html = render_to_string(template_name, context_data)
+    fh = StringIO()
+    pdf = pisa.pisaDocument(html, dest=fh)
+    r = HttpResponse(fh.getvalue(), content_type='application/pdf')
+    fh.close()
+    return r
