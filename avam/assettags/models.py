@@ -231,6 +231,18 @@ class AssetTagPrintTemplate(models.Model):
         box = self.paper_format.get_printable_area()
         box *= dpi
         return box
+    def get_html_padding(self, dpi=96):
+        spacing = self.get_spacing(dpi)
+        keymap = {
+            'column_spacing':['left', 'right'],
+            'row_spacing':['top', 'bottom'],
+        }
+        d = {}
+        for spkey, padkeys in keymap.items():
+            val = spacing[spkey] / 2.
+            for padkey in padkeys:
+                d[padkey] = val
+        return d
     def get_cells(self):
         full_box = self.get_printable_area()
         spacing = self.get_spacing()
