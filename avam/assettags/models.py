@@ -120,6 +120,28 @@ class AssetTagImageTemplate(models.Model):
             obj = cls(name='default', width=200, height=100)
             obj.save()
         return obj
+    @classmethod
+    def get_resized(cls, template, **kwargs):
+        w = kwargs.get('width', template.width)
+        h = kwargs.get('height', template.height)
+        if w == template.width and h == template.height:
+            return template
+        fnames = ['header_text', 'qr_code_size', 'code_text_location']
+        qkwargs = {fname:getattr(template, fname) for fname in fnames}
+        qkwargs.update(dict(width=w, height=h))
+        q = cls.objects.filter(**qkwargs)
+        if q.exists():
+            return q.first()
+        name_fmt = 'Auto created from "%(name)s" (%(i)s)'
+        d = {'name':template.name, 'i':0}
+        name = name_fmt % d
+        while cls.objects.filter(name=name).exists():
+            d['i'] += 1
+            name = name_fmt % d
+        qkwargs['name'] = name
+        new_template = cls(**qkwargs)
+        new_template.save()
+        return new_template
     @property
     def calc_qr_size(self):
         size = getattr(self, '_calc_qr_size', None)
