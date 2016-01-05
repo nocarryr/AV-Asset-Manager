@@ -259,11 +259,11 @@ class AssetTagPrintTemplate(models.Model):
         num_cols = self.columns_per_row
         col_gaps = num_cols - 1
         col_size = full_box.w / num_cols
-        col_size -= col_gaps * spacing['column_spacing']
+        col_size -= col_gaps * spacing['column_spacing'] / num_cols
         num_rows = self.rows_per_page
         row_gaps = num_rows - 1
         row_size = full_box.h / num_rows
-        row_size -= row_gaps * spacing['row_spacing']
+        row_size -= row_gaps * spacing['row_spacing'] / num_rows
         cells = []
         y = full_box.y
         for r in range(num_rows):
