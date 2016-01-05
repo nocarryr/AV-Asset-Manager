@@ -40,24 +40,20 @@
 </head>
 <body>
 {% block body %}
-  <div class="tag-page">
-    <table class="tag-table">
-      {% for page, row, col, tag in cell_iter %}
-        {% ifchanged row %}{% assettag_new_row %}{% endifchanged %}
-          <td>
-          {% if tag %}
-            {% if use_png %}
-              {% include 'assettags/includes/png-image.html' %}
-            {% else %}
-              {{ tag.qr_svg_bytes|safe }}
-            {% endif %}
-          {% endif %}
-          </td>
-        {# Make sure we close the last tr tag #}
-        {% if forloop.last %}</tr>{% endif %}
-      {% endfor %}
-    </table>
-  </div>
+{% for page, row, col, tag in cell_iter %}
+{% ifchanged page %}{% assettag_new_page %}{% endifchanged %}
+  {% ifchanged row %}{% assettag_new_row %}{% endifchanged %}
+    <td>
+    {% if tag %}
+      {% if use_png %}
+        {% include 'assettags/includes/png-image.html' %}
+      {% else %}
+        {{ tag.qr_svg_bytes|safe }}
+      {% endif %}
+    {% endif %}
+    </td>
+{% if forloop.last %}{% assettag_endfor %}{% endif %}
+{% endfor %}
 {% endblock %}
 </body>
 </html>
