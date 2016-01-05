@@ -32,4 +32,6 @@ def assettag_endfor(context):
         '  </table>',
         '</div>',
     ]
+    if context['use_pdf']:
+        lines.append('<pdf:nextpage>')
     return mark_safe('\n'.join(lines))
