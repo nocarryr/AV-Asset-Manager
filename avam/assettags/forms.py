@@ -14,4 +14,11 @@ class TagPrintForm(forms.Form):
     tag_template = forms.ModelChoiceField(
         queryset=AssetTagImageTemplate.objects.all(),
     )
+    render_as = forms.ChoiceField(
+        choices=(
+            ('html', 'HTML'),
+            ('pdf', 'PDF'),
+        ),
+        initial='html',
+    )
     

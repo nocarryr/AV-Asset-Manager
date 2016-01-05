@@ -1,8 +1,8 @@
+{% load assettag_sheet %}
 <html>
 <head>
   {% block head %}
   <style>
-    {% with padding=page_template.get_html_padding %}
     .tag-page{
       width: {{ print_box.w }}px;
       height: {{ print_box.h }}px;
@@ -25,8 +25,18 @@
     .tag-table tr:last-child td{padding-bottom: 0px;}
     .tag-table td:first-child{padding-left: 0px;}
     .tag-table td:last-child{padding-right: 0px;}
-    {% endwith %}
+    .tag-img-placeholder{
+      width: {{ tag_template.width }}px;
+      height: {{ tag_template.height }}px;
+      border-style: solid;
+      border-width: 1px;
+    }
   </style>
+  {% if use_pdf %}
+  <style>
+    {% include 'assettags/includes/pdf-page-css.html' %}
+  </style>
+  {% endif %}
   {% if use_png %}
   <style>
     {% include 'assettags/includes/png-image-css.html' %}
@@ -36,31 +46,22 @@
 </head>
 <body>
 {% block body %}
-  <div class="tag-page">
-    <table class="tag-table">
-      <tr>
-      {% for page, row, col, tag in cell_iter %}
-        {# Close the previous 'tr' tag on a new row and opens a new one #}
-        {% ifchanged row %}
-          {% if not forloop.first %}
-            </tr>
-            <tr>
-          {% endif %}
-        {% endifchanged %}
-          <td>
-          {% if tag %}
-            {% if use_png %}
-              {% include 'assettags/includes/png-image.html' %}
-            {% else %}
-              {{ tag.qr_svg_bytes|safe }}
-            {% endif %}
-          {% endif %}
-          </td>
-        {# Make sure we close the last tr tag #}
-        {% if forloop.last %}</tr>{% endif %}
-      {% endfor %}
-    </table>
-  </div>
+{% for page, row, col, tag in cell_iter %}
+{% ifchanged page %}{% assettag_new_page %}{% endifchanged %}
+  {% ifchanged row %}{% assettag_new_row %}{% endifchanged %}
+    <td>
+    {% if tag %}
+      {% if use_png %}
+        {% include 'assettags/includes/png-image.html' %}
+      {% else %}
+        {{ tag.qr_svg_bytes|safe }}
+      {% endif %}
+    {% else %}
+      <div class="tag-img-placeholder"></div>
+    {% endif %}
+    </td>
+{% if forloop.last %}{% assettag_endfor %}{% endif %}
+{% endfor %}
 {% endblock %}
 </body>
 </html>

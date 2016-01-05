@@ -43,17 +43,35 @@ def print_tags(request):
             q = AssetTag.objects.filter(code__in=codes)
             page_tmpl = data['page_template']
             tag_tmpl = data['tag_template']
+            use_pdf = data['render_as'] == 'pdf'
+            if use_pdf:
+                use_png = True
+                dpi = 72.
+                page_box = page_tmpl.get_full_area(dpi)
+                print_box = page_box
+            else:
+                use_png = False
+                dpi = 96.
+                page_box = page_tmpl.get_full_area(dpi)
+                print_box = page_tmpl.get_printable_area(dpi)
+            cell = page_tmpl.get_cells(dpi)[0]
+            tag_tmpl = AssetTagImageTemplate.get_resized(tag_tmpl, width=cell.w, height=cell.h)
             tag_imgs = [AssetTagImage(asset_tag=t, template=tag_tmpl) for t in q]
             context = dict(
-                use_png=True,
+                use_png=use_png,
+                use_pdf=use_pdf,
                 tag_template=tag_tmpl,
                 page_template=page_tmpl,
-                page_box=page_tmpl.get_full_area(96),
-                print_box=page_tmpl.get_printable_area(96),
+                page_box=page_box,
+                print_box=print_box,
+                padding=page_tmpl.get_html_padding(dpi),
                 cell_iter=data['page_template'].iter_cells(tag_imgs),
             )
-            #return render(request, 'assettags/assettag-table.html', context)
-            return render_pdf('assettags/print-tags-result.html', context)
+            template_name = 'assettags/assettag-table.html'
+            if use_pdf:
+                return render_pdf(template_name, context)
+            else:
+                return render(request, template_name, context)
     else:
         form = TagPrintForm()
     return render(request, 'assettags/print-tags.html', {'form':form})

@@ -120,6 +120,28 @@ class AssetTagImageTemplate(models.Model):
             obj = cls(name='default', width=200, height=100)
             obj.save()
         return obj
+    @classmethod
+    def get_resized(cls, template, **kwargs):
+        w = kwargs.get('width', template.width)
+        h = kwargs.get('height', template.height)
+        if w == template.width and h == template.height:
+            return template
+        fnames = ['header_text', 'qr_code_size', 'code_text_location']
+        qkwargs = {fname:getattr(template, fname) for fname in fnames}
+        qkwargs.update(dict(width=w, height=h))
+        q = cls.objects.filter(**qkwargs)
+        if q.exists():
+            return q.first()
+        name_fmt = 'Auto created from "%(name)s" (%(i)s)'
+        d = {'name':template.name, 'i':0}
+        name = name_fmt % d
+        while cls.objects.filter(name=name).exists():
+            d['i'] += 1
+            name = name_fmt % d
+        qkwargs['name'] = name
+        new_template = cls(**qkwargs)
+        new_template.save()
+        return new_template
     @property
     def calc_qr_size(self):
         size = getattr(self, '_calc_qr_size', None)
@@ -253,17 +275,17 @@ class AssetTagPrintTemplate(models.Model):
             for padkey in padkeys:
                 d[padkey] = val
         return d
-    def get_cells(self):
-        full_box = self.get_printable_area()
-        spacing = self.get_spacing()
+    def get_cells(self, dpi=None):
+        full_box = self.get_printable_area(dpi)
+        spacing = self.get_spacing(dpi)
         num_cols = self.columns_per_row
         col_gaps = num_cols - 1
         col_size = full_box.w / num_cols
-        col_size -= col_gaps * spacing['column_spacing']
+        col_size -= col_gaps * spacing['column_spacing'] / num_cols
         num_rows = self.rows_per_page
         row_gaps = num_rows - 1
         row_size = full_box.h / num_rows
-        row_size -= row_gaps * spacing['row_spacing']
+        row_size -= row_gaps * spacing['row_spacing'] / num_rows
         cells = []
         y = full_box.y
         for r in range(num_rows):
