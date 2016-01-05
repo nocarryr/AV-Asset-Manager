@@ -1,3 +1,4 @@
+{% load assettag_sheet %}
 <html>
 <head>
   {% block head %}
@@ -38,15 +39,8 @@
 {% block body %}
   <div class="tag-page">
     <table class="tag-table">
-      <tr>
       {% for page, row, col, tag in cell_iter %}
-        {# Close the previous 'tr' tag on a new row and opens a new one #}
-        {% ifchanged row %}
-          {% if not forloop.first %}
-            </tr>
-            <tr>
-          {% endif %}
-        {% endifchanged %}
+        {% ifchanged row %}{% assettag_new_row %}{% endifchanged %}
           <td>
           {% if tag %}
             {% if use_png %}
