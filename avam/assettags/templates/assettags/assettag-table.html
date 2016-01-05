@@ -3,7 +3,6 @@
 <head>
   {% block head %}
   <style>
-    {% with padding=page_template.get_html_padding %}
     .tag-page{
       width: {{ print_box.w }}px;
       height: {{ print_box.h }}px;
@@ -26,8 +25,12 @@
     .tag-table tr:last-child td{padding-bottom: 0px;}
     .tag-table td:first-child{padding-left: 0px;}
     .tag-table td:last-child{padding-right: 0px;}
-    {% endwith %}
   </style>
+  {% if use_pdf %}
+  <style>
+    {% include 'assettags/includes/pdf-page-css.html' %}
+  </style>
+  {% endif %}
   {% if use_png %}
   <style>
     {% include 'assettags/includes/png-image-css.html' %}
