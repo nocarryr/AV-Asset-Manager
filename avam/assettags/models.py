@@ -253,9 +253,9 @@ class AssetTagPrintTemplate(models.Model):
             for padkey in padkeys:
                 d[padkey] = val
         return d
-    def get_cells(self):
-        full_box = self.get_printable_area()
-        spacing = self.get_spacing()
+    def get_cells(self, dpi=None):
+        full_box = self.get_printable_area(dpi)
+        spacing = self.get_spacing(dpi)
         num_cols = self.columns_per_row
         col_gaps = num_cols - 1
         col_size = full_box.w / num_cols
