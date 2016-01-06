@@ -71,6 +71,15 @@ class AssetTag(models.Model):
             )
         self.content_object = instance
         self.save()
+    def get_asset_url(self):
+        asset = self.content_object
+        if asset is None:
+            return None
+        try:
+            url = asset.get_absolute_url()
+        except AttributeError:
+            url = None
+        return url
     def __str__(self):
         return self.code
     
