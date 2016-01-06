@@ -1,3 +1,4 @@
 [submodule "avam/assettags/static/assettags/js/html5-qrcode"]
 	path = avam/assettags/static/assettags/js/html5-qrcode
 	url = https://github.com/nocarryr/html5-qrcode.git
+	branch = nocarryr-develop
