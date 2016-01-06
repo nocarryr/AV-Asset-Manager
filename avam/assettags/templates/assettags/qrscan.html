@@ -1,0 +1,13 @@
+{% load static %}
+<html>
+<head>
+  <link rel="stylesheet" href="{% static 'assettags/css/qrscan.css' %}">
+</head>
+<body>
+  <div class="qrscanner"></div>
+  <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+  <script src="{% static 'assettags/js/html5-qrcode/lib/jsqrcode-combined.min.js' %}"></script>
+  <script src="{% static 'assettags/js/html5-qrcode/lib/html5-qrcode.min.js' %}"></script>
+  <script src="{% static 'assettags/js/qrscan.js' %}"></script>
+</body>
+</html>

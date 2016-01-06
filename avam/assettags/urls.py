@@ -3,6 +3,10 @@ from django.conf.urls import url
 from assettags import views
 
 urlpatterns = [
+    url(r'^search/$',
+        views.asset_tag_search,
+        name='assettag_search',
+    ),
     url(r'^(?P<tag_code>[\w-]+)/$',
         views.AssetTagItemView.as_view(),
         name='assettag_item',

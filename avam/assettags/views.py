@@ -44,6 +44,9 @@ def asset_tag_lookup(request, **kwargs):
         return redirect('assettags:assettag_item', **kwargs)
     return redirect(url)
 
+def asset_tag_search(request):
+    return render(request, 'assettags/qrscan.html')
+
 def print_tags(request):
     if request.method == 'POST':
         form = TagPrintForm(request.POST)
