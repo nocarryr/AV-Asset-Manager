@@ -3,7 +3,7 @@ try:
 except ImportError:
     from io import StringIO
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 from django.views.generic import DetailView
@@ -28,6 +28,21 @@ class AssetTagImageView(DetailView):
         context['image_template'] = tmpl
         context['image'] = img
         return context
+
+
+class AssetTagItemView(AssetTagImageView):
+    template_name = 'assettags/assettag-item.html'
+    slug_field = 'code'
+    slug_url_kwarg = 'tag_code'
+
+
+def asset_tag_lookup(request, **kwargs):
+    code = kwargs.get('tag_code')
+    tag = get_object_or_404(AssetTag, code=code)
+    url = tag.get_asset_url()
+    if url is None:
+        return redirect('assettags:assettag_item', **kwargs)
+    return redirect(url)
 
 def print_tags(request):
     if request.method == 'POST':
