@@ -38,14 +38,14 @@ class AssetTagItemView(AssetTagImageView):
 
 def asset_tag_lookup(request, **kwargs):
     code = kwargs.get('tag_code')
+    if code is None:
+        return render(request, 'assettags/qrscan.html')
     tag = get_object_or_404(AssetTag, code=code)
     url = tag.get_asset_url()
     if url is None:
         return redirect('assettags:assettag_item', **kwargs)
     return redirect(url)
 
-def asset_tag_search(request):
-    return render(request, 'assettags/qrscan.html')
 
 def print_tags(request):
     if request.method == 'POST':

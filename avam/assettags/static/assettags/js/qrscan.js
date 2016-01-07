@@ -1,7 +1,7 @@
 $(function(){
   var $scanDiv = $(".qrscanner");
   $scanDiv.html5_qrcode(function(data){
-    var url = $scanDiv.data('resulturl').replace('REPLACEME', data);
+    var url = $scanDiv.data('resulturl') + data;
     window.location = url;
   }, function(readError){
     console.log('readError:', readError);
