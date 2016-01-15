@@ -1,0 +1,12 @@
+{% extends "assettags/assettag-image.html" %}
+
+{% block body %}
+{{ block.super }}
+{% with asset_url=asset_tag.get_asset_url %}
+{% if asset_tag.content_object %}
+<h3{% if asset_url %} href="{{ asset_url }}"{% endif %}>{{ asset_tag.content_object }}</h3>
+{% else %}
+<p>Asset Tag Unassigned</p>
+{% endif %}
+{% endwith %}
+{% endblock %}

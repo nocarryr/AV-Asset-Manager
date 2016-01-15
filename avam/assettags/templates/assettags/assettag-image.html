@@ -1,5 +1,7 @@
 <html>
 <body>
+  {% block body %}
   {{ image.qr_svg_bytes|safe }}
+  {% endblock %}
 </body>
 </html>
