@@ -8,8 +8,20 @@
   <link rel="stylesheet" href="{% static 'assettags/css/qrscan.css' %}">
 </head>
 <body>
-  <div data-resulturl="{% url 'assettags:assettag_lookup' %}" data-canvas-crop="0.5" class="qrscanner"></div>
-  <button type="button" id="stop-btn">Stop</button>
+  <div class="qrscan-main">
+    <div data-resulturl="{% url 'assettags:assettag_lookup' %}" data-crop-factor="0.5" class="qrscanner centered"></div>
+    <div class="qrscan-buttonset qrscan-item">
+      <button type="button" id="stop-btn">Stop Scanning</button>
+      <button type="button" id="form-open-btn">Enter Code Text</button>
+    </div>
+    <form method="get" class="qrscan-form qrscan-item" style="display:none;">
+      <fieldset>
+        <legend>Tag Code</legend>
+        <input type="text" name="tagcode" id="tagcode_input" required>
+        <input type="submit" value="Submit">
+      </fieldset>
+    </form>
+  </div>
   <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
   <script src="{% static 'assettags/js/html5-qrcode/lib/jsqrcode-combined.min.js' %}"></script>
   <script src="{% static 'assettags/js/html5-qrcode/lib/html5-qrcode.min.js' %}"></script>

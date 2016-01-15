@@ -1,6 +1,33 @@
-.qrscanner{
+.qrscan-main{
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  height: 100vh;
+}
+
+.qrscan-item{
+  flex: auto;
   margin-left: auto;
   margin-right: auto;
-  width: 60vw;
-  height: 70vh;
+}
+
+.qrscanner{
+  min-width: 60vw;
+  min-height: 70vh;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.qrscan-buttonset{
+
+}
+
+.qrscan-buttonset button{
+  font-size: 1em;
+  padding: .7em;
+  margin: 4px;
+}
+
+fieldset{
+  border-width: 1px;
 }
