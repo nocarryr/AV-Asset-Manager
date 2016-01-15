@@ -4,7 +4,7 @@
   <link rel="stylesheet" href="{% static 'assettags/css/qrscan.css' %}">
 </head>
 <body>
-  <div data-resulturl="{% url 'assettags:assettag_lookup' %}" class="qrscanner"></div>
+  <div data-resulturl="{% url 'assettags:assettag_lookup' %}" data-canvas-crop="0.5" class="qrscanner"></div>
   <button type="button" id="stop-btn">Stop</button>
   <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
   <script src="{% static 'assettags/js/html5-qrcode/lib/jsqrcode-combined.min.js' %}"></script>
