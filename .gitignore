@@ -60,3 +60,4 @@ target/
 venv/
 .eric6project/
 .ropeproject/
+staticroot/
