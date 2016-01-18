@@ -15,6 +15,36 @@ class Category(models.Model):
         null=True,
         related_name='subcategories',
     )
+    class Meta:
+        unique_together = ('parent_category', 'name')
+    def add_item(self, instance):
+        item = CategoryItem(category=self, content_object=instance)
+        item.save()
+    def walk_subcategories(self):
+        for category in self.subcategories.all():
+            yield category
+            for sub_category in category.walk_subcategories():
+                yield sub_category
+    def is_ancestor(self, category):
+        parent = self.parent_category
+        if parent is None:
+            return False
+        if parent is category:
+            return True
+        return parent.is_ancestor(category)
+    def get_items(self, queryset=None):
+        if queryset is None:
+            queryset = CategoryItem.objects.all()
+        queryset = queryset.filter(category=self)
+        return queryset
+    def get_all_items(self, queryset=None):
+        if queryset is None:
+            queryset = CategoryItem.objects.all()
+        ids = set(self.pk)
+        for category in self.walk_subcategories():
+            ids.add(category.pk)
+        queryset = queryset.filter(id__in=ids)
+        return queryset
     def iter_parents(self, top_down=True):
         if top_down is False:
             yield self
@@ -30,4 +60,8 @@ class Category(models.Model):
 class CategoryItem(models.Model):
     category = models.ForeignKey(Category, related_name='items')
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
+    object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
+    class Meta:
+        unique_together = ('category', 'content_type', 'object_id')
+
