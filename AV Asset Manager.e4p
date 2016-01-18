@@ -52,6 +52,13 @@
     <Source>avam/avam/settings.py</Source>
     <Source>avam/avam/urls.py</Source>
     <Source>avam/avam/wsgi.py</Source>
+    <Source>avam/categories/__init__.py</Source>
+    <Source>avam/categories/admin.py</Source>
+    <Source>avam/categories/apps.py</Source>
+    <Source>avam/categories/migrations/__init__.py</Source>
+    <Source>avam/categories/models.py</Source>
+    <Source>avam/categories/tests.py</Source>
+    <Source>avam/categories/views.py</Source>
     <Source>avam/locations/__init__.py</Source>
     <Source>avam/locations/admin.py</Source>
     <Source>avam/locations/apps.py</Source>
