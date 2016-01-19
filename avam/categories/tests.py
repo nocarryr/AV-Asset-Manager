@@ -17,7 +17,6 @@ class CategoriesTestCase(TestCase):
                 name = '{0}_{1}'.format(base_name, i)
                 category = Category(name=name, parent_category=parent)
                 category.save()
-                print(category)
                 if next_name is not None:
                     build_children(next_name, category)
         build_children()
