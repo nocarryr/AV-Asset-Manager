@@ -47,11 +47,11 @@ class CategoriesTestCase(TestCase):
                 key = 'leaves'
             names[key].append(int(sub_category.name.split('_')[1]))
         self.assertEqual(names, {'branches':[0, 1, 2], 'leaves':[0, 1, 2]*3})
-    def test_ancestry(self):
-        root = self.get_category('root_1')
-        branch = self.get_category('root_1', 'branch_1')
-        leaf = self.get_category('root_1', 'branch_1', 'leaf_1')
-        not_root = self.get_category('root_0')
-        self.assertTrue(leaf.is_ancestor(branch))
-        self.assertTrue(leaf.is_ancestor(root))
-        self.assertFalse(leaf.is_ancestor(not_root))
+#    def test_ancestry(self):
+#        root = self.get_category('root_1')
+#        branch = self.get_category('root_1', 'branch_1')
+#        leaf = self.get_category('root_1', 'branch_1', 'leaf_1')
+#        not_root = self.get_category('root_0')
+#        self.assertTrue(leaf.is_ancestor(branch))
+#        self.assertTrue(leaf.is_ancestor(root))
+#        self.assertFalse(leaf.is_ancestor(not_root))
