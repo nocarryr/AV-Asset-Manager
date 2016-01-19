@@ -10,6 +10,6 @@ install:
   - pip install -q Django==$DJANGO_VERSION
   - pip install coveralls
 script:
-  - py.test tests.py --cov=avam
+  - py.test --cov=avam tests.py
   - coverage run --source=avam tests.py
 after_success: coveralls
