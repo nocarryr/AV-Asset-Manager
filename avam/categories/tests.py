@@ -6,13 +6,21 @@ from categories.models import Category
 class CategoriesTestCase(TestCase):
     def setUp(self):
         base_names = ['root', 'branch', 'leaf']
-        for i in range(3):
-            parent = None
-            for base_name in base_names:
+        def build_children(base_name=None, parent=None):
+            if base_name is None:
+                base_name = base_names[0]
+            try:
+                next_name = base_names[base_names.index(base_name) + 1]
+            except IndexError:
+                next_name = None
+            for i in range(3):
                 name = '{0}_{1}'.format(base_name, i)
                 category = Category(name=name, parent_category=parent)
                 category.save()
-                parent = category
+                print(category)
+                if next_name is not None:
+                    build_children(next_name, category)
+        build_children()
     def test_str(self):
         root = Category.objects.get(name='root_1')
         branch = root.subcategories.get(name='branch_1')
