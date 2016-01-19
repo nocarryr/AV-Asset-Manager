@@ -21,13 +21,19 @@ class CategoriesTestCase(TestCase):
                 if next_name is not None:
                     build_children(next_name, category)
         build_children()
+    def get_category(self, *args):
+        category = None
+        for name in args:
+            if category is None:
+                category = Category.objects.get(name=name)
+            else:
+                category = category.subcategories.get(name=name)
+        return category
     def test_str(self):
-        root = Category.objects.get(name='root_1')
-        branch = root.subcategories.get(name='branch_1')
-        leaf = branch.subcategories.get(name='leaf_1')
+        leaf = self.get_category('root_1', 'branch_1', 'leaf_1')
         self.assertEqual(str(leaf), 'root_1/branch_1/leaf_1')
     def test_uniques(self):
-        root = Category.objects.get(name='root_1')
+        root = self.get_category('root_1')
         with self.assertRaises(IntegrityError):
             bad_branch = Category(name='branch_1', parent_category=root)
             bad_branch.save()
