@@ -5,6 +5,9 @@ from assettypes.models import (
     ProjectorLampModel,
     ProjectorFilterModel,
     ProjectorModel,
+    MovingLightLampModel,
+    MovingLightModel,
+    LEDLightModel,
 )
 
 def build_test_fixtures():
@@ -28,7 +31,27 @@ def build_test_fixtures():
         lamp_type=lamp,
         filter_type=filt,
     )
-    return dict(projector=proj, lamp=lamp, filter=filt, manufacturer=manuf)
+    lighting_manuf = Manufacturer.objects.create(name='Lighting Manufacturer')
+    mover_lamp = MovingLightLampModel.objects.create(
+        manufacturer=lighting_manuf,
+        model_name='Test MovingLight Lamp',
+        max_hours=2000,
+    )
+    mover = MovingLightModel.objects.create(
+        manufacturer=lighting_manuf,
+        model_name='Test MovingLight',
+        lamp_type=mover_lamp,
+    )
+    led_fixture = LEDLightModel.objects.create(
+        manufacturer=lighting_manuf,
+        model_name='Test LED',
+    )
+    d = dict(
+        projector=proj, lamp=lamp, filter=filt, manufacturer=manuf,
+        lighting_manuf=lighting_manuf, mover_lamp=mover_lamp,
+        mover=mover, led_fixture=led_fixture,
+    )
+    return d
 
 class AssetTypesTestCase(TestCase):
     @classmethod
