@@ -37,3 +37,13 @@ class CategoriesTestCase(TestCase):
         with self.assertRaises(IntegrityError):
             bad_branch = Category(name='branch_1', parent_category=root)
             bad_branch.save()
+    def test_walk(self):
+        root = self.get_category('root_1')
+        names = {'branches':[], 'leaves':[]}
+        for sub_category in root.walk_subcategories():
+            if 'branch' in sub_category.name:
+                key = 'branches'
+            else:
+                key = 'leaves'
+            names[key].append(int(sub_category.name.split('_')[1]))
+        self.assertEqual(names, {'branches':[0, 1, 2], 'leaves':[0, 1, 2]*3})
