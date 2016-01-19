@@ -8,5 +8,8 @@ env:
 install:
   - pip install -q -r requirements-tests.txt
   - pip install -q Django==$DJANGO_VERSION
+  - pip install coveralls
 script:
-  - py.test tests.py
+  - py.test tests.py --cov=avam
+  - coverage run --source=avam tests.py
+after_success: coveralls
