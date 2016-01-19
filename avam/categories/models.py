@@ -26,10 +26,12 @@ class Category(models.Model):
             for sub_category in category.walk_subcategories():
                 yield sub_category
     def is_ancestor(self, category):
+        if not isinstance(category, Category):
+            return False
         parent = self.parent_category
         if parent is None:
             return False
-        if parent is category:
+        if parent == category:
             return True
         return parent.is_ancestor(category)
     def get_items(self, queryset=None):
