@@ -67,3 +67,18 @@ class CategoryItem(models.Model):
     class Meta:
         unique_together = ('category', 'content_type', 'object_id')
 
+class CategorizedMixin(object):
+    def get_current_categories(self):
+        content_type = ContentType.objects.get_for_model(self._meta.model)
+        q = Category.objects.filter(
+            items__content_type=content_type,
+            items__object_id=self.pk,
+        )
+        return q
+    def get_category_choices(self):
+        return Category.objects.all()
+    def add_category(self, **kwargs):
+        category, created = Category.objects.get_or_create(**kwargs)
+        self.add_to_category(category)
+    def add_to_category(self, category):
+        category.add_item(self)
