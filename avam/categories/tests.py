@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.db import IntegrityError
 
-from categories.models import Category
+from categories.models import Category, CategoryItem
 
 class CategoriesTestCase(TestCase):
     def setUp(self):
@@ -93,9 +93,13 @@ class CategoryItemTestCase(TestCase):
         self.assign_items()
         category = self.category_fixtures['Video']
         q = category.get_items()
-        manuf = self.assettypes_fixtures['projector'].manufacturer
+        proj = self.assettypes_fixtures['projector']
+        manuf = proj.manufacturer
         for category_item in q:
             obj = category_item.content_object
             if obj._meta.model_name == 'manufacturer':
                 continue
             self.assertEqual(obj.manufacturer, manuf)
+        for category_item in CategoryItem.objects.get_for_object(proj):
+            self.assertEqual(category_item.content_object, proj)
+            self.assertEqual(category_item.category, category)

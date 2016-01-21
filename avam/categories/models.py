@@ -59,11 +59,23 @@ class Category(models.Model):
     def __str__(self):
         return '/'.join([obj.name for obj in self.iter_parents()])
 
+class CategoryItemManager(models.Manager):
+    def get_for_object(self, obj):
+        queryset = self.get_queryset()
+        m = obj._meta.model
+        content_type = ContentType.objects.get_for_model(m)
+        queryset = queryset.filter(
+            content_type=content_type,
+            object_id=obj.pk,
+        )
+        return queryset
+
 class CategoryItem(models.Model):
     category = models.ForeignKey(Category, related_name='items')
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
+    objects = CategoryItemManager()
     class Meta:
         unique_together = ('category', 'content_type', 'object_id')
 
