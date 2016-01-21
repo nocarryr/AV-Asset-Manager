@@ -5,6 +5,8 @@ from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.utils.encoding import python_2_unicode_compatible
 
+from categories.queryutils import GenericFKManager
+
 @python_2_unicode_compatible
 class Category(models.Model):
     name = models.CharField(max_length=100)
@@ -59,16 +61,10 @@ class Category(models.Model):
     def __str__(self):
         return '/'.join([obj.name for obj in self.iter_parents()])
 
-class CategoryItemManager(models.Manager):
+class CategoryItemManager(GenericFKManager):
     def get_for_object(self, obj):
         queryset = self.get_queryset()
-        m = obj._meta.model
-        content_type = ContentType.objects.get_for_model(m)
-        queryset = queryset.filter(
-            content_type=content_type,
-            object_id=obj.pk,
-        )
-        return queryset
+        return queryset.filter(content_object=obj)
 
 class CategoryItem(models.Model):
     category = models.ForeignKey(Category, related_name='items')
