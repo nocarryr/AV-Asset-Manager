@@ -20,8 +20,7 @@ class Category(models.Model):
     class Meta:
         unique_together = ('parent_category', 'name')
     def add_item(self, instance):
-        item = CategoryItem(category=self, content_object=instance)
-        item.save()
+        CategoryItem.objects.get_or_create(category=self, content_object=instance)
     def walk_subcategories(self):
         for category in self.subcategories.all():
             yield category
