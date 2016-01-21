@@ -17,10 +17,18 @@ class Category(models.Model):
         null=True,
         related_name='subcategories',
     )
+    linked_categories = models.ManyToManyField(
+        'self',
+        symmetrical=False,
+        blank=True,
+    )
     class Meta:
         unique_together = ('parent_category', 'name')
     def add_item(self, instance):
         CategoryItem.objects.get_or_create(category=self, content_object=instance)
+    def add_item_to_links(self, instance):
+        for linked_category in self.linked_categories.all():
+            linked_category.add_item(instance)
     def walk_subcategories(self):
         for category in self.subcategories.all():
             yield category
