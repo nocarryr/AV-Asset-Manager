@@ -103,3 +103,26 @@ class CategoryItemTestCase(TestCase):
         for category_item in CategoryItem.objects.get_for_object(proj):
             self.assertEqual(category_item.content_object, proj)
             self.assertEqual(category_item.category, category)
+    def test_linked_categories(self):
+        def get_content_objects(category):
+            return [ci.content_object for ci in category.get_items()]
+        self.assign_items()
+        acc_cat = self.category_fixtures['Accessories']
+        vid_acc_cat = self.category_fixtures['Video/Accessories']
+        vid_acc_cat.linked_categories.add(acc_cat)
+        vid_acc_cat.save()
+        proj = self.assettypes_fixtures['projector']
+        lamp = proj.lamp_type
+        vid_acc_cat.add_item(lamp)
+        self.assertIn(lamp, get_content_objects(acc_cat))
+        test_lamp = lamp._meta.model(
+            model_name='Test Projector Lamp 2',
+            max_hours=1,
+            manufacturer=lamp.manufacturer,
+        )
+        test_lamp.save()
+        vid_acc_cat.add_item(test_lamp)
+        count = acc_cat.get_items().count()
+        self.assertIn(test_lamp, get_content_objects(acc_cat))
+        test_lamp.delete()
+        self.assertEqual(acc_cat.get_items().count(), count - 1)
