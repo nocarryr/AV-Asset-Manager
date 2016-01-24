@@ -1,0 +1,23 @@
+{% load sekizai_tags %}
+<!DOCTYPE html>
+<html>
+<head>
+  {% block head_pre %}{% endblock %}
+  <title>{% block page_title %}{{ page_title }}{% endblock %}</title>
+  {% render_block "head_meta" %}
+  {% render_block "css" %}
+  {% block head_post %}{% endblock %}
+</head>
+<body>
+  {% block body %}{% endblock %}
+  {% render_block "js-foot" %}
+</body>
+</html>
+
+{% block addblocks %}
+{% addtoblock "head_meta" %}
+<meta charset="utf-8">
+<meta http-equiv="x-ua-compatible" content="ie=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+{% endaddtoblock %}
+{% endblock addblocks %}
