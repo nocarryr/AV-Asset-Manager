@@ -137,3 +137,18 @@ STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'staticroot')
 
 DATABASES.update(getattr(local_settings, 'DATABASES'))
+
+# If any settings are added to `local_settings.py` later,
+# import them here.
+_local_settings_attrs = [
+    'ALLOWED_HOSTS',
+    'DATABASES',
+    'DEBUG',
+    'SECRET_KEY',
+]
+for attr in dir(local_settings):
+    if attr in _local_settings_attrs:
+        continue
+    if not attr.isupper():
+        continue
+    locals()[attr] = getattr(local_settings, attr)
