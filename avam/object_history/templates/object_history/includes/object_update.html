@@ -1,5 +1,21 @@
-<div data-objectid="{{ object_update.id }}"
-  <h4>{{ object_update.datetime|date:"SHORT_DATE_FORMAT" }}</h4>
-  <p>{{ object_update.datetime|time }}</p>
-  {% if object_update.user %}<p>{{ object_update.user }}</p>{% endif %}
-</div>
+{% url 'object_history:object_history' pk=obj_update.pk as update_url %}
+<li data-href="{{ update_url }}"
+    data-objectid="{{ object_update.id }}"
+    class="mdl-list__item mdl-list__item--two-line{% if request.path == update_url %} active{% endif %}">
+  <span class="mdl-list__item-primary-content">
+    <span class="mdl-list__item-text">{{ object_update.datetime|date:"SHORT_DATE_FORMAT" }} {{ object_update.datetime|time }}</span>
+    <span class="mdl-list__item-sub-title">{{ object_update.user }}</span>
+  </span>
+  <span class="mdl-list__item-secondary-content">
+    <span class="mdl-list__item-secondary-action">
+      <label class="mdl-radio mdl-js-radio mdl-js-ripple-effect" for="object_update_{{ object_update.id }}">
+        <input
+          type="radio"
+          id="object_update_{{ object_update.id }}"
+          class="mdl-radio__button"
+          name="object_update"
+          {% if request.path == update_url %}value="1" checked{% else %}value="0"{% endif %} />
+      </label>
+    </span>
+  </span>
+</li>
