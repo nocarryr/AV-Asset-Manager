@@ -1,1 +1,50 @@
 {% extends "base-shell.html" %}
+{% load sekizai_tags %}
+
+{% block addblocks %}
+{{ block.super }}
+{% addtoblock "css" %}
+<link rel="stylesheet" href="//storage.googleapis.com/code.getmdl.io/1.0.6/material.indigo-pink.min.css">
+<link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+{% endaddtoblock %}
+
+{% addtoblock "js-foot" %}
+<script src="//storage.googleapis.com/code.getmdl.io/1.0.6/material.min.js"></script>
+{% endaddtoblock %}
+{% endblock %}
+
+{% block body %}
+<div class="mdl-layout mdl-js-layout">
+{% block layout %}
+  <header class="mdl-layout__header">
+  {% block header %}
+    <div class="mdl-layout-icon"></div>
+    <div class="mdl-layout__header-row">
+    {% block header_row %}
+      <span class="mdl-layout__title">{{ page_title }}</span>
+      <div class="mdl-layout-spacer"></div>
+      <nav class="mdl-navigation">
+      {% block header_nav %}
+        {% include "includes/page-navitems.html" %}
+      {% endblock header_nav %}
+      </nav>
+    {% endblock header_row %}
+    </div>
+  {% endblock header %}
+  </header>
+  <div class="mdl-layout__drawer">
+  {% block drawer %}
+    <span class="mdl-layout__title">{{ page_title }}</span>
+    <nav class="mdl-navigation">
+    {% block drawer_nav %}
+      {% include "includes/page-navitems.html" %}
+    {% endblock drawer_nav %}
+    </nav>
+  {% endblock drawer %}
+  </div>
+  <main class="mdl-layout__content">
+    {% block main %}{% endblock %}
+  </main>
+{% endblock layout %}
+</div>
+{% endblock body %}
