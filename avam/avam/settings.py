@@ -137,6 +137,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'staticroot')
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'site_static')]
 
 DATABASES.update(getattr(local_settings, 'DATABASES'))
 

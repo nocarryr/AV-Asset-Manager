@@ -1,15 +1,16 @@
 {% extends "base-shell.html" %}
-{% load sekizai_tags %}
+{% load static sekizai_tags %}
 
 {% block addblocks %}
 {{ block.super }}
 {% addtoblock "css" %}
-<link rel="stylesheet" href="//storage.googleapis.com/code.getmdl.io/1.0.6/material.indigo-pink.min.css">
+<link rel="stylesheet" href="{% static 'mdl/material.indigo-pink.min.css' %}">
 <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
 {% endaddtoblock %}
 
 {% addtoblock "js-foot" %}
-<script src="//storage.googleapis.com/code.getmdl.io/1.0.6/material.min.js"></script>
+<script src="{% static 'mdl/material.min.js' %}"></script>
+<script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
 {% endaddtoblock %}
 {% endblock %}
 
