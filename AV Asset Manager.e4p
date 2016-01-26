@@ -14,6 +14,7 @@
   <Eol index="-1"/>
   <Sources>
     <Source>__init__.py</Source>
+    <Source>avam/__init__.py</Source>
     <Source>avam/assets/__init__.py</Source>
     <Source>avam/assets/admin.py</Source>
     <Source>avam/assets/apps.py</Source>
@@ -80,6 +81,8 @@
     <Source>avam/object_history/migrations/__init__.py</Source>
     <Source>avam/object_history/models.py</Source>
     <Source>avam/object_history/signals.py</Source>
+    <Source>avam/object_history/templatetags/__init__.py</Source>
+    <Source>avam/object_history/templatetags/form_relationfield.py</Source>
     <Source>avam/object_history/tests.py</Source>
     <Source>avam/object_history/urls.py</Source>
     <Source>avam/object_history/utils.py</Source>
