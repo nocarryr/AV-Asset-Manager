@@ -1,7 +1,7 @@
 {% url 'object_history:object_history' pk=obj_update.pk as update_url %}
 <li data-href="{{ update_url }}"
     data-objectid="{{ object_update.id }}"
-    class="mdl-list__item mdl-list__item--two-line mdl-shadow--2dp{% if request.path == update_url %} active{% endif %}">
+    class="mdl-list__item mdl-list__item--two-line mdl-shadow--2dp{% if request.path == update_url %} mdl-color--accent{% endif %}">
   <span class="mdl-list__item-primary-content">
     <span class="mdl-list__item-text">{{ object_update.datetime|date:"SHORT_DATE_FORMAT" }} {{ object_update.datetime|time }}</span>
     <span class="mdl-list__item-sub-title">{{ object_update.user }}</span>
