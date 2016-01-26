@@ -1,5 +1,5 @@
 {% extends "base.html" %}
-{% load static sekizai_tags %}
+{% load static sekizai_tags form_relationfield %}
 
 {% block addblocks %}
 {{ block.super }}
@@ -25,6 +25,7 @@
     {% block object_form %}
     <form class="object_update_form">
     {% for field, is_changed in object_form.iter_with_changes %}
+      {% related_obj_data object_form field as obj_data %}
       {% include "object_history/includes/formfield.html" %}
     {% endfor %}
     </form>
