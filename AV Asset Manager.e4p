@@ -87,6 +87,15 @@
     <Source>avam/object_history/urls.py</Source>
     <Source>avam/object_history/utils.py</Source>
     <Source>avam/object_history/views.py</Source>
+    <Source>avam/site_navigation/__init__.py</Source>
+    <Source>avam/site_navigation/admin.py</Source>
+    <Source>avam/site_navigation/apps.py</Source>
+    <Source>avam/site_navigation/migrations/__init__.py</Source>
+    <Source>avam/site_navigation/models.py</Source>
+    <Source>avam/site_navigation/navitems.py</Source>
+    <Source>avam/site_navigation/tests.py</Source>
+    <Source>avam/site_navigation/urls.py</Source>
+    <Source>avam/site_navigation/views.py</Source>
   </Sources>
   <Forms/>
   <Translations/>
