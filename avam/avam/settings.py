@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'sekizai',
+    'site_navigation',
     'object_history',
     'categories',
     'locations',
@@ -70,7 +72,7 @@ ROOT_URLCONF = 'avam.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -78,6 +80,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'sekizai.context_processors.sekizai',
+                'site_navigation.navitems.navitem_context',
             ],
         },
     },
@@ -135,6 +139,7 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'staticroot')
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'site_static')]
 
 DATABASES.update(getattr(local_settings, 'DATABASES'))
 

@@ -1,3 +1,4 @@
 pytz
 qrcode
 xhtml2pdf
+django-sekizai

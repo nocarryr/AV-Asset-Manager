@@ -1,6 +1,6 @@
 {% extends "assettags/assettag-image.html" %}
 
-{% block body %}
+{% block main %}
 {{ block.super }}
 {% with asset_url=asset_tag.get_asset_url %}
 {% if asset_tag.content_object %}

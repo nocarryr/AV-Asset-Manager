@@ -1,0 +1,4 @@
+{% for navitem in page_navitems %}
+<a class="mdl-navigation__link{% if navitem.active %} mdl-navigation__link--current{% endif %}" href="{{ navitem.href }}">{{ navitem.text }}</a>
+{% empty %}
+{% endfor %}

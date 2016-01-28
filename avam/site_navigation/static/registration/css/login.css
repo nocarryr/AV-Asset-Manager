@@ -1,0 +1,12 @@
+.mdl-layout{
+	align-items: center;
+}
+
+.mdl-layout__content{
+	padding: 24px;
+	flex: none;
+}
+
+.hidden-textfield{
+  display: none;
+}
