@@ -1,0 +1,17 @@
+<header class="account-header">
+  <div class="account-dropdown">
+  {% if user.is_authenticated %}
+    <span>{{ user.username }}</span>
+    <div class="mdl-layout-spacer"></div>
+    <button id="account-option-btn" class="mdl-button mdl-js-button mdl-js-ripple-effect mdl-button--icon">
+      <i class="material-icons" role="presentation">arrow_drop_down</i>
+      <span class="visuallyhidden">Account</span>
+    </button>
+    <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="account-option-btn">
+      <li class="mdl-menu__item"><a href="{% url 'account_logout' %}">Logout</a></li>
+    </ul>
+  {% else %}
+    <span><a href="{% url 'account_login' %}">Login</a></span>
+  {% endif %}
+  </div>
+</header>

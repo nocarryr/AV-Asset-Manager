@@ -5,6 +5,7 @@
 {{ block.super }}
 {% addtoblock "css" %}
 <link rel="stylesheet" href="{% static 'mdl/material.indigo-pink.min.css' %}">
+<link rel="stylesheet" href="{% static 'registration/css/account-header.css' %}">
 <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
 {% endaddtoblock %}
 
@@ -36,6 +37,7 @@
   <div class="mdl-layout__drawer">
   {% block drawer %}
     <span class="mdl-layout__title">{{ page_title }}</span>
+    {% include "registration/includes/navlinks.html" %}
     <nav class="mdl-navigation">
     {% block drawer_nav %}
       {% include "includes/page-navitems.html" %}
