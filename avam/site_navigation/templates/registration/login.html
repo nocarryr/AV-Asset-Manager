@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block body %}
+<form method="post" action="{% url 'django.contrib.auth.views.login' %}">
+  {% csrf_token %}
+  <h3>Please sign in</h3>
+  <input type="text" name="username" placeholder="Username" required autofocus>
+  <input type="password" name="password" placeholder="Password" required>
+  <button type="submit">Sign in</button>
+  <input type="hidden" name="next" value="{{ next|default:"/" }}" />
+</form>
+{% if form.errors %}
+<p>Your username and password didn't match. Please try again.</p>
+{% endif %}
+{% endblock %}
