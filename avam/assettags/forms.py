@@ -22,7 +22,7 @@ class MDLWidgetMixin(object):
             id=attrs['id'],
             div_classes=self.div_classes,
             inner_widget=inner_widget,
-            label=name,
+            label=self.field.label,
         )
 
 class MDLInputMixin(MDLWidgetMixin):
@@ -59,6 +59,28 @@ class MDLSelect(MDLWidgetMixin, forms.Select):
         final_attrs = self.build_attrs(attrs)
         inner_widget = super(MDLSelect, self).render(name, value, final_attrs, choices)
         return mark_safe(self.render_mdl(name, final_attrs, inner_widget))
+
+######## Begin hacky BoundField method override ########
+
+class MDLBoundField(forms.BoundField):
+    def as_widget(self, widget=None, attrs=None, only_initial=False):
+        """Give every `Widget` instance a reference to its `Field` parent.
+
+        For some reason this is not included in the default implementation,
+        but it's necessary to properly render labels within widgets.
+        """
+        if not widget:
+            widget = self.field.widget
+        widget.field = self
+        return super(MDLBoundField, self).as_widget(widget, attrs, only_initial)
+
+def get_bound_field(self, form, field_name):
+    return MDLBoundField(form, self, field_name)
+
+# Yuk, but thanks for the duck typing, python!
+forms.Field.get_bound_field = get_bound_field
+
+######## End hacky BoundField method override ##########
 
 class TagPrintForm(forms.Form):
     tags_to_create = forms.IntegerField(required=False, widget=MDLNumberInput())
