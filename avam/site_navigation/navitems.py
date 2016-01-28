@@ -66,8 +66,11 @@ def build_static_navitems():
 def navitem_context(request):
     if not len(page_navitems):
         build_static_navitems()
+    d = {}
     active_item = navitems_by_href.get(request.path)
     if active_item is not None:
         active_item.active = True
+        d['page_title'] = active_item.text
     items = [page_navitems[key] for key in sorted(page_navitems.keys())]
-    return {'page_navitems':items}
+    d['page_navitems'] = items
+    return d
