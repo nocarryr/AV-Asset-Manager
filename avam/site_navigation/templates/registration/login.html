@@ -1,15 +1,43 @@
 {% extends "base.html" %}
+{% load static sekizai_tags %}
 
-{% block body %}
-<form method="post" action="{% url 'django.contrib.auth.views.login' %}">
-  {% csrf_token %}
-  <h3>Please sign in</h3>
-  <input type="text" name="username" placeholder="Username" required autofocus>
-  <input type="password" name="password" placeholder="Password" required>
-  <button type="submit">Sign in</button>
-  <input type="hidden" name="next" value="{{ next|default:"/" }}" />
-</form>
-{% if form.errors %}
-<p>Your username and password didn't match. Please try again.</p>
-{% endif %}
+{% block addblocks %}
+{{ block.super }}
+{% addtoblock "css" %}
+<link rel="stylesheet" href="{% static 'registration/css/login.css' %}">
+{% endaddtoblock %}
+{% endblock %}
+
+{% block layout %}
+<main class="mdl-layout__content">
+  <div class="mdl-card mdl-shadow--6dp">
+    <div class="mdl-card__title mdl-color--primary mdl-color-text--white">
+      <h2 class="mdl-card__title-text">Login</h2>
+    </div>
+    <div class="mdl-card__supporting-text">
+      {% if form.errors %}
+      <p class="mdl-typography--text-center mdl-color-text--accent">Your username and password didn't match. Please try again.</p>
+      {% endif %}
+      <form id="login-form" method="post" action="{% url 'django.contrib.auth.views.login' %}">
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+          <input class="mdl-textfield__input" type="text" name="username" id="username">
+          <label class="mdl-textfield__label" for="username">Username</label>
+        </div>
+        <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+          <input class="mdl-textfield__input" type="password" name="password" id="password">
+          <label class="mdl-textfield__label" for="password">Password</label>
+        </div>
+        <div class="mdl-textfield mdl-js-textfield hidden-textfield">
+          <input type="hidden" name="next" value="{{ next|default:"/" }}" />
+        </div>
+        <div class="mdl-textfield mdl-js-textfield hidden-textfield">
+          {% csrf_token %}
+        </div>
+      </form>
+    </div>
+    <div class="mdl-card__actions mdl-card--border">
+      <button type="submit" form="login-form" class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">Log in</button>
+    </div>
+  </div>
+</main>
 {% endblock %}
