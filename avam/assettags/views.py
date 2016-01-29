@@ -7,6 +7,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.template.loader import render_to_string
 from django.views.generic import DetailView
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from xhtml2pdf import pisa
 
@@ -17,7 +19,7 @@ from assettags.models import (
 from assettags.forms import TagPrintForm
 from assettags.tag_handler import AssetTagImage, AssetTagSheet
 
-class AssetTagImageView(DetailView):
+class AssetTagImageView(LoginRequiredMixin, DetailView):
     model = AssetTag
     template_name = 'assettags/assettag-image.html'
     context_object_name = 'asset_tag'
@@ -35,7 +37,7 @@ class AssetTagItemView(AssetTagImageView):
     slug_field = 'code'
     slug_url_kwarg = 'tag_code'
 
-
+@login_required
 def asset_tag_lookup(request, **kwargs):
     code = kwargs.get('tag_code')
     if code is None:
@@ -46,7 +48,7 @@ def asset_tag_lookup(request, **kwargs):
         return redirect('assettags:assettag_item', **kwargs)
     return redirect(url)
 
-
+@login_required
 def print_tags(request):
     if request.method == 'POST':
         form = TagPrintForm(request.POST)

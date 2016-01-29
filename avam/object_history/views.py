@@ -4,6 +4,8 @@ from django.views.generic.base import View
 from django.views.generic.detail import SingleObjectMixin, SingleObjectTemplateResponseMixin
 from django.contrib.contenttypes.models import ContentType
 
+from django.contrib.auth.mixins import LoginRequiredMixin
+
 from object_history.models import ObjectUpdate
 from object_history.forms import get_object_history_form
 
@@ -69,7 +71,7 @@ class SingleObjectUpdateMixin(SingleObjectMixin, ObjectUpdateMixin):
             context['object_update'] = self.object_update = q.latest('datetime')
         return context
 
-class BaseObjectHistoryView(SingleObjectUpdateMixin, View):
+class BaseObjectHistoryView(LoginRequiredMixin, SingleObjectUpdateMixin, View):
     def get(self, request, *args, **kwargs):
         self.object = self.get_object()
         context = self.get_context_data(object=self.object)
