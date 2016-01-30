@@ -20,7 +20,7 @@ class Asset(models.Model):
     date_acquired = models.DateTimeField(blank=True, null=True)
 
 @python_2_unicode_compatible
-class AssetBase(models.Model, AssetTaggedMixin):
+class AssetBase(Asset, AssetTaggedMixin):
     location = models.ForeignKey(Location)
     class Meta:
         abstract = True
@@ -83,14 +83,12 @@ class GenericAsset(AssetBase):
         asset_models.GenericModel,
         related_name='assets',
     )
-    asset_ptr = models.OneToOneField(Asset, null=True)
 
 class GenericAccessory(AssetBase):
     asset_model = models.ForeignKey(
         asset_models.GenericAccessoryModel,
         related_name='assets',
     )
-    asset_ptr = models.OneToOneField(Asset, null=True)
     
 class LampBase(LifeTrackedAsset, Installable):
     class Meta:
@@ -105,7 +103,6 @@ class Projector(AssetBase):
         asset_models.ProjectorModel,
         related_name='assets',
     )
-    asset_ptr = models.OneToOneField(Asset, null=True)
 
 class ProjectorLamp(LampBase):
     asset_model = models.ForeignKey(
@@ -117,7 +114,6 @@ class ProjectorLamp(LampBase):
         blank=True,
         null=True,
     )
-    asset_ptr = models.OneToOneField(Asset, null=True)
 
 class ProjectorFilter(FilterBase):
     asset_model = models.ForeignKey(
@@ -129,14 +125,12 @@ class ProjectorFilter(FilterBase):
         blank=True,
         null=True,
     )
-    asset_ptr = models.OneToOneField(Asset, null=True)
 
 class MovingLight(AssetBase):
     asset_model = models.ForeignKey(
         asset_models.MovingLightModel,
         related_name='assets',
     )
-    asset_ptr = models.OneToOneField(Asset, null=True)
 
 class MovingLightLamp(LampBase):
     asset_model = models.ForeignKey(
@@ -149,11 +143,9 @@ class MovingLightLamp(LampBase):
         blank=True,
         null=True,
     )
-    asset_ptr = models.OneToOneField(Asset, null=True)
 
 class LEDLight(AssetBase):
     asset_model = models.ForeignKey(
         asset_models.LEDLightModel,
         related_name='assets',
     )
-    asset_ptr = models.OneToOneField(Asset, null=True)
