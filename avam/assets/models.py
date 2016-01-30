@@ -35,7 +35,6 @@ class AssetBase(Asset, AssetTaggedMixin):
                 yield _cls
     @classmethod
     def connect_post_save(cls):
-        return
         for cls in AssetBase.iter_subclasses():
             post_save.connect(on_asset_base_post_save, sender=cls)
     def save(self, *args, **kwargs):
