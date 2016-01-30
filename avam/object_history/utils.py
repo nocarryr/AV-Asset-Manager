@@ -2,6 +2,7 @@ import sys
 import datetime
 import json
 
+from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 
 PY2 = sys.version_info.major == 2
@@ -17,6 +18,12 @@ def iter_fields(obj, query_lookup=None):
             if f.many_to_many or f.one_to_many:
                 for _obj in getattr(obj, f.name).all():
                     yield m, fname, f, _obj.pk
+            elif f.one_to_one:
+                try:
+                    v = getattr(obj, f.name).pk
+                except ObjectDoesNotExist:
+                    continue
+                yield m, fname, f, v
             else:
                 yield m, fname, f, getattr(obj, f.name).pk
         else:
