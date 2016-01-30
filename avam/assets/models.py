@@ -83,14 +83,14 @@ class GenericAsset(AssetBase):
         asset_models.GenericModel,
         related_name='assets',
     )
-    temp_asset_ptr = models.OneToOneField(Asset, null=True)
+    asset_ptr = models.OneToOneField(Asset, null=True)
 
 class GenericAccessory(AssetBase):
     asset_model = models.ForeignKey(
         asset_models.GenericAccessoryModel,
         related_name='assets',
     )
-    temp_asset_ptr = models.OneToOneField(Asset, null=True)
+    asset_ptr = models.OneToOneField(Asset, null=True)
     
 class LampBase(LifeTrackedAsset, Installable):
     class Meta:
@@ -105,7 +105,7 @@ class Projector(AssetBase):
         asset_models.ProjectorModel,
         related_name='assets',
     )
-    temp_asset_ptr = models.OneToOneField(Asset, null=True)
+    asset_ptr = models.OneToOneField(Asset, null=True)
 
 class ProjectorLamp(LampBase):
     asset_model = models.ForeignKey(
@@ -117,7 +117,7 @@ class ProjectorLamp(LampBase):
         blank=True,
         null=True,
     )
-    temp_asset_ptr = models.OneToOneField(Asset, null=True)
+    asset_ptr = models.OneToOneField(Asset, null=True)
 
 class ProjectorFilter(FilterBase):
     asset_model = models.ForeignKey(
@@ -129,14 +129,14 @@ class ProjectorFilter(FilterBase):
         blank=True,
         null=True,
     )
-    temp_asset_ptr = models.OneToOneField(Asset, null=True)
+    asset_ptr = models.OneToOneField(Asset, null=True)
 
 class MovingLight(AssetBase):
     asset_model = models.ForeignKey(
         asset_models.MovingLightModel,
         related_name='assets',
     )
-    temp_asset_ptr = models.OneToOneField(Asset, null=True)
+    asset_ptr = models.OneToOneField(Asset, null=True)
 
 class MovingLightLamp(LampBase):
     asset_model = models.ForeignKey(
@@ -149,11 +149,11 @@ class MovingLightLamp(LampBase):
         blank=True,
         null=True,
     )
-    temp_asset_ptr = models.OneToOneField(Asset, null=True)
+    asset_ptr = models.OneToOneField(Asset, null=True)
 
 class LEDLight(AssetBase):
     asset_model = models.ForeignKey(
         asset_models.LEDLightModel,
         related_name='assets',
     )
-    temp_asset_ptr = models.OneToOneField(Asset, null=True)
+    asset_ptr = models.OneToOneField(Asset, null=True)
