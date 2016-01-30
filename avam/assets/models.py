@@ -15,17 +15,13 @@ PY2 = sys.version_info.major == 2
 
 class Asset(models.Model):
     temp_in_use = models.BooleanField(default=True)
-    temp_retired = models.BooleanField(default=False)
-    temp_notes = models.TextField(null=True)
-    temp_date_acquired = models.DateTimeField(blank=True, null=True)
+    retired = models.BooleanField(default=False)
+    notes = models.TextField(null=True)
+    date_acquired = models.DateTimeField(blank=True, null=True)
 
 @python_2_unicode_compatible
 class AssetBase(models.Model, AssetTaggedMixin):
     location = models.ForeignKey(Location)
-    in_use = models.BooleanField(default=True)
-    retired = models.BooleanField(default=False)
-    notes = models.TextField(blank=True)
-    date_acquired = models.DateTimeField(blank=True, null=True)
     class Meta:
         abstract = True
     @classmethod
