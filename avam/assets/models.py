@@ -18,7 +18,7 @@ PY2 = sys.version_info.major == 2
 class Asset(models.Model, AssetTaggedMixin):
     in_use = models.BooleanField(default=True)
     retired = models.BooleanField(default=False)
-    notes = models.TextField(null=True)
+    notes = models.TextField(blank=True, null=True)
     date_acquired = models.DateTimeField(blank=True, null=True)
     @property
     def asset_instance(self):
