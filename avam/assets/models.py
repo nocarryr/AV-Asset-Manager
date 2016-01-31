@@ -16,7 +16,7 @@ from assettags.models import AssetTaggedMixin
 PY2 = sys.version_info.major == 2
 
 class Asset(models.Model, AssetTaggedMixin):
-    temp_in_use = models.BooleanField(default=True)
+    in_use = models.BooleanField(default=True)
     retired = models.BooleanField(default=False)
     notes = models.TextField(null=True)
     date_acquired = models.DateTimeField(blank=True, null=True)
