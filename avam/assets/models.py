@@ -67,9 +67,7 @@ class AssetBase(Asset):
             for _cls in subcls.iter_subclasses():
                 yield _cls
     def __str__(self):
-        if PY2:
-            return unicode(self.asset_model)
-        return str(self.asset_model)
+        return '{0} ({1})'.format(self.asset_model, self.location)
 
 class LifeTrackedAsset(AssetBase):
     current_usage = models.DurationField(default=datetime.timedelta())
