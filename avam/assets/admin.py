@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.db import models
 
 from assets.models import (
     GenericAsset,
@@ -11,34 +12,44 @@ from assets.models import (
     LEDLight,
 )
 
+from assets.fields import HoursField
+
+class AssetAdminBase(admin.ModelAdmin):
+    formfield_overrides = {
+        models.DurationField:{
+            'form_class':HoursField,
+            'widget':admin.widgets.AdminTextInputWidget,
+        }
+    }
+
 @admin.register(GenericAsset)
-class GenericAssetAdmin(admin.ModelAdmin):
+class GenericAssetAdmin(AssetAdminBase):
     pass
 
 @admin.register(GenericAccessory)
-class GenericAccessoryAdmin(admin.ModelAdmin):
+class GenericAccessoryAdmin(AssetAdminBase):
     pass
 
 @admin.register(Projector)
-class ProjectorAdmin(admin.ModelAdmin):
+class ProjectorAdmin(AssetAdminBase):
     pass
 
 @admin.register(ProjectorLamp)
-class ProjectorLampAdmin(admin.ModelAdmin):
+class ProjectorLampAdmin(AssetAdminBase):
     pass
 
 @admin.register(ProjectorFilter)
-class ProjectorFilterAdmin(admin.ModelAdmin):
+class ProjectorFilterAdmin(AssetAdminBase):
     pass
 
 @admin.register(MovingLight)
-class MovingLightAdmin(admin.ModelAdmin):
+class MovingLightAdmin(AssetAdminBase):
     pass
 
 @admin.register(MovingLightLamp)
-class MovingLightLampAdmin(admin.ModelAdmin):
+class MovingLightLampAdmin(AssetAdminBase):
     pass
 
 @admin.register(LEDLight)
-class LEDLightAdmin(admin.ModelAdmin):
+class LEDLightAdmin(AssetAdminBase):
     pass
