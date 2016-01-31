@@ -5,6 +5,7 @@ import datetime
 from django.db import models
 from django.dispatch import receiver
 from django.db.models.signals import post_save
+from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
 
@@ -19,6 +20,22 @@ class Asset(models.Model, AssetTaggedMixin):
     retired = models.BooleanField(default=False)
     notes = models.TextField(null=True)
     date_acquired = models.DateTimeField(blank=True, null=True)
+    @property
+    def asset_instance(self):
+        obj = getattr(self, '_asset_instance', None)
+        if obj is None:
+            obj = self._asset_instance = self.get_asset_instance()
+        return obj
+    def get_asset_instance(self):
+        if self.__class__ is not Asset:
+            return self
+        for rel in self._meta.related_objects:
+            try:
+                obj = getattr(self, rel.name)
+            except ObjectDoesNotExist:
+                obj = None
+            if obj is not None:
+                return obj
     def save(self, *args, **kwargs):
         if self.retired and self.in_use:
             self.in_use = False
