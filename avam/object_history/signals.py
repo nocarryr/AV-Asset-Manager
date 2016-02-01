@@ -6,6 +6,8 @@ from object_history.models import WatchedModel, ObjectUpdate, ObjectChange
 
 @receiver(post_save)
 def on_all_post_save(sender, **kwargs):
+    if sender._meta.app_label == 'migrations':
+        return
     if kwargs.get('raw'):
         return
     if issubclass(sender, (WatchedModel, ObjectUpdate, ObjectChange)):
