@@ -45,10 +45,12 @@ class ObjectUpdateAdmin(admin.ModelAdmin):
         'content_type',
         'content_object',
         'datetime',
+        'user',
     ]
     list_filter = [
-        'content_type',
         ContentObjectFilter,
+        'user',
+        'content_type',
     ]
     ordering = ['-datetime']
 
