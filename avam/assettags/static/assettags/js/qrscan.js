@@ -1,12 +1,9 @@
 $(function(){
   var $scanDiv = $(".qrscanner"),
       $form = $(".qrscan-form");
-  var buildUrl = function(tagcode){
-    return $scanDiv.data('resulturl') + tagcode;
-  };
-
   $scanDiv.html5_qrcode(function(data){
-    window.location = buildUrl(data);
+    $("#tagcode_input").val(data);
+    $form.submit();
   }, function(readError){
     console.log('readError:', readError);
   }, function(videoError){
@@ -38,8 +35,4 @@ $(function(){
     $form.show();
     $("#tagcode_input").focus();
   });
-  $form.submit(function(e){
-    var tagcode = $("#tagcode_input").val();
-    $form.attr('action', buildUrl(tagcode));
-  })
 });

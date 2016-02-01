@@ -3,6 +3,7 @@ try:
 except ImportError:
     from io import StringIO
 
+from django.core.urlresolvers import reverse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.template.loader import render_to_string
@@ -16,7 +17,7 @@ from assettags.models import (
     AssetTag,
     AssetTagImageTemplate,
 )
-from assettags.forms import TagPrintForm
+from assettags.forms import TagPrintForm, TagScanForm
 from assettags.tag_handler import AssetTagImage, AssetTagSheet
 
 class AssetTagImageView(LoginRequiredMixin, DetailView):
@@ -37,16 +38,39 @@ class AssetTagItemView(AssetTagImageView):
     slug_field = 'code'
     slug_url_kwarg = 'tag_code'
 
+def asset_tag_form(request):
+    tag = None
+    if request.method == 'POST':
+        form = TagScanForm(request.POST)
+        if form.is_valid():
+            code = form.cleaned_data['tagcode']
+            try:
+                tag = AssetTag.objects.get(code=code)
+            except AssetTag.DoesNotExist:
+                tag = None
+    else:
+        form = TagScanForm()
+    return form, tag
+
 @login_required
 def asset_tag_lookup(request, **kwargs):
+    def get_url_for_code(code=None, tag=None):
+        if tag is None:
+            tag = get_object_or_404(AssetTag, code=code)
+        url = tag.get_asset_url()
+        if url is None:
+            url = reverse('assettags:assettag_item', kwargs={'tag_code':tag.code})
+        return url
     code = kwargs.get('tag_code')
-    if code is None:
-        return render(request, 'assettags/qrscan.html')
-    tag = get_object_or_404(AssetTag, code=code)
-    url = tag.get_asset_url()
-    if url is None:
-        return redirect('assettags:assettag_item', **kwargs)
-    return redirect(url)
+    if code is not None:
+        return redirect(get_url_for_code(code))
+    form, tag = asset_tag_form(request)
+    if request.method == 'POST':
+        if tag is not None:
+            url = get_url_for_code(form.cleaned_data['tagcode'])
+            return redirect(url)
+    return render(request, 'assettags/qrscan.html', {'form':form})
+
 
 @login_required
 def print_tags(request):

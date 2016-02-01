@@ -26,3 +26,5 @@ class TagPrintForm(forms.Form):
         widget=MDLSelect(),
     )
     
+class TagScanForm(forms.Form):
+    tagcode = forms.CharField(label='Tag Code', max_length=50)
