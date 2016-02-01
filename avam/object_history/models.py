@@ -7,6 +7,7 @@ from django.db import models
 from django.contrib.admin.models import LogEntry
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
+from django.core.urlresolvers import reverse
 from django.utils.encoding import python_2_unicode_compatible
 
 from object_history.utils import (
@@ -46,6 +47,8 @@ class ObjectUpdate(models.Model):
     objects = ObjectUpdateManager()
     class Meta:
         ordering = ['-datetime']
+    def get_absolute_url(self):
+        return reverse('object_history:object_history', kwargs={'pk':self.pk})
     def get_update_queryset(self, queryset=None, **kwargs):
         if queryset is None:
             queryset = self._meta.model.objects.get_for_object(self.content_object)
