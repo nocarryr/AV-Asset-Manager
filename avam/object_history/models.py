@@ -1,7 +1,10 @@
 from __future__ import unicode_literals
 
+import datetime
+
 from django.conf import settings
 from django.db import models
+from django.contrib.admin.models import LogEntry
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
 from django.utils.encoding import python_2_unicode_compatible
@@ -109,11 +112,30 @@ class ObjectUpdate(models.Model):
                 changes.append(value)
             updates.append(changes)
         return updates
+    def get_user_from_admin(self):
+        q = LogEntry.objects.filter(
+            content_type=self.content_type,
+            object_id=self.object_id,
+        )
+        td = datetime.timedelta(seconds=1)
+        dt_range = [self.datetime - td, self.datetime + td]
+        q = q.filter(action_time__range=dt_range)
+        if not q.exists():
+            return None
+        vl = q.values_list('user', flat=True)
+        if len(set(vl)) > 1:
+            return None
+        return q.first().user
     def save(self, *args, **kwargs):
         created = self.pk is None
         super(ObjectUpdate, self).save(*args, **kwargs)
         if created:
             ObjectChange.find_changes(self)
+        if self.user is None:
+            user = self.get_user_from_admin()
+            if user is not None:
+                self.user = user
+                super(ObjectUpdate, self).save(*args, **kwargs)
     def __str__(self):
         return u'%s: %s' % (self.content_object, self.datetime)
 
