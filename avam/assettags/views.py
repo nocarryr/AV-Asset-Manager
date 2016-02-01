@@ -10,6 +10,8 @@ from django.template.loader import render_to_string
 from django.views.generic import DetailView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.contenttypes.models import ContentType
+from django.contrib import messages
 
 from xhtml2pdf import pisa
 
@@ -38,7 +40,7 @@ class AssetTagItemView(AssetTagImageView):
     slug_field = 'code'
     slug_url_kwarg = 'tag_code'
 
-def asset_tag_form(request):
+def asset_tag_form(request, **kwargs):
     tag = None
     if request.method == 'POST':
         form = TagScanForm(request.POST)
@@ -49,7 +51,7 @@ def asset_tag_form(request):
             except AssetTag.DoesNotExist:
                 tag = None
     else:
-        form = TagScanForm()
+        form = TagScanForm(**kwargs)
     return form, tag
 
 @login_required
@@ -71,6 +73,61 @@ def asset_tag_lookup(request, **kwargs):
             return redirect(url)
     return render(request, 'assettags/qrscan.html', {'form':form})
 
+@login_required
+def asset_tag_assign(request, **kwargs):
+    def get_content_data(formdata=None):
+        instance = kwargs.get('instance')
+        if instance is not None:
+            content_type = ContentType.objects.get_for_model(instance._meta.model)
+            ct_id = content_type.id
+            object_id = instance.pk
+        elif formdata is not None:
+            ct_id = formdata['content_type_id']
+            object_id = formdata['object_id']
+            content_type = ContentType.objects.get_for_id(ct_id)
+            m = content_type.model_class()
+            instance = m.objects.get(pk=object_id)
+        else:
+            content_type = kwargs.get('content_type')
+            if content_type is not None:
+                ct_id = content_type.id
+            else:
+                ct_id = kwargs.get('content_type_id', request.GET.get('content_type_id'))
+                try:
+                    content_type = ContentType.objects.get_for_id(ct_id)
+                except ContentType.DoesNotExist:
+                    content_type = None
+            object_id = kwargs.get('object_id', request.GET.get('object_id'))
+            if content_type is not None:
+                m = content_type.model_class()
+                try:
+                    instance = m.objects.get(pk=object_id)
+                except m.DoesNotExist:
+                    instance = None
+        return dict(
+            content_type=content_type,
+            content_type_id=ct_id,
+            object_id=object_id,
+            instance=instance,
+        )
+    if request.method == 'POST':
+        form, tag = asset_tag_form(request)
+        if form.is_valid():
+            data = get_content_data(form.cleaned_data)
+            tag.assign_asset(data['instance'])
+            messages.success(
+                request,
+                'Asset Tag %s successfully assigned to %s' % (tag, data['instance']),
+            )
+    else:
+        data = get_content_data()
+        keys = ['content_type_id', 'object_id']
+        form, tag = asset_tag_form(request, initial={k:data[k] for k in keys})
+    context = dict(
+        form=form,
+        header_text='Assign Tag for %s' % (data['instance']),
+    )
+    return render(request, 'assettags/assign-tag.html', context)
 
 @login_required
 def print_tags(request):

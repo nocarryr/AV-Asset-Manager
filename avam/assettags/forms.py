@@ -28,3 +28,11 @@ class TagPrintForm(forms.Form):
     
 class TagScanForm(forms.Form):
     tagcode = forms.CharField(label='Tag Code', max_length=50)
+    content_type_id = forms.IntegerField(
+        required=False,
+        widget=forms.HiddenInput(),
+    )
+    object_id = forms.IntegerField(
+        required=False,
+        widget=forms.HiddenInput(),
+    )

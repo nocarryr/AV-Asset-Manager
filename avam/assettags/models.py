@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 
+from django.core.urlresolvers import reverse
 from django.db import models
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
@@ -95,6 +96,12 @@ class AssetTaggedMixin(object):
         if not isinstance(asset_tag, AssetTag):
             asset_tag, created = AssetTag.objects.get_or_create(code=asset_tag)
         asset_tag.assign_asset(self)
+    def url_for_assign_view(self):
+        content_type = ContentType.objects.get_for_model(self)
+        return reverse('assettags:asset_tag_assign', kwargs=dict(
+            content_type_id=content_type.id,
+            object_id=self.pk,
+        ))
 
 
 @python_2_unicode_compatible

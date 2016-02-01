@@ -16,6 +16,7 @@
 
 {% block main %}
 <div class="qrscan-main">
+  <h3>{{ header_text|default:'Scan QR Code' }}</h1>
   <div data-resulturl="{% url 'assettags:assettag_lookup' %}" data-crop-factor="0.35" class="qrscanner centered"></div>
   <div class="qrscan-buttonset qrscan-item">
     <button type="button" id="stop-btn">Stop Scanning</button>
@@ -27,6 +28,9 @@
       <input type="text" name="tagcode" id="tagcode_input" required>
       <input type="submit" value="Submit">
     </fieldset>
+    {% for field in form.hidden_fields %}
+    {{ field }}
+    {% endfor %}
     {% csrf_token %}
   </form>
 </div>
