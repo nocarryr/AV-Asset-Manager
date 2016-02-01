@@ -21,6 +21,17 @@ class AssetAdminBase(admin.ModelAdmin):
             'widget':admin.widgets.AdminTextInputWidget,
         }
     }
+    list_display = [
+        'asset_model',
+        'location',
+        'in_use',
+        'retired',
+    ]
+    list_filter = [
+        'retired',
+        'in_use',
+        'location',
+    ]
 
 @admin.register(GenericAsset)
 class GenericAssetAdmin(AssetAdminBase):
