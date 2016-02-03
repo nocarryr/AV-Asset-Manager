@@ -6,10 +6,12 @@ from assettypes.models import (
     GenericAccessoryModel,
     ProjectorLampModel,
     ProjectorFilterModel,
+    ProjectorLensModel,
     ProjectorModel,
     MovingLightLampModel,
     MovingLightModel,
     LEDLightModel,
+    CameraLensModel,
     VideoCameraModel,
 )
 
@@ -45,10 +47,18 @@ class ProjectorLampModelAdmin(admin.ModelAdmin):
 class ProjectorFilterModelAdmin(admin.ModelAdmin):
     pass
 
+@admin.register(ProjectorLensModel)
+class ProjectorLensModelAdmin(admin.ModelAdmin):
+    pass
+
 @admin.register(MovingLightLampModel)
 class MovingLightLampModelAdmin(admin.ModelAdmin):
     pass
 
 @admin.register(VideoCameraModel)
 class VideoCameraModelAdmin(admin.ModelAdmin):
+    pass
+
+@admin.register(CameraLensModel)
+class CameraLensModelAdmin(admin.ModelAdmin):
     pass

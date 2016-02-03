@@ -111,6 +111,10 @@ class FilterBase(LifeTrackedAsset, Installable):
     class Meta:
         abstract = True
 
+class LensBase(AssetBase, Installable):
+    class Meta:
+        abstract = True
+
 class Projector(AssetBase):
     asset_model = models.ForeignKey(
         asset_models.ProjectorModel,
@@ -135,6 +139,19 @@ class ProjectorFilter(FilterBase):
     )
     installed_in = models.ForeignKey(Projector,
         related_name='filters',
+        blank=True,
+        null=True,
+    )
+
+class ProjectorLens(LensBase):
+    class Meta:
+        verbose_name_plural = 'Projector lenses'
+    asset_model = models.ForeignKey(
+        asset_models.ProjectorLensModel,
+        related_name='assets',
+    )
+    installed_in = models.OneToOneField(Projector,
+        related_name='lens',
         blank=True,
         null=True,
     )
@@ -167,4 +184,17 @@ class VideoCamera(AssetBase):
     asset_model = models.ForeignKey(
         asset_models.VideoCameraModel,
         related_name='assets',
+    )
+
+class VideoCameraLens(LensBase):
+    class Meta:
+        verbose_name_plural = 'Video camera lenses'
+    asset_model = models.ForeignKey(
+        asset_models.CameraLensModel,
+        related_name='assets',
+    )
+    installed_in = models.OneToOneField(VideoCamera,
+        related_name='lens',
+        blank=True,
+        null=True,
     )

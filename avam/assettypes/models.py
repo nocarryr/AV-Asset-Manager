@@ -51,6 +51,20 @@ class FilterModelBase(AccessoryModel):
     class Meta:
         abstract = True
 
+@python_2_unicode_compatible
+class LensMountType(models.Model):
+    name = models.CharField(max_length=30, unique=True)
+    def __str__(self):
+        return self.name
+
+class LensModelBase(AccessoryModel):
+    class Meta:
+        abstract = True
+
+class ProjectorLensModel(LensModelBase):
+    throw_ratio_wide = models.FloatField()
+    throw_ratio_tele = models.FloatField()
+
 class ProjectorLampModel(LampModelBase):
     pass
 
@@ -70,6 +84,14 @@ class MovingLightModel(LightingModelBase):
 
 class LEDLightModel(LightingModelBase):
     pass
+
+class CameraLensModel(LensModelBase):
+    mount_type = models.ForeignKey(LensMountType, blank=True, null=True)
+    focal_length_wide = models.DecimalField(max_digits=6, decimal_places=2)
+    focal_length_tele = models.DecimalField(max_digits=6, decimal_places=2)
+    fstop_wide = models.DecimalField(max_digits=4, decimal_places=2)
+    fstop_tele = models.DecimalField(max_digits=4, decimal_places=2)
+    zoom_extender_ratio = models.FloatField(blank=True, null=True)
 
 class VideoCameraModel(ModelBase):
     pass

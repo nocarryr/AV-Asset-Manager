@@ -7,10 +7,12 @@ from assets.models import (
     Projector,
     ProjectorLamp,
     ProjectorFilter,
+    ProjectorLens,
     MovingLight,
     MovingLightLamp,
     LEDLight,
     VideoCamera,
+    VideoCameraLens,
 )
 
 from assets.fields import HoursField
@@ -54,6 +56,10 @@ class ProjectorLampAdmin(AssetAdminBase):
 class ProjectorFilterAdmin(AssetAdminBase):
     pass
 
+@admin.register(ProjectorLens)
+class ProjectorLensAdmin(AssetAdminBase):
+    pass
+
 @admin.register(MovingLight)
 class MovingLightAdmin(AssetAdminBase):
     pass
@@ -68,4 +74,8 @@ class LEDLightAdmin(AssetAdminBase):
 
 @admin.register(VideoCamera)
 class VideoCameraAdmin(AssetAdminBase):
+    pass
+
+@admin.register(VideoCameraLens)
+class VideoCameraLensAdmin(AssetAdminBase):
     pass
