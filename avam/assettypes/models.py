@@ -70,3 +70,6 @@ class MovingLightModel(LightingModelBase):
 
 class LEDLightModel(LightingModelBase):
     pass
+
+class VideoCameraModel(ModelBase):
+    pass

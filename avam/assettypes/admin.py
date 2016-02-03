@@ -10,6 +10,7 @@ from assettypes.models import (
     MovingLightLampModel,
     MovingLightModel,
     LEDLightModel,
+    VideoCameraModel,
 )
 
 @admin.register(Manufacturer)
@@ -46,4 +47,8 @@ class ProjectorFilterModelAdmin(admin.ModelAdmin):
 
 @admin.register(MovingLightLampModel)
 class MovingLightLampModelAdmin(admin.ModelAdmin):
+    pass
+
+@admin.register(VideoCameraModel)
+class VideoCameraModelAdmin(admin.ModelAdmin):
     pass

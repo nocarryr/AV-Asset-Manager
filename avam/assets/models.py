@@ -162,3 +162,9 @@ class LEDLight(AssetBase):
         asset_models.LEDLightModel,
         related_name='assets',
     )
+
+class VideoCamera(AssetBase):
+    asset_model = models.ForeignKey(
+        asset_models.VideoCameraModel,
+        related_name='assets',
+    )

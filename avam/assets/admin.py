@@ -10,6 +10,7 @@ from assets.models import (
     MovingLight,
     MovingLightLamp,
     LEDLight,
+    VideoCamera,
 )
 
 from assets.fields import HoursField
@@ -63,4 +64,8 @@ class MovingLightLampAdmin(AssetAdminBase):
 
 @admin.register(LEDLight)
 class LEDLightAdmin(AssetAdminBase):
+    pass
+
+@admin.register(VideoCamera)
+class VideoCameraAdmin(AssetAdminBase):
     pass
