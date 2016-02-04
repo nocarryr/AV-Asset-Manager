@@ -12,10 +12,11 @@ from django.utils.encoding import python_2_unicode_compatible
 from locations.models import Location
 from assettypes import models as asset_models
 from assettags.models import AssetTaggedMixin
+from categories.models import CategorizedMixin
 
 PY2 = sys.version_info.major == 2
 
-class Asset(models.Model, AssetTaggedMixin):
+class Asset(models.Model, AssetTaggedMixin, CategorizedMixin):
     in_use = models.BooleanField(default=True)
     retired = models.BooleanField(default=False)
     notes = models.TextField(blank=True, null=True)
@@ -46,9 +47,12 @@ class Asset(models.Model, AssetTaggedMixin):
 def on_asset_base_post_save(sender, **kwargs):
     if kwargs.get('raw'):
         return
+    obj = kwargs.get('instance')
+    asset_model = obj.asset_instance.asset_model
+    for category in asset_model.get_current_categories():
+        obj.add_to_category(category)
     if not kwargs.get('created'):
         return
-    obj = kwargs.get('instance')
     if obj.date_acquired is None:
         obj.date_acquired = timezone.now()
         obj.save()
