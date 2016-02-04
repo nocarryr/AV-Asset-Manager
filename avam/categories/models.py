@@ -125,9 +125,14 @@ class CategorizedMixin(object):
                 for cls__ in cls_.__bases__:
                     yield iter_bases(cls__)
         for _cls in iter_bases(cls):
+            f = getattr(_cls, 'get_default_categories', None)
+            if PY2:
+                im_func = 'im_func'
+            else:
+                im_func = '__func__'
             if (hasattr(_cls, 'get_default_categories') and
                     _cls is not CategorizedMixin and
-                    _cls.get_default_categories.im_func.__module__ != 'categories.models'):
+                    getattr(f, im_func).__module__ != 'categories.models'):
                 yield _cls.get_default_categories()
             elif hasattr(_cls, 'default_categories'):
                 yield _cls.default_categories
