@@ -3,6 +3,8 @@ from __future__ import unicode_literals
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 
+from categories.models import CategorizedMixin
+
 @python_2_unicode_compatible
 class Manufacturer(models.Model):
     name = models.CharField(max_length=100, unique=True)
@@ -10,7 +12,7 @@ class Manufacturer(models.Model):
         return self.name
     
 @python_2_unicode_compatible
-class ModelBase(models.Model):
+class ModelBase(models.Model, CategorizedMixin):
     model_name = models.CharField(max_length=100)
     manufacturer = models.ForeignKey(Manufacturer)
     other_accessories = models.ManyToManyField('assettypes.GenericAccessoryModel', blank=True)
@@ -21,10 +23,17 @@ class ModelBase(models.Model):
         return self.model_name
     
 class AccessoryModel(ModelBase):
+    default_categories = ['Accessories']
+    class Meta(ModelBase.Meta):
+        abstract = True
+
+class VideoModelBase(ModelBase):
+    default_categories = ['Video']
     class Meta(ModelBase.Meta):
         abstract = True
 
 class LightingModelBase(ModelBase):
+    default_categories = ['Lighting']
     class Meta(ModelBase.Meta):
         abstract = True
     
@@ -62,22 +71,23 @@ class LensModelBase(AccessoryModel):
         abstract = True
 
 class ProjectorLensModel(LensModelBase):
+    default_categories = ['Video', ['Video', 'Accessories']]
     throw_ratio_wide = models.FloatField()
     throw_ratio_tele = models.FloatField()
 
 class ProjectorLampModel(LampModelBase):
-    pass
+    default_categories = ['Video', ['Video', 'Accessories']]
 
 class ProjectorFilterModel(FilterModelBase):
-    pass
+    default_categories = ['Video', ['Video', 'Accessories']]
 
-class ProjectorModel(ModelBase):
+class ProjectorModel(VideoModelBase):
     lamp_count = models.PositiveIntegerField(default=1)
     lamp_type = models.ForeignKey(ProjectorLampModel)
     filter_type = models.ForeignKey(ProjectorFilterModel, blank=True, null=True)
 
 class MovingLightLampModel(LampModelBase):
-    pass
+    default_categories = ['Lighting', ['Lighting', 'Accessories']]
 
 class MovingLightModel(LightingModelBase):
     lamp_type = models.ForeignKey(MovingLightLampModel)
@@ -93,5 +103,5 @@ class CameraLensModel(LensModelBase):
     fstop_tele = models.DecimalField(max_digits=4, decimal_places=2)
     zoom_extender_ratio = models.FloatField(blank=True, null=True)
 
-class VideoCameraModel(ModelBase):
+class VideoCameraModel(VideoModelBase):
     pass
