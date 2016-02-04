@@ -57,6 +57,10 @@ class CategoriesTestCase(TestCase):
 
 class CategoryItemTestCase(TestCase):
     def setUp(self):
+        from categories.models import CategorizedMixin
+        def get_default_categories(*args):
+            return []
+        CategorizedMixin.get_default_categories = get_default_categories
         from assettypes.tests import build_test_fixtures as build_assettypes_fixures
         assettypes_fixtures = build_assettypes_fixures()
         category_fixtures = {}
