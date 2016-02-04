@@ -1,4 +1,5 @@
 from __future__ import unicode_literals
+import sys
 
 from django.db import models
 from django.contrib.contenttypes.fields import GenericForeignKey
@@ -6,6 +7,11 @@ from django.contrib.contenttypes.models import ContentType
 from django.utils.encoding import python_2_unicode_compatible
 
 from categories.queryutils import GenericFKManager
+
+PY2 = sys.version_info.major == 2
+
+if not PY2:
+    basestring = str
 
 @python_2_unicode_compatible
 class Category(models.Model):
@@ -83,6 +89,48 @@ class CategoryItem(models.Model):
         unique_together = ('category', 'content_type', 'object_id')
 
 class CategorizedMixin(object):
+    def add_model_category_defaults(self):
+        """Adds an instance to any categories defined on its class and base classes
+        
+        Category definitions can be add with a class attribute :attr:`default_categories`
+        as shown in the example below.
+        ```
+        class MyModel(models.Model):
+            default_categories = [
+                'some single category',
+                ['some root category', 'some subcategory'],
+            ]
+        ```
+        Or by extending/overriding the :meth:`CategorizedMixin.get_default_categories` method
+        
+        This would mostly be useful on either the :meth:`django.db.models.Model.save` method
+        or in its :attr:`django.db.models.signals.post_save` handler.
+        """
+        for category_defs in self.get_default_categories():
+            for category_def in category_defs:
+                if isinstance(category_def, basestring):
+                    category_def = [category_def]
+                parent = None
+                for name in category_def:
+                    category = self.add_category(
+                        name=name,
+                        parent_category=parent,
+                    )
+                    parent = category
+    @classmethod
+    def get_default_categories(cls):
+        def iter_bases(cls_):
+            if cls_ is not object:
+                yield cls_
+                for cls__ in cls_.__bases__:
+                    yield iter_bases(cls__)
+        for _cls in iter_bases(cls):
+            if (hasattr(_cls, 'get_default_categories') and
+                    _cls is not CategorizedMixin and
+                    _cls.get_default_categories.im_func.__module__ != 'categories.models'):
+                yield _cls.get_default_categories()
+            elif hasattr(_cls, 'default_categories'):
+                yield _cls.default_categories
     def get_current_categories(self):
         content_type = ContentType.objects.get_for_model(self._meta.model)
         q = Category.objects.filter(
@@ -95,5 +143,6 @@ class CategorizedMixin(object):
     def add_category(self, **kwargs):
         category, created = Category.objects.get_or_create(**kwargs)
         self.add_to_category(category)
+        return category
     def add_to_category(self, category):
         category.add_item(self)
