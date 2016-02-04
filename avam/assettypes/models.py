@@ -21,11 +21,11 @@ class ModelBase(models.Model):
         return self.model_name
     
 class AccessoryModel(ModelBase):
-    class Meta:
+    class Meta(ModelBase.Meta):
         abstract = True
 
 class LightingModelBase(ModelBase):
-    class Meta:
+    class Meta(ModelBase.Meta):
         abstract = True
     
 class GenericModel(ModelBase):
@@ -36,7 +36,7 @@ class GenericAccessoryModel(AccessoryModel):
     
 class LampModelBase(AccessoryModel):
     max_hours = models.PositiveIntegerField()
-    class Meta:
+    class Meta(AccessoryModel.Meta):
         abstract = True
 
 class FilterModelBase(AccessoryModel):
@@ -48,7 +48,7 @@ class FilterModelBase(AccessoryModel):
     filter_type = models.CharField(max_length=1, choices=filter_type_choices)
     max_hours = models.PositiveIntegerField(blank=True, null=True)
     replaceable = models.BooleanField(default=False)
-    class Meta:
+    class Meta(AccessoryModel.Meta):
         abstract = True
 
 @python_2_unicode_compatible
@@ -58,7 +58,7 @@ class LensMountType(models.Model):
         return self.name
 
 class LensModelBase(AccessoryModel):
-    class Meta:
+    class Meta(AccessoryModel.Meta):
         abstract = True
 
 class ProjectorLensModel(LensModelBase):

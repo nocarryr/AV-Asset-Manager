@@ -57,6 +57,7 @@
     <Source>avam/assettypes/migrations/0002_auto_20151223_1125.py</Source>
     <Source>avam/assettypes/migrations/0003_auto_20160203_1203.py</Source>
     <Source>avam/assettypes/migrations/0004_auto_20160203_1243.py</Source>
+    <Source>avam/assettypes/migrations/0005_auto_20160204_1403.py</Source>
     <Source>avam/assettypes/migrations/__init__.py</Source>
     <Source>avam/assettypes/models.py</Source>
     <Source>avam/assettypes/tests.py</Source>
