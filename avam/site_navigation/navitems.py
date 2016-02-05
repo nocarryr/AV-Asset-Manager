@@ -97,6 +97,11 @@ def add_page_navitem(nav_item=None, **kwargs):
 def build_static_navitems():
     add_page_navitem(text='Home', pattern='home')
     add_page_navitem(
+        text='Assets',
+        pattern='assets:asset_list',
+        login_required=True,
+    )
+    add_page_navitem(
         text='Scan Tag',
         pattern='assettags:assettag_lookup',
         login_required=True,
