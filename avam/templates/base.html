@@ -4,13 +4,13 @@
 {% block addblocks %}
 {{ block.super }}
 {% addtoblock "css" %}
-<link rel="stylesheet" href="{% static 'mdl/material.indigo-pink.min.css' %}">
-<link rel="stylesheet" href="{% static 'registration/css/account-header.css' %}">
 <link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
+<link rel="stylesheet" href="//code.getmdl.io/1.1.1/material.indigo-pink.min.css">
+<link rel="stylesheet" href="{% static 'registration/css/account-header.css' %}">
 {% endaddtoblock %}
 
 {% addtoblock "js-foot" %}
-<script src="{% static 'mdl/material.min.js' %}"></script>
+<script src="//code.getmdl.io/1.1.1/material.min.js"></script>
 <script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
 {% endaddtoblock %}
 {% endblock %}
