@@ -33,7 +33,10 @@
     <Source>avam/assets/migrations/0012_projectorlens_videocameralens.py</Source>
     <Source>avam/assets/migrations/__init__.py</Source>
     <Source>avam/assets/models.py</Source>
+    <Source>avam/assets/templatetags/__init__.py</Source>
+    <Source>avam/assets/templatetags/asset_item_field.py</Source>
     <Source>avam/assets/tests.py</Source>
+    <Source>avam/assets/urls.py</Source>
     <Source>avam/assets/views.py</Source>
     <Source>avam/assettags/__init__.py</Source>
     <Source>avam/assettags/admin.py</Source>

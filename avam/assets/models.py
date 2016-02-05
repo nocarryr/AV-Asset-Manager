@@ -8,6 +8,7 @@ from django.db.models.signals import post_save
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
+from django.core.urlresolvers import reverse
 
 from locations.models import Location
 from assettypes import models as asset_models
@@ -38,6 +39,8 @@ class Asset(models.Model, AssetTaggedMixin, CategorizedMixin):
                 obj = None
             if obj is not None:
                 return obj
+    def get_absolute_url(self):
+        return reverse('assets:asset_detail', kwargs={'pk':self.pk})
     def save(self, *args, **kwargs):
         if self.retired and self.in_use:
             self.in_use = False

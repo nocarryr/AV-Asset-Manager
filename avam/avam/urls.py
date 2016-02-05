@@ -18,11 +18,19 @@ from django.conf.urls import url, include
 from django.contrib import admin
 
 from site_navigation import urls as site_urls
+from assets import urls as asset_urls
 from object_history import urls as object_history_urls
 from assettags import urls as assettags_urls
 
 urlpatterns = [
     url(r'^', include(site_urls)),
+    url(r'^assets/',
+        include(
+            asset_urls,
+            namespace='assets',
+            app_name='assets',
+        )
+    ),
     url(r'^admin/', admin.site.urls),
     url(r'^object_history/',
         include(

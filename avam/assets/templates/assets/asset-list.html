@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% load asset_item_field %}
+
+{% block main %}
+<div class="mdl-grid">
+  <div class="mdl-cell mdl-cell--6-col">
+    <table class="asset-list mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+      <thead><tr>
+      {% for field_name in asset_item_fields %}
+        <th class="mdl-data-table__cell--non-numeric">{% asset_field_title %}</th>
+      {% endfor %}
+        <th class="mdl-data-table__cell--non-numeric"> </th>
+      </tr></thead>
+      <tbody>
+      {% for asset in asset_list %}
+        <tr>
+        {% for field_name in asset_item_fields %}
+          {% asset_item_field %}
+        {% endfor %}
+          <td class="mdl-data-table__cell--non-numeric">
+            <a class="mdl-button mdl-js-button mdl-button--icon mdl-button--raised" href="{{ asset.get_absolute_url }}">
+              <i class="material-icons">forward</i>
+            </a>
+          </td>
+        </tr>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+{% endblock %}
