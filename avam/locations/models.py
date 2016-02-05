@@ -16,7 +16,7 @@ class Room(models.Model):
     class Meta:
         unique_together = ('building', 'name')
     def __str__(self):
-        return self.name
+        return '{0} > {1}'.format(self.building, self.name)
     
 @python_2_unicode_compatible
 class Location(models.Model):
@@ -25,4 +25,4 @@ class Location(models.Model):
     class Meta:
         unique_together = ('room', 'name')
     def __str__(self):
-        return self.name
+        return '{0} > {1}'.format(self.room, self.name)
