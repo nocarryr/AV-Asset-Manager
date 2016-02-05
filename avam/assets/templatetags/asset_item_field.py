@@ -50,7 +50,7 @@ def asset_item_field(context):
     else:
         cell = str(field_val)
     if is_numeric:
-        td = '<td mdl-data-table__cell--non-numeric>'
+        td = '<td class="mdl-data-table__cell--non-numeric">'
     else:
         td = '<td>'
     h = ''.join([td, cell, '</td>'])
