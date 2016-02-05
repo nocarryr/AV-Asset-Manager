@@ -47,11 +47,13 @@ def asset_item_field(context):
             cell = '<a href={0}>{1}</a>'.format(url, field_val)
         else:
             cell = str(field_val)
+        field_val = field_val.pk
     else:
         cell = str(field_val)
+    attrs = {'data-fieldname':field_name, 'data-fieldvalue':field_val}
     if is_numeric:
-        td = '<td class="mdl-data-table__cell--non-numeric">'
-    else:
-        td = '<td>'
+        attrs['class'] = 'mdl-data-table__cell--non-numeric'
+    attrs = ' '.join(['{0}="{1}"'.format(k, v) for k, v in attrs.items()])
+    td = '<td {0}>'.format(attrs)
     h = ''.join([td, cell, '</td>'])
     return mark_safe(h)
