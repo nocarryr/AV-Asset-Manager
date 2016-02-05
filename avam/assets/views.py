@@ -1,10 +1,11 @@
 from django.views.generic import ListView, DetailView
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from assets.models import (
     Asset,
 )
 
-class AssetList(ListView):
+class AssetList(LoginRequiredMixin, ListView):
     model = Asset
     template_name = 'assets/asset-list.html'
     context_object_name = 'asset_list'
@@ -18,7 +19,7 @@ class AssetList(ListView):
         ]
         return context
 
-class AssetDetail(DetailView):
+class AssetDetail(LoginRequiredMixin, DetailView):
     model = Asset
     template_name = 'assets/asset-detail.html'
     context_object_name = 'asset'
