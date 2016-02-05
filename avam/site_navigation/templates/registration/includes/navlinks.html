@@ -8,6 +8,9 @@
       <span class="visuallyhidden">Account</span>
     </button>
     <ul class="mdl-menu mdl-menu--bottom-right mdl-js-menu mdl-js-ripple-effect" for="account-option-btn">
+      {% if user.is_staff %}
+      <li class="mdl-menu__item"><a href="{% url 'admin:index' %}">Admin Site</a></li>
+      {% endif %}
       <li class="mdl-menu__item"><a href="{% url 'account_logout' %}">Logout</a></li>
     </ul>
   {% else %}
