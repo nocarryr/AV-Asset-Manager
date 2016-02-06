@@ -1,16 +1,30 @@
 from django.db import models
+from django.db.models import Q
 from django.contrib.contenttypes.models import ContentType
 
 class GenericFKQuerySet(models.query.QuerySet):
+    def _filter_or_exclude_content_objects(self, negate, *content_objects):
+        models = [obj._meta.model for obj in content_objects]
+        content_types = ContentType.objects.get_for_models(*models)
+        qexp = None
+        for content_object, m in zip(content_objects, models):
+            content_type=content_types[m]
+            qkwargs = dict(content_type__id=content_type.pk, object_id=content_object.pk)
+            if qexp is None:
+                qexp = Q(**qkwargs)
+            else:
+                qexp = qexp | Q(**qkwargs)
+        return qexp
     def _filter_or_exclude(self, negate, *args, **kwargs):
+        content_objects = kwargs.pop('content_object__in', [])
         content_object = kwargs.pop('content_object', None)
         if content_object is not None:
-            m = content_object._meta.model
-            content_type = ContentType.objects.get_for_model(m)
-            kwargs.update(dict(
-                content_type=content_type,
-                object_id=content_object.pk,
-            ))
+            content_objects = list(content_objects)
+            content_objects.append(content_object)
+        if len(content_objects):
+            qexp = self._filter_or_exclude_content_objects(negate, *content_objects)
+            args = list(args)
+            args.append(qexp)
         return super(GenericFKQuerySet, self)._filter_or_exclude(negate, *args, **kwargs)
 
 class GenericFKManager(models.Manager):

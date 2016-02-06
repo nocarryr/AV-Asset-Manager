@@ -78,6 +78,8 @@ class CategoryItemManager(GenericFKManager):
     def get_for_object(self, obj):
         queryset = self.get_queryset()
         return queryset.filter(content_object=obj)
+    def get_for_objects(self, *objects):
+        return self.filter(content_object__in=objects)
 
 class CategoryItem(models.Model):
     category = models.ForeignKey(Category, related_name='items')
