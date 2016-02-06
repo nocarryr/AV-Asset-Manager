@@ -80,6 +80,7 @@
     <Source>avam/categories/queryutils.py</Source>
     <Source>avam/categories/signals.py</Source>
     <Source>avam/categories/tests.py</Source>
+    <Source>avam/categories/urls.py</Source>
     <Source>avam/categories/views.py</Source>
     <Source>avam/locations/__init__.py</Source>
     <Source>avam/locations/admin.py</Source>

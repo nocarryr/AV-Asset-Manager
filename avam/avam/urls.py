@@ -21,6 +21,7 @@ from site_navigation import urls as site_urls
 from assets import urls as asset_urls
 from object_history import urls as object_history_urls
 from assettags import urls as assettags_urls
+from categories import urls as categories_urls
 
 urlpatterns = [
     url(r'^', include(site_urls)),
@@ -44,6 +45,13 @@ urlpatterns = [
             assettags_urls,
             namespace='assettags',
             app_name='assettags',
+        )
+    ),
+    url(r'^categories/',
+        include(
+            categories_urls,
+            namespace='categories',
+            app_name='categories',
         )
     ),
 ]

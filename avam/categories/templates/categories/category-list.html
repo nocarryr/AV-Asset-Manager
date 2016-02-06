@@ -1,0 +1,16 @@
+<ul class="category-item-list">
+{% for category_item in category_items %}
+  <li
+    data-category-item-id="{{ category_item.id }}"
+    data-content-object-key="{{ category_item.content_type.id }}-{{ category_item.object_id }}"
+    data-category-id="{{ category_item.category.id }}"
+    data-category-name="{{ category_item.category.name }}">{{ category_item.content_object }}</li>
+{% endfor %}
+</ul>
+<ul class="category-list">
+{% for category in categories %}
+  <li
+    data-category-id="{{ category.id }}"
+    data-category-name="{{ category.name }}">{{ category }}</li>
+{% endfor %}
+</ul>
