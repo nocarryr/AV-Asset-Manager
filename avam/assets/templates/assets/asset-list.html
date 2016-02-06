@@ -13,7 +13,8 @@
       </tr></thead>
       <tbody>
       {% for asset in asset_list %}
-        <tr data-objectid="{{ asset.id }}">
+        <tr data-objectid="{{ asset.id }}"
+            data-content-object-key="{{ asset.content_type.id }}-{{ asset.id }}">
         {% for field_name in asset_item_fields %}
           {% asset_item_field %}
         {% endfor %}

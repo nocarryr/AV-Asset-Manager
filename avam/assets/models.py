@@ -9,6 +9,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 from django.utils.encoding import python_2_unicode_compatible
 from django.core.urlresolvers import reverse
+from django.contrib.contenttypes.models import ContentType
 
 from locations.models import Location
 from assettypes import models as asset_models
@@ -23,6 +24,14 @@ class Asset(models.Model, AssetTaggedMixin, CategorizedMixin):
     notes = models.TextField(blank=True, null=True)
     date_acquired = models.DateTimeField(blank=True, null=True)
     serial_number = models.CharField(max_length=300, blank=True, null=True)
+    @property
+    def content_type(self):
+        c = getattr(self, '_content_type', None)
+        if c is None:
+            c = self._content_type = self.get_content_type()
+        return c
+    def get_content_type(self):
+        return ContentType.objects.get_for_model(self)
     @property
     def asset_instance(self):
         obj = getattr(self, '_asset_instance', None)
@@ -74,6 +83,8 @@ class AssetBase(Asset):
         for subcls in cls.__subclasses__():
             for _cls in subcls.iter_subclasses():
                 yield _cls
+    def get_content_type(self):
+        return self.asset_ptr.get_content_type()
     def __str__(self):
         return '{0} ({1})'.format(self.asset_model, self.location)
 
