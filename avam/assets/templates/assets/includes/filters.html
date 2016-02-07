@@ -2,14 +2,16 @@
 <div class="asset-list-filter">
   <h5>Categories</h5>
   <ul class="asset-category-filter mdl-list"
-      data-href="{% url 'categories:list_for_objects_json' %}">
+      data-href="{% url 'categories:list_for_objects' %}">
     <li class="mdl-list__item">
-      <span class="mdl-list__item-primary-content">
+      <span class="list-item-title mdl-list__item-primary-content">
         ALL
       </span>
       <span class="mdl-list__item-secondary-action">
-        <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="asset-categories-all">
-          <input type="checkbox" id="asset-categories-all" class="mdl-checkbox__input" checked />
+        <label class="mdl-checkbox"
+               data-template-class="mdl-js-checkbox mdl-js-ripple-effect"
+               for="asset-categories-all">
+          <input type="checkbox" id="asset-categories-all" class="list-item-checkbox mdl-checkbox__input" checked />
         </label>
       </span>
     </li>
@@ -19,23 +21,27 @@
   <h5>Manufacturer</h5>
   <ul class="asset-manufacturer-filter mdl-list">
   {% for manuf in manufacturers %}
-    <li class="mdl-list__item">
-      <span class="mdl-list__item-primary-content">
+    <li data-object-id="{{ manufacturer.id }}" class="mdl-list__item">
+      <span class="list-item-title mdl-list__item-primary-content">
         {{ manuf }}
       </span>
       <span class="mdl-list__item-secondary-action">
-        <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="asset-manufacturers-{{ manuf.id }}">
+        <label class="mdl-checkbox"
+               data-template-class="mdl-js-checkbox mdl-js-ripple-effect"
+               for="asset-manufacturers-{{ manuf.id }}">
           <input type="checkbox" id="asset-manufacturers-{{ manuf.id }}" class="mdl-checkbox__input" />
         </label>
       </span>
     </li>
   {% endfor %}
-    <li class="mdl-list__item">
-      <span class="mdl-list__item-primary-content">
+    <li data-object-id="ALL" class="mdl-list__item">
+      <span class="list-item-title mdl-list__item-primary-content">
         ALL
       </span>
       <span class="mdl-list__item-secondary-action">
-        <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="asset-categories-all">
+        <label class="mdl-checkbox"
+               data-template-class="mdl-js-checkbox mdl-js-ripple-effect"
+               for="asset-categories-all">
           <input type="checkbox" id="asset-categories-all" class="mdl-checkbox__input" checked />
         </label>
       </span>

@@ -1,5 +1,12 @@
 {% extends "base.html" %}
-{% load asset_item_field %}
+{% load static sekizai_tags asset_item_field %}
+
+{% block addblocks %}
+{{ block.super }}
+{% addtoblock "js-foot" %}
+<script src="{% static 'assets/js/filters.js' %}"></script>
+{% endaddtoblock %}
+{% endblock %}
 
 {% block main %}
 <div class="mdl-grid">
@@ -13,8 +20,10 @@
       </tr></thead>
       <tbody>
       {% for asset in asset_list %}
-        <tr data-objectid="{{ asset.id }}"
-            data-content-object-key="{{ asset.content_type.id }}-{{ asset.id }}">
+        <tr class="asset-list-item"
+            data-objectid="{{ asset.id }}"
+            data-content-object-key="{{ asset.content_type.id }}-{{ asset.id }}"
+            data-manufacturer-id="{{ asset.asset_instance.asset_model.manufacturer.id }}">
         {% for field_name in asset_item_fields %}
           {% asset_item_field %}
         {% endfor %}
