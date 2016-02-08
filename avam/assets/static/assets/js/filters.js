@@ -40,11 +40,73 @@ $(function(){
           });
         });
       };
-  $(".list-item-checkbox", $templateLi).prop('checked', false);
+  $(".list-item-checkbox", $templateLi)
+    .prop('checked', false)
+    .removeClass('list-filter-all');
   upgradeClasses();
   getCategories();
-  $("input", $manufUl).change(function(){
-    var $this = $(this);
-    console.log($this.prop('checked'));
+
+  var filterHandler = function($listEl, filterParamCallback){
+    $listEl.data('currentFilters', []);
+    function refreshFilter(){
+      var currentFilters = $listEl.data('currentFilters'),
+          $filterEl = $("input:not(.list-filter-all)", $listEl),
+          $allEl = $(".list-filter-all", $listEl);
+      if (currentFilters.length == 0){
+        $filterEl.prop('checked', false);
+        $allEl.prop('checked', true);
+      } else {
+        $allEl.prop('checked', false);
+      }
+      $("input", $listEl).trigger('checkToggleState');
+      $listEl.trigger('refreshFilter');
+    }
+    $("input", $listEl).change(function(){
+      var $this = $(this),
+          checked = $this.prop('checked'),
+          objId = filterParamCallback($this),
+          currentFilters = $listEl.data('currentFilters'),
+          i = currentFilters.indexOf(objId);
+      if ($this.hasClass('list-filter-all')){
+        objId == 'ALL';
+      }
+      if (objId == 'ALL'){
+        if (checked){
+          currentFilters.splice(0, currentFilters.length);
+        }
+      } else {
+        if (checked){
+          if (i == -1){
+            currentFilters.push(objId);
+          }
+        } else {
+          if (i != -1){
+            currentFilters.splice(i, 1);
+          }
+        }
+      }
+      refreshFilter();
+    }).on('checkToggleState', function(){
+      $(this).parent()[0].MaterialCheckbox.checkToggleState();
+    });
+  };
+
+  filterHandler($manufUl, function($el){
+    return $el.parents("li").data('objectId');
+  });
+
+  $manufUl.on('refreshFilter', function(){
+    $(".asset-list-item").trigger('filterManufacturer');
+  });
+
+  $(".asset-list-item").on('filterManufacturer', function(){
+    var $this = $(this),
+        currentFilters = $manufUl.data('currentFilters'),
+        i = currentFilters.indexOf($this.data('manufacturerId'));
+    if (i != -1 || currentFilters.length == 0){
+      $this.show();
+    } else {
+      $this.hide();
+    }
   });
 });
