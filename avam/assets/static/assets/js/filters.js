@@ -23,15 +23,19 @@ $(function(){
         url = [url, $.param(objKeys)].join('?');
         $.get(url, function(data){
           var $data = $(data),
-              $tempDiv = $('<div></div>');
+              $tempDiv = $('<div></div>'),
+              $itemList;
           $tempDiv.hide().append($data).appendTo($("body"));
+          $itemList = $(".category-item-list", $tempDiv).detach();
+          $(".category-data").empty().append($itemList);
+
           $(".category-list li", $tempDiv).each(function(){
             var $dataLi = $(this),
                 $newLi = $templateLi.clone(),
                 itemId = 'asset-categories-' + $dataLi.data('categoryId').toString();
             $(".list-item-title", $newLi).text($dataLi.text());
             $("label", $newLi).attr('for', itemId);
-            $(".input", $newLi).attr('id', itemId);
+            $("input", $newLi).attr('id', itemId);
             $newLi
               .data('categoryId', $dataLi.data('categoryId'))
               .insertBefore($("li:last", $categoryUl));
@@ -61,14 +65,14 @@ $(function(){
       $("input", $listEl).trigger('checkToggleState');
       $listEl.trigger('refreshFilter');
     }
-    $("input", $listEl).change(function(){
+    $listEl.on('change', 'input', function(){
       var $this = $(this),
           checked = $this.prop('checked'),
           objId = filterParamCallback($this),
           currentFilters = $listEl.data('currentFilters'),
           i = currentFilters.indexOf(objId);
       if ($this.hasClass('list-filter-all')){
-        objId == 'ALL';
+        objId = 'ALL';
       }
       if (objId == 'ALL'){
         if (checked){
@@ -86,7 +90,7 @@ $(function(){
         }
       }
       refreshFilter();
-    }).on('checkToggleState', function(){
+    }).on('checkToggleState', 'input', function(){
       $(this).parent()[0].MaterialCheckbox.checkToggleState();
     });
   };
@@ -104,6 +108,39 @@ $(function(){
         currentFilters = $manufUl.data('currentFilters'),
         i = currentFilters.indexOf($this.data('manufacturerId'));
     if (i != -1 || currentFilters.length == 0){
+      $this.show();
+    } else {
+      $this.hide();
+    }
+  });
+
+  filterHandler($categoryUl, function($el){
+    return $el.attr('id');
+  });
+
+  $categoryUl.on('refreshFilter', function(){
+    $(".asset-list-item").trigger('filterCategory');
+  });
+
+  $(".asset-list-item").on('filterCategory', function(){
+    var $this = $(this),
+        currentFilters = $categoryUl.data('currentFilters'),
+        active = false;
+    if (currentFilters.length == 0){
+      active = true;
+    } else {
+      $.each(currentFilters, function(i, filtId){
+        var $filt = $("#" + filtId),
+            categoryId = $filt.parents("li").data('categoryId'),
+            sel = "[data-category-id=ID]".replace('ID', categoryId.toString()),
+            cobjKey = $(sel, $(".category-item-list")).data('contentObjectKey');
+        if ($this.data('contentObjectKey') == cobjKey){
+          active = true;
+          return false;
+        }
+      });
+    }
+    if (active){
       $this.show();
     } else {
       $this.hide();
