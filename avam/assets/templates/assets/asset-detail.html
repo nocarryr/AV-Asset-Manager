@@ -1,9 +1,30 @@
 {% extends "base.html" %}
+{% load static sekizai_tags %}
+
+{% block addblocks %}
+{{ block.super }}
+{% addtoblock "css" %}
+<link rel="stylesheet" href="{% static 'mdl-selectfield/mdl-selectfield.min.css' %}">
+{% endaddtoblock %}
+
+{% addtoblock "js-foot" %}
+<script src="{% static 'mdl-selectfield/mdl-selectfield.min.js' %}"></script>
+{% endaddtoblock %}
+{% endblock %}
 
 {% block main %}
 <div class="mdl-grid">
-  <div class="mdl-cell mdl-cell--6-col">
-    <h3>{{ asset.asset_instance }}</h3>
+  <div class="mdl-card mdl-shadow--2dp mdl-cell mdl-cell--6-col">
+    <div class="mdl-card__supporting-text">
+      <h3>{{ asset.asset_instance.asset_model }}</h3>
+      {% if asset_form %}
+      <form class="asset-detail-form">
+      {% for field in asset_form %}
+        {{ field }}
+      {% endfor %}
+      </form>
+      {% endif %}
+    </div>
   </div>
 </div>
 {% endblock %}

@@ -4,6 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from assets.models import (
     Asset,
 )
+from assets import forms
 
 class AssetList(LoginRequiredMixin, ListView):
     model = Asset
@@ -27,3 +28,12 @@ class AssetDetail(LoginRequiredMixin, DetailView):
     model = Asset
     template_name = 'assets/asset-detail.html'
     context_object_name = 'asset'
+    def get_context_data(self, **kwargs):
+        context = super(AssetDetail, self).get_context_data(**kwargs)
+        asset = context['asset'].asset_instance
+        model_form = forms.build_model_form(instance=asset)
+        if self.request.method == 'POST':
+            context['asset_form'] = model_form(self.request.POST, instance=asset)
+        elif self.request.method == 'GET':
+            context['asset_form'] = model_form(instance=asset)
+        return context
