@@ -10,7 +10,7 @@ class MDLWidgetMixin(object):
     '''
     def build_attrs(self, extra_attrs=None, **kwargs):
         attrs = super(MDLWidgetMixin, self).build_attrs(extra_attrs, **kwargs)
-        attrs['class'] = self.div_classes
+        attrs['class'] = self.inner_classes
         return attrs
     def render_mdl(self, name, attrs, inner_widget):
         return self.widget_template % dict(
@@ -26,6 +26,8 @@ class MDLInputMixin(MDLWidgetMixin):
     def render(self, name, value, attrs=None):
         final_attrs = self.build_attrs(attrs)
         inner_widget = super(MDLInputMixin, self).render(name, value, final_attrs)
+        if inner_widget.endswith(' />'):
+            inner_widget = '{0}>'.format(inner_widget[:-3], '>')
         return mark_safe(self.render_mdl(name, final_attrs, inner_widget))
 
 class MDLTextInput(MDLInputMixin, forms.TextInput):
