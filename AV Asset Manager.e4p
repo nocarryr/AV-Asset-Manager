@@ -19,6 +19,7 @@
     <Source>avam/assets/admin.py</Source>
     <Source>avam/assets/apps.py</Source>
     <Source>avam/assets/fields.py</Source>
+    <Source>avam/assets/forms.py</Source>
     <Source>avam/assets/migrations/0001_initial.py</Source>
     <Source>avam/assets/migrations/0002_auto_20151223_1145.py</Source>
     <Source>avam/assets/migrations/0003_auto_20160130_1416.py</Source>
