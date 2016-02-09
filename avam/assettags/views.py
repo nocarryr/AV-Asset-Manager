@@ -33,6 +33,10 @@ class AssetTagImageView(LoginRequiredMixin, DetailView):
         context['image_template'] = tmpl
         context['image'] = img
         return context
+    def render_to_response(self, context, **kwargs):
+        if self.kwargs.get('as_file'):
+            return HttpResponse(context['image'].qr_svg_bytes, content_type='image/svg+xml')
+        return super(AssetTagImageView, self).render_to_response(context, **kwargs)
 
 
 class AssetTagItemView(AssetTagImageView):
