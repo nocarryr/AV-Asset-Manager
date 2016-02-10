@@ -20,7 +20,7 @@
       </tr></thead>
       <tbody>
       {% for asset in asset_list %}
-        <tr class="asset-list-item"
+        <tr class="asset-list-item"{% if asset.retired %} style="display:none;"{% endif %}
             data-objectid="{{ asset.id }}"
             data-content-object-key="{{ asset.content_type.id }}-{{ asset.id }}"
             data-manufacturer-id="{{ asset.asset_instance.asset_model.manufacturer.id }}">

@@ -146,4 +146,23 @@ $(function(){
       $this.hide();
     }
   });
+
+  $(".asset-status-filter input").change(function(){
+    var $this = $(this),
+        fieldName = $this.parents('li').data('fieldname');
+    $(".asset-list-item").trigger('filterStatus', [fieldName, $this.prop('checked')]);
+  });
+  $(".asset-list-item").on('filterStatus', function(e, fieldName, value){
+    var $this = $(this),
+        $td = $("[data-fieldname=F]".replace('F', fieldName), $this),
+        fieldValue = $td.data('fieldvalue') == 'True';
+    if (!fieldValue){
+      return;
+    }
+    if (value){
+      $this.show();
+    } else {
+      $this.hide();
+    }
+  });
 });
