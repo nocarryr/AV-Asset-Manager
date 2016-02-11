@@ -14,6 +14,10 @@ if not PY2:
 @register.simple_tag(takes_context=True)
 def asset_field_title(context):
     field_name = context['field_name']
+    if field_name.startswith('location'):
+        if '__' in field_name:
+            field_name = field_name.split('__')[-1]
+        return field_name.title()
     asset = context.get('asset')
     if asset is None:
         asset = context['asset_list'].first()
@@ -26,7 +30,17 @@ def asset_item_field(context):
     field_name = context['field_name']
     asset = context['asset']
     asset_instance = asset.asset_instance
-    field_val = getattr(asset, field_name, getattr(asset_instance, field_name))
+    if field_name.startswith('location'):
+        field_name = '__'.join([field_name, 'name'])
+        lookup = field_name.split('__')
+        lookup.reverse()
+        obj = asset_instance
+        while len(lookup):
+            attr = lookup.pop()
+            obj = getattr(obj, attr)
+        field_val = obj
+    else:
+        field_val = getattr(asset, field_name, getattr(asset_instance, field_name))
     is_numeric = False
     if isinstance(field_val, numbers.Number):
         cell = str(field_val)

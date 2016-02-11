@@ -19,6 +19,8 @@ class AssetList(LoginRequiredMixin, ListView):
         context['asset_item_fields'] = [
             'asset_model',
             'location',
+            'location__room',
+            'location__room__building',
             'in_use',
             'retired',
         ]
