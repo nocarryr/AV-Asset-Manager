@@ -32,6 +32,8 @@
     <Source>avam/assets/migrations/0010_asset_serial_number.py</Source>
     <Source>avam/assets/migrations/0011_videocamera.py</Source>
     <Source>avam/assets/migrations/0012_projectorlens_videocameralens.py</Source>
+    <Source>avam/assets/migrations/0013_auto_20160212_0948.py</Source>
+    <Source>avam/assets/migrations/0014_auto_20160212_0950.py</Source>
     <Source>avam/assets/migrations/__init__.py</Source>
     <Source>avam/assets/models.py</Source>
     <Source>avam/assets/templatetags/__init__.py</Source>
@@ -62,6 +64,7 @@
     <Source>avam/assettypes/migrations/0003_auto_20160203_1203.py</Source>
     <Source>avam/assettypes/migrations/0004_auto_20160203_1243.py</Source>
     <Source>avam/assettypes/migrations/0005_auto_20160204_1403.py</Source>
+    <Source>avam/assettypes/migrations/0006_auto_20160212_0946.py</Source>
     <Source>avam/assettypes/migrations/__init__.py</Source>
     <Source>avam/assettypes/models.py</Source>
     <Source>avam/assettypes/tests.py</Source>
