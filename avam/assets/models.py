@@ -174,7 +174,18 @@ class ProjectorLens(LensBase):
         null=True,
     )
 
-class MovingLight(AssetBase):
+class LightingAssetBase(AssetBase):
+    dmx_address = models.IntegerField(blank=True, null=True)
+    profile = models.ForeignKey(
+        'assettypes.LightingProfile',
+        blank=True,
+        null=True,
+    )
+    ## TODO: add 'limit_choices_to'
+    class Meta:
+        abstract = True
+
+class MovingLight(LightingAssetBase):
     asset_model = models.ForeignKey(
         asset_models.MovingLightModel,
         related_name='assets',
@@ -192,7 +203,7 @@ class MovingLightLamp(LampBase):
         null=True,
     )
 
-class LEDLight(AssetBase):
+class LEDLight(LightingAssetBase):
     asset_model = models.ForeignKey(
         asset_models.LEDLightModel,
         related_name='assets',
