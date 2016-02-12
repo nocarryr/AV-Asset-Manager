@@ -32,8 +32,25 @@ class VideoModelBase(ModelBase):
     class Meta(ModelBase.Meta):
         abstract = True
 
+@python_2_unicode_compatible
+class LightingProfile(models.Model):
+    name = models.CharField(max_length=100)
+    def __str__(self):
+        return self.name
+
+@python_2_unicode_compatible
+class LightingProfileChannel(models.Model):
+    profile = models.ForeignKey(LightingProfile, related_name='channels')
+    index = models.IntegerField()
+    name = models.CharField(max_length=30)
+    class Meta:
+        unique_together = ('profile', 'index', )
+    def __str__(self):
+        return self.name
+
 class LightingModelBase(ModelBase):
     default_categories = ['Lighting']
+    profiles = models.ManyToManyField(LightingProfile, blank=True)
     class Meta(ModelBase.Meta):
         abstract = True
     
