@@ -2,3 +2,4 @@ pytz
 qrcode
 xhtml2pdf
 django-sekizai
+django-nested-admin

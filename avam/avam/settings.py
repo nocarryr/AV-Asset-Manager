@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'sekizai',
+    'nested_admin',
     'site_navigation',
     'object_history',
     'categories',

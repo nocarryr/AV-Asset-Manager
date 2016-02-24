@@ -17,6 +17,8 @@ Including another URLconf
 from django.conf.urls import url, include
 from django.contrib import admin
 
+from nested_admin import urls as nested_admin_urls
+
 from site_navigation import urls as site_urls
 from assets import urls as asset_urls
 from object_history import urls as object_history_urls
@@ -33,6 +35,7 @@ urlpatterns = [
         )
     ),
     url(r'^admin/', admin.site.urls),
+    url(r'^nested_admin/', include(nested_admin_urls)),
     url(r'^object_history/',
         include(
             object_history_urls,

@@ -1,5 +1,7 @@
 from django.contrib import admin
 
+import nested_admin
+
 from assettypes.models import (
     Manufacturer,
     GenericModel,
@@ -11,6 +13,8 @@ from assettypes.models import (
     MovingLightLampModel,
     MovingLightModel,
     LEDLightModel,
+    LightingProfile,
+    LightingProfileChannel,
     CameraLensModel,
     VideoCameraModel,
 )
@@ -31,13 +35,32 @@ class GenericAccessoryModelAdmin(admin.ModelAdmin):
 class ProjectorModelAdmin(admin.ModelAdmin):
     pass
 
-@admin.register(MovingLightModel)
-class MovingLightModelAdmin(admin.ModelAdmin):
+class LightingProfileChannelInline(nested_admin.NestedStackedInline):
+    model = LightingProfileChannel
+    sortable_field_name = 'index'
+    def __init__(self, parent_model, admin_site):
+        parent_model = LightingProfile
+        super(LightingProfileChannelInline, self).__init__(parent_model, admin_site)
+
+class LightingProfileInline(nested_admin.NestedStackedInline):
+    inlines = [LightingProfileChannelInline]
+
+class MovingLightProfileInline(LightingProfileInline):
+    model = MovingLightModel.profiles.through
+
+class LEDLightProfileInline(LightingProfileInline):
+    model = LEDLightModel.profiles.through
+
+class LightingAdmin(nested_admin.NestedAdmin):
     pass
 
+@admin.register(MovingLightModel)
+class MovingLightModelAdmin(LightingAdmin):
+    inlines = [MovingLightProfileInline]
+
 @admin.register(LEDLightModel)
-class LEDLightModelAdmin(admin.ModelAdmin):
-    pass
+class LEDLightModelAdmin(LightingAdmin):
+    inlines = [LEDLightProfileInline]
 
 @admin.register(ProjectorLampModel)
 class ProjectorLampModelAdmin(admin.ModelAdmin):
