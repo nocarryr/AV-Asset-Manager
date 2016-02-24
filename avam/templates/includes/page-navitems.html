@@ -1,4 +1,6 @@
 {% for navitem in page_navitems %}
-<a class="mdl-navigation__link{% if navitem.active %} mdl-navigation__link--current{% endif %}" href="{{ navitem.href }}">{{ navitem.text }}</a>
+<li class="nav-item{% if navitem.active %} active{% endif %}">
+  <a class="nav-link" href="{{ navitem.href }}">{{ navitem.text }}{% if navitem.active %} <span class="sr-only">(current)</span>{% endif %}</a>
+</li>
 {% empty %}
 {% endfor %}
