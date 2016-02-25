@@ -14,14 +14,14 @@
       <a href="#" class="list-group-item" id="asset-manufacturers-{{ manuf.id }}"
         data-object-id="{{ manuf.id }}">{{ manuf }}</a>
     {% endfor %}
-      <a href="#" class="list-group-item active" id="asset-manufacturers-all"
+      <a href="#" class="list-group-item active list-filter-all" id="asset-manufacturers-all"
         data-object-id="ALL">ALL</a>
     </div>
   </div>
   <div class="asset-list-filter card card-block">
     <h5 class="card-title">Status</h5>
     <div class="asset-status-filter list-group">
-      <a href="#" data-fieldname="in_use" class="list-group-item" id="status-filter-inuse">In Use</a>
+      <a href="#" data-fieldname="in_use" class="list-group-item active" id="status-filter-inuse">In Use</a>
       <a href="#" data-fieldname="retired" class="list-group-item" id="status-filter-retired">Retired</a>
     </div>
   </div>

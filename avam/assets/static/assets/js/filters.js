@@ -2,15 +2,7 @@ $(function(){
   var $filterDivs = $(".asset-list-filter"),
       $categoryUl = $(".asset-category-filter"),
       $manufUl = $(".asset-manufacturer-filter"),
-      $templateLi = $("li", $categoryUl).clone(),
       $assetEl = $(".asset-list"),
-      upgradeClasses = function(){
-        $("[data-template-class]:not(.classes-upgraded)", $filterDivs).each(function(){
-          var $el = $(this);
-          $el.addClass($el.data('template-class')).addClass('classes-upgraded');
-        });
-        componentHandler.upgradeDom();
-      },
       getCategories = function(){
         var objKeys = [],
             url = $categoryUl.data('href');
@@ -29,45 +21,37 @@ $(function(){
           $itemList = $(".category-item-list", $tempDiv).detach();
           $(".category-data").empty().append($itemList);
 
-          $(".category-list li", $tempDiv).each(function(){
-            var $dataLi = $(this),
-                $newLi = $templateLi.clone(),
-                itemId = 'asset-categories-' + $dataLi.data('categoryId').toString();
-            $(".list-item-title", $newLi).text($dataLi.text());
-            $("label", $newLi).attr('for', itemId);
-            $("input", $newLi).attr('id', itemId);
-            $newLi
-              .data('categoryId', $dataLi.data('categoryId'))
-              .insertBefore($("li:last", $categoryUl));
-            upgradeClasses();
+          $(".category-list a", $tempDiv).each(function(){
+            var $aTag = $(this),
+                itemId = 'asset-categories-' + $aTag.data('categoryId').toString();
+            $aTag
+              .attr('id', itemId)
+              .addClass('list-group-item')
+              .insertBefore($("a:last", $categoryUl));
             $tempDiv.remove();
           });
         });
       };
-  $(".list-item-checkbox", $templateLi)
-    .prop('checked', false)
-    .removeClass('list-filter-all');
-  upgradeClasses();
   getCategories();
 
   var filterHandler = function($listEl, filterParamCallback){
     $listEl.data('currentFilters', []);
     function refreshFilter(){
       var currentFilters = $listEl.data('currentFilters'),
-          $filterEl = $("input:not(.list-filter-all)", $listEl),
+          $filterEl = $("a:not(.list-filter-all)", $listEl),
           $allEl = $(".list-filter-all", $listEl);
       if (currentFilters.length == 0){
-        $filterEl.prop('checked', false);
-        $allEl.prop('checked', true);
+        $filterEl.removeClass('active');
+        $allEl.addClass('active');
       } else {
-        $allEl.prop('checked', false);
+        $allEl.removeClass('active');
       }
-      $("input", $listEl).trigger('checkToggleState');
       $listEl.trigger('refreshFilter');
     }
-    $listEl.on('change', 'input', function(){
-      var $this = $(this),
-          checked = $this.prop('checked'),
+    $listEl.on('click', 'a', function(e){
+      var $this = $(this);
+      $this.toggleClass('active');
+      var checked = $this.hasClass('active'),
           objId = filterParamCallback($this),
           currentFilters = $listEl.data('currentFilters'),
           i = currentFilters.indexOf(objId);
@@ -90,13 +74,11 @@ $(function(){
         }
       }
       refreshFilter();
-    }).on('checkToggleState', 'input', function(){
-      $(this).parent()[0].MaterialCheckbox.checkToggleState();
     });
   };
 
   filterHandler($manufUl, function($el){
-    return $el.parents("li").data('objectId');
+    return $el.data('objectId');
   });
 
   $manufUl.on('refreshFilter', function(){
@@ -131,7 +113,7 @@ $(function(){
     } else {
       $.each(currentFilters, function(i, filtId){
         var $filt = $("#" + filtId),
-            categoryId = $filt.parents("li").data('categoryId'),
+            categoryId = $filt.data('categoryId'),
             sel = "[data-category-id=ID]".replace('ID', categoryId.toString()),
             cobjKey = $(sel, $(".category-item-list")).data('contentObjectKey');
         if ($this.data('contentObjectKey') == cobjKey){
@@ -147,10 +129,12 @@ $(function(){
     }
   });
 
-  $(".asset-status-filter input").change(function(){
+  $(".asset-status-filter a").click(function(e){
     var $this = $(this),
-        fieldName = $this.parents('li').data('fieldname');
-    $(".asset-list-item").trigger('filterStatus', [fieldName, $this.prop('checked')]);
+        fieldName = $this.data('fieldname');
+    e.preventDefault();
+    $this.toggleClass('active');
+    $(".asset-list-item").trigger('filterStatus', [fieldName, $this.hasClass('active')]);
   });
   $(".asset-list-item").on('filterStatus', function(e, fieldName, value){
     var $this = $(this),
