@@ -16,11 +16,11 @@
       {% csrf_token %}
       <fieldset class="form-group">
         <label for="username">Username</label>
-        <input type="text" class="form-control" id="username" placeholder="username">
+        <input type="text" class="form-control" name="username" id="username" placeholder="username">
       </fieldset>
       <fieldset class="form-group">
         <label for="password">Password</label>
-        <input type="password" class="form-control" id="password" placeholder="password">
+        <input type="password" class="form-control" name="password" id="password" placeholder="password">
       </fieldset>
       <input type="hidden" name="next" value="{{ next|default:"/" }}">
       <button type="submit" class="btn btn-primary">Login</button>
