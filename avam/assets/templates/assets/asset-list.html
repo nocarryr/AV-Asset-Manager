@@ -4,46 +4,46 @@
 {% block addblocks %}
 {{ block.super }}
 {% addtoblock "js-foot" %}
-<script src="{% static 'assets/js/filters.js' %}"></script>
+<!--<script src="{% static 'assets/js/filters.js' %}"></script>-->
 {% endaddtoblock %}
 {% endblock %}
 
 {% block main %}
-<div class="mdl-grid">
-  <div class="mdl-cell mdl-cell--8-col">
-    <table class="asset-list mdl-data-table mdl-js-data-table mdl-shadow--2dp">
-      <thead><tr>
-      {% for field_name in asset_item_fields %}
-        <th class="mdl-data-table__cell--non-numeric">{% asset_field_title %}</th>
-      {% endfor %}
-        <th class="mdl-data-table__cell--non-numeric"> </th>
-      </tr></thead>
-      <tbody>
-      {% for asset in asset_list %}
-      {% with location=asset.asset_instance.location %}
-        <tr class="asset-list-item"{% if asset.retired %} style="display:none;"{% endif %}
-            data-objectid="{{ asset.id }}"
-            data-content-object-key="{{ asset.content_type.id }}-{{ asset.id }}"
-            data-manufacturer-id="{{ asset.asset_instance.asset_model.manufacturer.id }}"
-            data-location-name="{{ location.name }}"
-            data-location-room="{{ location.room.name }}"
-            data-location-building="{{ location.room.building.name }}">
+<div class="container">
+  <div class="row">
+    <div class="col-md-8">
+      <table class="asset-list table">
+        <thead><tr>
         {% for field_name in asset_item_fields %}
-          {% asset_item_field %}
+          <th>{% asset_field_title %}</th>
         {% endfor %}
-          <td class="mdl-data-table__cell--non-numeric">
-            <a class="mdl-button mdl-js-button mdl-button--icon mdl-button--raised" href="{{ asset.get_absolute_url }}">
-              <i class="material-icons">forward</i>
-            </a>
-          </td>
-        </tr>
-      {% endwith %}
-      {% endfor %}
-      </tbody>
-    </table>
-  </div>
-  <div class="mdl-cell mdl-cell--4-col">
-  {% include "assets/includes/filters.html" %}
+          <th> </th>
+        </tr></thead>
+        <tbody>
+        {% for asset in asset_list %}
+        {% with location=asset.asset_instance.location %}
+          <tr class="asset-list-item"{% if asset.retired %} style="display:none;"{% endif %}
+              data-objectid="{{ asset.id }}"
+              data-content-object-key="{{ asset.content_type.id }}-{{ asset.id }}"
+              data-manufacturer-id="{{ asset.asset_instance.asset_model.manufacturer.id }}"
+              data-location-name="{{ location.name }}"
+              data-location-room="{{ location.room.name }}"
+              data-location-building="{{ location.room.building.name }}">
+          {% for field_name in asset_item_fields %}
+            {% asset_item_field %}
+          {% endfor %}
+            <td>
+              <a href="{{ asset.get_absolute_url }}"><span class="octicon octicon-chevron-right"></a></span>
+            </td>
+          </tr>
+        {% endwith %}
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <div class="col-md-4">
+    {% include "assets/includes/filters.html" %}
+    </div>
   </div>
 </div>
 {% endblock %}

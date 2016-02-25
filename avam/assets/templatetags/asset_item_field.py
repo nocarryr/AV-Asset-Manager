@@ -49,9 +49,9 @@ def asset_item_field(context):
         cell = field_val
     elif isinstance(field_val, bool):
         if field_val:
-            cell = '<i class="material-icons">check_box</i>'
+            cell = '<span class="octicon octicon-check"></span>'
         else:
-            cell = '<i class="material-icons">check_box_outline_blank</i>'
+            cell = '<span class="octicon octicon-dash"></span>'
     elif isinstance(field_val, models.Model):
         try:
             url = field_val.get_absolute_url()
@@ -65,8 +65,8 @@ def asset_item_field(context):
     else:
         cell = str(field_val)
     attrs = {'data-fieldname':field_name, 'data-fieldvalue':field_val}
-    if is_numeric:
-        attrs['class'] = 'mdl-data-table__cell--non-numeric'
+    #if is_numeric:
+    #    attrs['class'] = 'mdl-data-table__cell--non-numeric'
     attrs = ' '.join(['{0}="{1}"'.format(k, v) for k, v in attrs.items()])
     td = '<td {0}>'.format(attrs)
     h = ''.join([td, cell, '</td>'])
