@@ -11,6 +11,7 @@
 {% block body %}
 <div class="container">
   <div class="card card-block">
+    {% if form.errors %}<p>Your username and password didn't match. Please try again.</p>{% endif %}
     <form id="login-form" method="post" action="{% url 'django.contrib.auth.views.login' %}">
       {% csrf_token %}
       <fieldset class="form-group">
