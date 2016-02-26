@@ -3,42 +3,33 @@
 
 {% block addblocks %}
 {{ block.super }}
-{% addtoblock "js-foot" %}
-<script type="text/javascript">
-  $(function(){
-    $(".object_history_list li").click(function(){
-      var $li = $(this);
-      console.log($li);
-      if ($li.hasClass('active')){
-        return;
-      }
-      window.location = $li.data('href');
-    });
-  });
-</script>
+{% addtoblock "css" %}
+<link rel="stylesheet" href="{% static 'object_history/css/object_history.css' %}">
 {% endaddtoblock %}
 {% endblock %}
 
 {% block main %}
-<div class="object_history mdl-grid">
-  <div class="object_update_view mdl-cell mdl-cell--8-col">
-    {% block object_form %}
-    <form class="object_update_form">
-    {% for field, is_changed in object_form.iter_with_changes %}
-      {% related_obj_data object_form field as obj_data %}
-      {% include "object_history/includes/formfield.html" %}
-    {% endfor %}
-    </form>
-    {% endblock %}
-  </div>
-  <div class="object_history_panel mdl-cell mdl-cell--4-col">
-    {% block object_history_list %}
-    <ul class="object_history_list mdl-list">
-    {% for obj_update in object_history_queryset %}
-      {% include "object_history/includes/object_update.html" with object_update=obj_update %}
-    {% endfor %}
-    </ul>
-    {% endblock %}
+<div class="container">
+  <div class="object_history row">
+    <div class="object_update_view col-md-8">
+      {% block object_form %}
+      <form class="object_update_form">
+      {% for field, is_changed in object_form.iter_with_changes %}
+        {% related_obj_data object_form field as obj_data %}
+        {% include "object_history/includes/formfield.html" %}
+      {% endfor %}
+      </form>
+      {% endblock %}
+    </div>
+    <div class="object_history_panel col-md-4">
+      {% block object_history_list %}
+      <div class="object_history_list list-group">
+      {% for obj_update in object_history_queryset %}
+        {% include "object_history/includes/object_update.html" with object_update=obj_update %}
+      {% endfor %}
+      </div>
+      {% endblock %}
+    </div>
   </div>
 </div>
 {% endblock %}

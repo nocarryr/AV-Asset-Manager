@@ -3,48 +3,55 @@
 
 {% block addblocks %}
 {{ block.super }}
-{% addtoblock "css" %}
-<link rel="stylesheet" href="{% static 'mdl-selectfield/mdl-selectfield.min.css' %}">
-{% endaddtoblock %}
 
 {% addtoblock "js-foot" %}
-<script src="{% static 'mdl-selectfield/mdl-selectfield.min.js' %}"></script>
+<script type="text/javascript">
+  $(function(){
+    $(".asset-detail-form input,select,textarea").addClass('form-control');
+  });
+</script>
 {% endaddtoblock %}
 {% endblock %}
 
 {% block main %}
-<div class="mdl-grid">
-  <div class="mdl-card mdl-shadow--2dp mdl-cell mdl-cell--6-col">
-    <div class="mdl-card__supporting-text">
-      <h3>{{ asset.asset_instance.asset_model }}</h3>
-      {% if asset_form %}
-      <form class="asset-detail-form">
-      {% for field in asset_form %}
-        {{ field }}
-      {% endfor %}
-      </form>
-      {% endif %}
+<div class="container">
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-block">
+          <h4 class="card-title">{{ asset.asset_instance.asset_model }}</h4>
+        </div>
+        {% if asset_form %}
+        <form class="asset-detail-form">
+        {% for field in asset_form %}
+          <fieldset class="form-group">
+            <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+            {{ field }}
+          </fieldset>
+        {% endfor %}
+        </form>
+        {% endif %}
+      </div>
     </div>
+    {% with asset_tag=asset.asset_tag %}
+    <div class="col-md-4">
+      <div class="card">
+        <div class="card-block">
+          <h4 class="card-title">Asset Tag</h4>
+        </div>
+        {% if asset_tag %}
+        <img src="{% url 'assettags:assettag_image_file' pk=asset_tag.id %}">
+        {% else %}
+        <p>(Not assigned)</p>
+        {% endif %}
+        {% if not asset_tag %}
+        <a href="{% url 'assettags:asset_tag_assign' content_type_id=asset.content_type.id object_id=asset.id %}">
+          Assign
+        </a>
+        {% endif %}
+      </div>
+    </div>
+    {% endwith %}
   </div>
-  {% with asset_tag=asset.asset_tag %}
-  <div class="mdl-card mdl-shadow--2dp mdl-cell mdl-cell--4-col">
-    <div class="mdl-card__supporting-text">
-      <h3>Asset Tag</h3>
-      {% if asset_tag %}
-      <img src="{% url 'assettags:assettag_image_file' pk=asset_tag.id %}">
-      {% else %}
-      <p>(Not assigned)</p>
-      {% endif %}
-    </div>
-    {% if not asset_tag %}
-    <div class="mdl-card__actions mdl-card--border">
-      <a href="{% url 'assettags:asset_tag_assign' content_type_id=asset.content_type.id object_id=asset.id %}"
-         class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect">
-        Assign
-      </a>
-    </div>
-    {% endif %}
-  </div>
-  {% endwith %}
 </div>
 {% endblock %}

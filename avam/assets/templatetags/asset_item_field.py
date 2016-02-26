@@ -1,5 +1,4 @@
 import sys
-import numbers
 
 from django.db import models
 from django import template
@@ -41,17 +40,13 @@ def asset_item_field(context):
         field_val = obj
     else:
         field_val = getattr(asset, field_name, getattr(asset_instance, field_name))
-    is_numeric = False
-    if isinstance(field_val, numbers.Number):
-        cell = str(field_val)
-        is_numeric = True
     if isinstance(field_val, basestring):
         cell = field_val
     elif isinstance(field_val, bool):
         if field_val:
-            cell = '<i class="material-icons">check_box</i>'
+            cell = '<span class="octicon octicon-check"></span>'
         else:
-            cell = '<i class="material-icons">check_box_outline_blank</i>'
+            cell = '<span class="octicon octicon-dash"></span>'
     elif isinstance(field_val, models.Model):
         try:
             url = field_val.get_absolute_url()
@@ -65,8 +60,6 @@ def asset_item_field(context):
     else:
         cell = str(field_val)
     attrs = {'data-fieldname':field_name, 'data-fieldvalue':field_val}
-    if is_numeric:
-        attrs['class'] = 'mdl-data-table__cell--non-numeric'
     attrs = ' '.join(['{0}="{1}"'.format(k, v) for k, v in attrs.items()])
     td = '<td {0}>'.format(attrs)
     h = ''.join([td, cell, '</td>'])

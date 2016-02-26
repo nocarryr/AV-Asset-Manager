@@ -4,50 +4,26 @@
 {% block addblocks %}
 {{ block.super }}
 {% addtoblock "css" %}
-<link rel="stylesheet" href="//fonts.googleapis.com/icon?family=Material+Icons">
-<link rel="stylesheet" href="//code.getmdl.io/1.1.1/material.indigo-pink.min.css">
-<link rel="stylesheet" href="{% static 'registration/css/account-header.css' %}">
+<link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/octicons/3.5.0/octicons.css">
 {% endaddtoblock %}
 
 {% addtoblock "js-foot" %}
-<script src="//code.getmdl.io/1.1.1/material.min.js"></script>
-<script src="//code.jquery.com/jquery-1.12.0.min.js"></script>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js" integrity="sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7" crossorigin="anonymous"></script>
 {% endaddtoblock %}
 {% endblock %}
 
 {% block body %}
-<div class="mdl-layout mdl-js-layout">
-{% block layout %}
-  <header class="mdl-layout__header">
-  {% block header %}
-    <div class="mdl-layout-icon"></div>
-    <div class="mdl-layout__header-row">
-    {% block header_row %}
-      <span class="mdl-layout__title">{{ page_title }}</span>
-      <div class="mdl-layout-spacer"></div>
-      <nav class="mdl-navigation">
-      {% block header_nav %}
-        {% include "includes/page-navitems.html" %}
-      {% endblock header_nav %}
-      </nav>
-    {% endblock header_row %}
-    </div>
-  {% endblock header %}
-  </header>
-  <div class="mdl-layout__drawer">
-  {% block drawer %}
-    <span class="mdl-layout__title">{{ page_title }}</span>
-    {% include "registration/includes/navlinks.html" %}
-    <nav class="mdl-navigation">
-    {% block drawer_nav %}
-      {% include "includes/page-navitems.html" %}
-    {% endblock drawer_nav %}
-    </nav>
-  {% endblock drawer %}
-  </div>
-  <main class="mdl-layout__content">
-    {% block main %}{% endblock %}
-  </main>
-{% endblock layout %}
-</div>
+{% block navbar %}
+<nav class="navbar navbar-dark">
+  {% block navbar_items %}
+  <ul class="nav navbar-nav">
+    {% block navbar_page_items %}{% include "includes/page-navitems.html" %}{% endblock %}
+  {% endblock navbar_items %}
+  {% include "registration/includes/navlinks.html" %}
+  </ul>
+</nav>
+{% endblock navbar %}
+{% block main %}{% endblock %}
 {% endblock body %}

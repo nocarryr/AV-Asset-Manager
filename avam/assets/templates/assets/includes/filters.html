@@ -1,76 +1,29 @@
-<h4>Filters</h4>
-<div class="asset-list-filter">
-  <h5>Categories</h5>
-  <ul class="asset-category-filter mdl-list"
-      data-href="{% url 'categories:list_for_objects' %}">
-    <li class="mdl-list__item">
-      <span class="list-item-title mdl-list__item-primary-content">
-        ALL
-      </span>
-      <span class="mdl-list__item-secondary-action">
-        <label class="mdl-checkbox"
-               data-template-class="mdl-js-checkbox mdl-js-ripple-effect"
-               for="asset-categories-all">
-          <input type="checkbox" id="asset-categories-all" class="list-filter-all list-item-checkbox mdl-checkbox__input" checked />
-        </label>
-      </span>
-    </li>
-  </ul>
-</div>
-<div class="asset-list-filter">
-  <h5>Manufacturer</h5>
-  <ul class="asset-manufacturer-filter mdl-list">
-  {% for manuf in manufacturers %}
-    <li data-object-id="{{ manuf.id }}" class="mdl-list__item">
-      <span class="list-item-title mdl-list__item-primary-content">
-        {{ manuf }}
-      </span>
-      <span class="mdl-list__item-secondary-action">
-        <label class="mdl-checkbox"
-               data-template-class="mdl-js-checkbox mdl-js-ripple-effect"
-               for="asset-manufacturers-{{ manuf.id }}">
-          <input type="checkbox" id="asset-manufacturers-{{ manuf.id }}" class="mdl-checkbox__input" />
-        </label>
-      </span>
-    </li>
-  {% endfor %}
-    <li data-object-id="ALL" class="mdl-list__item">
-      <span class="list-item-title mdl-list__item-primary-content">
-        ALL
-      </span>
-      <span class="mdl-list__item-secondary-action">
-        <label class="mdl-checkbox"
-               data-template-class="mdl-js-checkbox mdl-js-ripple-effect"
-               for="asset-manufacturers-all">
-          <input type="checkbox" id="asset-manufacturers-all" class="list-filter-all mdl-checkbox__input" checked />
-        </label>
-      </span>
-    </li>
-  </ul>
-</div>
-<div class="asset-list-filter">
-  <h5>Status</h5>
-  <ul class="asset-status-filter mdl-list">
-    <li data-fieldname="in_use" class="mdl-list__item">
-      <span class="list-item-title mdl-list__item-primary-content">
-        In Use
-      </span>
-      <span class="mdl-list__item-secondary-action">
-        <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="status-filter-inuse">
-          <input type="checkbox" id="status-filter-inuse" class="mdl-checkbox__input" checked />
-        </label>
-      </span>
-    </li>
-    <li data-fieldname="retired" class="mdl-list__item">
-      <span class="list-item-title mdl-list__item-primary-content">
-        Retired
-      </span>
-      <span class="mdl-list__item-secondary-action">
-        <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="status-filter-retired">
-          <input type="checkbox" id="status-filter-retired" class="mdl-checkbox__input" />
-        </label>
-      </span>
-    </li>
-  </ul>
+<div class="card card-block">
+  <h4 class="card-title">Filters</h4>
+  <div class="asset-list-filter card card-block">
+    <h5 class="card-title">Categories</h5>
+    <div class="asset-category-filter list-group"
+        data-href="{% url 'categories:list_for_objects' %}">
+      <a href="#" class="list-group-item active list-filter-all" id="asset-categories-all">ALL</a>
+    </div>
+  </div>
+  <div class="asset-list-filter card card-block">
+    <h5 class="card-title">Manufacturer</h5>
+    <div class="asset-manufacturer-filter list-group">
+    {% for manuf in manufacturers %}
+      <a href="#" class="list-group-item" id="asset-manufacturers-{{ manuf.id }}"
+        data-object-id="{{ manuf.id }}">{{ manuf }}</a>
+    {% endfor %}
+      <a href="#" class="list-group-item active list-filter-all" id="asset-manufacturers-all"
+        data-object-id="ALL">ALL</a>
+    </div>
+  </div>
+  <div class="asset-list-filter card card-block">
+    <h5 class="card-title">Status</h5>
+    <div class="asset-status-filter list-group">
+      <a href="#" data-fieldname="in_use" class="list-group-item active" id="status-filter-inuse">In Use</a>
+      <a href="#" data-fieldname="retired" class="list-group-item" id="status-filter-retired">Retired</a>
+    </div>
+  </div>
 </div>
 <div class="category-data" style="display:none;"></div>
