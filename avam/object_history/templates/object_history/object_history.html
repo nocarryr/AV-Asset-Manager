@@ -4,14 +4,7 @@
 {% block addblocks %}
 {{ block.super }}
 {% addtoblock "css" %}
-<style>
-  .object_history_field.not-changed{
-    background-color: rgb(190, 190, 190);
-  }
-  .object_history_field.changed{
-    background-color: rgb(135, 255, 135);
-  }
-</style>
+<link rel="stylesheet" href="{% static 'object_history/css/object_history.css' %}">
 {% endaddtoblock %}
 {% endblock %}
 

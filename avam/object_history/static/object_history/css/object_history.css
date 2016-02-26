@@ -1,40 +1,6 @@
-.object_history{
-  display: flex;
+.object_history_field.not-changed{
+  background-color: rgb(190, 190, 190);
 }
-
-.object_update_view{
-  width: 80%;
-}
-
-.object_update_form{
-
-}
-
-.object_history_formfield{
-
-}
-
-.object_history_formfield_altered{
-  background-color: rgba(255, 255, 0, 0.25);
-}
-
-.object_history_panel{
-  background-color: rgba(212, 212, 212, 0.6);
-  padding-right: 10px;
-}
-
-.object_history_list{
-  list-style-type: none;
-  padding-left: 10px;
-}
-
-.object_history_list_item{
-  margin-bottom: .25em;
-  padding: .25em;
-  border-radius: 10%;
-  background-color: rgb(255, 255, 255);
-}
-
-.object_history_list_item_active{
-  background-color: rgb(173, 255, 173);
+.object_history_field.changed{
+  background-color: rgb(135, 255, 135);
 }
