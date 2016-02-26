@@ -6,7 +6,6 @@
 {% addtoblock "css" %}
 <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">
 <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/octicons/3.5.0/octicons.css">
-<link rel="stylesheet" href="{% static 'registration/css/account-header.css' %}">
 {% endaddtoblock %}
 
 {% addtoblock "js-foot" %}
@@ -17,7 +16,7 @@
 
 {% block body %}
 {% block navbar %}
-<nav class="navbar navbar-light bg-faded">
+<nav class="navbar navbar-dark">
   {% block navbar_items %}
   <ul class="nav navbar-nav">
     {% block navbar_page_items %}{% include "includes/page-navitems.html" %}{% endblock %}

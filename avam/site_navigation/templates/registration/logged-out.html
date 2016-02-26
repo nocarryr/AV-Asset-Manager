@@ -1,19 +1,14 @@
 {% extends "base.html" %}
-{% load static sekizai_tags %}
-
-{% block addblocks %}
-{{ block.super }}
-{% addtoblock "css" %}
-<link rel="stylesheet" href="{% static 'registration/css/login.css' %}">
-{% endaddtoblock %}
-{% endblock %}
 
 {% block main %}
 <div class="container">
-  <div class="card card-block">
-    <h4 class="card-title">Logged out</h4>
-    <p class="card-text">You have been successfully logged out.</p>
-    <a href="{% url 'account_login' %}" class="card-link">Log in again</a>
+  <div class="row">
+    <div class="col-md-4"></div>
+    <div class="card card-block col-md-4">
+      <h4 class="card-title">Logged out</h4>
+      <p class="card-text">You have been successfully logged out.</p>
+      <a href="{% url 'account_login' %}" class="card-link">Log in again</a>
+    </div>
   </div>
 </div>
 {% endblock %}
