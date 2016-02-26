@@ -118,7 +118,6 @@
     <Source>avam/site_navigation/tests.py</Source>
     <Source>avam/site_navigation/urls.py</Source>
     <Source>avam/site_navigation/views.py</Source>
-    <Source>avam/site_navigation/widgets.py</Source>
   </Sources>
   <Forms/>
   <Translations/>
