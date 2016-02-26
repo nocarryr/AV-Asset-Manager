@@ -1,10 +1,11 @@
-<div class="object_history_formfield mdl-textfield mdl-js-textfield mdl-textfield--floating-label mdl-shadow--2dp{% if not is_changed %} mdl-color--grey-300{% endif %}">
+<fieldset class="form-group">
+  <label for="{{ field.id_for_label }}">{{ field.label }}</label>
   <input
-    class="mdl-textfield__input"
+    class="form-control object_history_field {% if is_changed %}changed{% else %}not-changed{% endif %}"
     type="text"
+    readonly
     id="{{ field.id_for_label }}"
     name="{{ field.name }}"
     data-href="{{ obj_data.href }}"
     value="{{ obj_data.label }}">
-  <label class="mdl-textfield__label" for="{{ field.id_for_label }}">{{ field.label }}</label>
-</div>
+</fieldset>

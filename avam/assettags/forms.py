@@ -1,21 +1,18 @@
 from django import forms
 
-from site_navigation.widgets import MDLNumberInput, MDLCheckBox, MDLSelect
 from assettags.models import (
     AssetTagImageTemplate,
     AssetTagPrintTemplate
 )
 
 class TagPrintForm(forms.Form):
-    tags_to_create = forms.IntegerField(required=False, widget=MDLNumberInput())
-    reprint_unassigned = forms.BooleanField(required=False, widget=MDLCheckBox())
+    tags_to_create = forms.IntegerField(required=False)
+    reprint_unassigned = forms.BooleanField(required=False)
     page_template = forms.ModelChoiceField(
         queryset=AssetTagPrintTemplate.objects.all(),
-        widget=MDLSelect(),
     )
     tag_template = forms.ModelChoiceField(
         queryset=AssetTagImageTemplate.objects.all(),
-        widget=MDLSelect(),
     )
     render_as = forms.ChoiceField(
         choices=(
@@ -23,7 +20,6 @@ class TagPrintForm(forms.Form):
             ('pdf', 'PDF'),
         ),
         initial='html',
-        widget=MDLSelect(),
     )
     
 class TagScanForm(forms.Form):
