@@ -119,7 +119,14 @@ class AssetTagImageTemplate(models.Model):
     location_choices = (
         ('a', 'Above'),
         ('b', 'Below'),
+        ('l', 'Left'),
+        ('r', 'Right'),
         ('n', 'None'),
+    )
+    header_text_location = models.CharField(
+        max_length=1,
+        choices=location_choices,
+        default='a',
     )
     code_text_location = models.CharField(
         max_length=1,
@@ -142,7 +149,8 @@ class AssetTagImageTemplate(models.Model):
         h = kwargs.get('height', template.height)
         if w == template.width and h == template.height:
             return template
-        fnames = ['header_text', 'qr_code_size', 'code_text_location']
+        fnames = ['header_text', 'qr_code_size',
+                  'header_text_location', 'code_text_location']
         qkwargs = {fname:getattr(template, fname) for fname in fnames}
         qkwargs.update(dict(width=w, height=h))
         q = cls.objects.filter(**qkwargs)
