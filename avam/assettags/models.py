@@ -41,7 +41,7 @@ class AssetTagManager(models.Manager):
             except AssetTag.DoesNotExist:
                 return None
         return asset_tag.content_object
-    
+
 @python_2_unicode_compatible
 class AssetTag(models.Model):
     code = models.CharField(max_length=50, unique=True)
@@ -84,7 +84,7 @@ class AssetTag(models.Model):
         return url
     def __str__(self):
         return self.code
-    
+
 class AssetTaggedMixin(object):
     @property
     def asset_tag(self):
@@ -261,7 +261,7 @@ class PaperFormat(models.Model):
         return Box(**kwargs)
     def __str__(self):
         return self.name
-    
+
 @python_2_unicode_compatible
 class AssetTagPrintTemplate(models.Model):
     name = models.CharField(max_length=30, unique=True)
