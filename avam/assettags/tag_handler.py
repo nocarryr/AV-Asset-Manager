@@ -78,6 +78,10 @@ class AssetTagImage(object):
         if b is None:
             b = self._qr_svg_bytes = self.get_qr_svg_bytes()
         return b
+    @property
+    def qr_svg_data_url(self):
+        b = b64encode(self.qr_svg_bytes)
+        return 'data:image/svg+xml;charset=utf-8;base64,{}'.format(b)
     def get_qr_svg_bytes(self):
         return ET.tostring(self.svg)
     @property

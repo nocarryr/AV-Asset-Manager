@@ -173,6 +173,7 @@ def print_tags(request):
                 page_template=page_tmpl,
                 page_box=page_box,
                 print_box=print_box,
+                tag_box=cell,
                 padding=page_tmpl.get_html_padding(dpi),
                 cell_iter=data['page_template'].iter_cells(tag_imgs),
             )
