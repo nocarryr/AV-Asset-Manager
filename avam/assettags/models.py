@@ -321,7 +321,7 @@ class AssetTagPrintTemplate(models.Model):
             for padkey in padkeys:
                 d[padkey] = val
         return d
-    def get_cells(self, dpi=None):
+    def iter_cells(self, dpi=None):
         full_box = self.get_printable_area(dpi)
         spacing = self.get_spacing(dpi)
         num_cols = self.columns_per_row
@@ -334,7 +334,6 @@ class AssetTagPrintTemplate(models.Model):
         row_size = full_box.h / num_rows
         if spacing['row_spacing'] > 0:
             row_size -= row_gaps * spacing['row_spacing'] / num_rows
-        cells = []
         y = full_box.y
         for r in range(num_rows):
             last_col = None
@@ -344,9 +343,10 @@ class AssetTagPrintTemplate(models.Model):
                 else:
                     x = full_box.x
                 last_col = Box(x=x, y=y, w=col_size, h=row_size, dpi=dpi)
-                cells.append(last_col)
+                yield last_col
             y += row_size + spacing['row_spacing']
-        return cells
+    def get_cells(self, dpi=None):
+        return [cell for cell in self.iter_cells(dpi)]
     def iter_page_row_col(self, asset_tags=None, full_page=True):
         rows = self.rows_per_page
         cols = self.columns_per_row
