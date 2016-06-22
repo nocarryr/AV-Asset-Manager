@@ -1,9 +1,14 @@
 {% with fmt=page_template.paper_format %}
-@page {
-  size:{{ fmt.width }}in {{ fmt.height }}in portrait;
-  margin-left: {{ fmt.left_margin }}in;
-  margin-right: {{ fmt.right_margin }}in;
-  margin-top: {{ fmt.top_margin }}in;
-  margin-bottom: {{ fmt.bottom_margin }}in;
+@media print {
+    @page {
+        size: {{ fmt.width }}in {{ fmt.height }}in;
+        margin-left: {{ fmt.left_margin }}in;
+        margin-right: {{ fmt.right_margin }}in;
+        margin-top: {{ fmt.top_margin }}in;
+        margin-bottom: {{ fmt.bottom_margin }}in;
+    }
+    .tag-page{
+        width: 100%;
+    }
 }
 {% endwith %}
