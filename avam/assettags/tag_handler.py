@@ -65,6 +65,7 @@ class AssetTagImage(object):
     def __init__(self, **kwargs):
         self.asset_tag = kwargs.get('asset_tag')
         self.template = kwargs.get('template')
+        self.scale = kwargs.get('scale')
         self.image_format = kwargs.get('image_format', 'svg')
         self.qr_img = build_qr_svg(self.asset_tag.code)
         self.qr_img._img.set('width', '100%')
@@ -92,13 +93,17 @@ class AssetTagImage(object):
         s = self.get_png_string()
         return b64encode(s)
     def build_svg(self):
-        w = self.template.width
-        h = self.template.height
+        vw = self.template.width
+        vh = self.template.height
+        if self.scale is not None:
+            w, h = [str(s) for s in self.scale]
+        else:
+            w, h = '{}px'.format(vw), '{}px'.format(vh)
         root = ET.Element(
             'svg',
-            width='%spx' % (w),
-            height='%spx' % (h),
-            viewBox='0 0 %s %s' % (w, h),
+            width=w,
+            height=h,
+            viewBox='0 0 %s %s' % (vw, vh),
             version='1.1',
         )
         root.set('xmlns', SvgPathFillImage._SVG_namespace)

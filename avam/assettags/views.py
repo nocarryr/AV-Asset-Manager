@@ -160,8 +160,8 @@ def print_tags(request):
                 page_box = page_tmpl.get_full_area(dpi)
                 print_box = page_tmpl.get_printable_area(dpi)
             cell = page_tmpl.get_cells(dpi)[0]
-            tag_tmpl = AssetTagImageTemplate.get_resized(tag_tmpl, width=cell.w, height=cell.h)
-            tag_imgs = [AssetTagImage(asset_tag=t, template=tag_tmpl) for t in q]
+            tag_scale = [u.to_other('px') for u in [cell.w, cell.h]]
+            tag_imgs = [AssetTagImage(asset_tag=t, template=tag_tmpl, scale=tag_scale) for t in q]
             context = dict(
                 use_png=use_png,
                 use_pdf=use_pdf,
