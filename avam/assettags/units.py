@@ -32,6 +32,8 @@ class Unit(object):
         if not obj:
             obj = cls(float(label), dpi)
         return obj
+    def copy(self):
+        return self.__class__(self.value, self.dpi)
     def to_other(self, other):
         return self.value
     def __add__(self, other):

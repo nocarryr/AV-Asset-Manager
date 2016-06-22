@@ -190,7 +190,7 @@ class Box(object):
             if val is None:
                 obj = Unit(0., dpi=self.dpi)
             elif isinstance(val, Unit):
-                obj = val
+                obj = val.copy()
             else:
                 obj = Unit.unit_from_label(val, dpi=self.dpi)
             setattr(self, key, obj)
