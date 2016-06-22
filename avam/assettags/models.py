@@ -347,7 +347,7 @@ class AssetTagPrintTemplate(models.Model):
                 cells.append(last_col)
             y += row_size + spacing['row_spacing']
         return cells
-    def iter_cells(self, asset_tags=None, full_page=True):
+    def iter_page_row_col(self, asset_tags=None, full_page=True):
         rows = self.rows_per_page
         cols = self.columns_per_row
         if asset_tags is not None:
