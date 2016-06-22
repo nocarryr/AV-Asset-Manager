@@ -175,7 +175,7 @@ def print_tags(request):
                 print_box=print_box,
                 tag_box=cell,
                 padding=page_tmpl.get_html_padding(dpi),
-                cell_iter=data['page_template'].iter_page_row_col(tag_imgs),
+                cell_iter=data['page_template'].iter_page_row_col_cell(tag_imgs, dpi=dpi),
             )
             template_name = 'assettags/assettag-table.html'
             if use_pdf and not pdf_preview:

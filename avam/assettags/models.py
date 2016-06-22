@@ -381,5 +381,21 @@ class AssetTagPrintTemplate(models.Model):
             if tag is None:
                 tag = False
             page += 1
+    def iter_page_row_col_cell(self, asset_tags=None, full_page=True, dpi=None):
+        cell_iter = self.iter_cells(dpi)
+        last_page = 0
+        for t in self.iter_page_row_col(asset_tags, full_page):
+            page = t[0]
+            if page > last_page:
+                cell_iter = self.iter_cells(dpi)
+                last_page = page
+            cell = next(cell_iter)
+            if asset_tags is not None:
+                page, row, col, tag = t
+                yield page, row, col, tag, cell
+            else:
+                page, row, col = t
+                yield page, row, col, cell
+
     def __str__(self):
         return self.name
