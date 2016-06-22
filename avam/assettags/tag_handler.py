@@ -122,16 +122,44 @@ class AssetTagImage(object):
             elems.append(code_text)
         elems.append(self.build_qr_group())
         return elems
+    def format_text_elem(self, loc, **kwargs):
+        x = self.template.width / 2.
+        h = self.template.height
+        kwargs.setdefault('font_size', '13px')
+        kwargs.setdefault('text_align', 'center')
+        kwargs.setdefault('text_anchor', 'middle')
+        kwargs.setdefault('baseline', 'no-change')
+        if loc == 'Above':
+            y = h * .1
+            kwargs['baseline'] = 'hanging'
+        elif loc == 'Below':
+            y = h - (h * .05)
+        elif loc == 'Left':
+            x = 0.
+            y = h / 2.
+            kwargs['text_align'] = 'left'
+            kwargs['text_anchor'] = 'start'
+        elif loc == 'Right':
+            x = self.template.width
+            y = h / 2.
+            kwargs['text_align'] = 'right'
+            kwargs['text_anchor'] = 'end'
+        else:
+            return None
+        style = '''
+            font-size:{font_size};font-style:normal;font-weight:normal;
+            text-align:{text_align};line-height:125%;letter-spacing:0px;
+            word-spacing:0px;text-anchor:{text_anchor};fill:#000000;
+            fill-opacity:1;stroke:none;font-family:sans-serif;
+            dominant-baseline:{baseline}'''.format(**kwargs)
+        return dict(x=str(x), y=str(y), style=style)
     def build_header(self):
-        w = self.template.width
-        g = ET.Element('g', id='header-group', transform='translate(%s, 0.0)' % (w / 2.))
-        t = ET.Element(
-            'text',
-            id='header-text',
-            x='0',
-            y='0',
-            style='font-size:13px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:sans-serif;dominant-baseline:text-before-edge',
-        )
+        loc = self.template.get_header_text_location_display()
+        ekwargs = self.format_text_elem(loc, baseline='text-before-edge', font_size='13px')
+        x, y = [ekwargs[k] for k in ['x', 'y']]
+        g = ET.Element('g', id='header-group', transform='translate(%s, %s)' % (x, y))
+        ekwargs['id'] = 'header-text'
+        t = ET.Element('text', **ekwargs)
         t.set('xml:space', 'preserve')
         tspan = ET.Element('tspan', x='0', y='0', id='header-tspan')
         tspan.text = self.template.header_text
@@ -139,25 +167,14 @@ class AssetTagImage(object):
         g.append(t)
         return g
     def build_code_text(self):
-        x = self.template.width / 2.
-        h = self.template.height
         loc = self.template.get_code_text_location_display()
-        if loc == 'Above':
-            y = h * .1
-            baseline = 'hanging'
-        elif loc == 'Below':
-            y = h - (h * .05)
-            baseline = 'no-change'
-        else:
+        ekwargs = self.format_text_elem(loc, font_size='9px')
+        if ekwargs is None:
             return None
+        x, y = [ekwargs[k] for k in ['x', 'y']]
         g = ET.Element('g', id='code-text-group', transform='translate(%s, %s)' % (x, y))
-        t = ET.Element(
-            'text',
-            id='code-text',
-            x='0',
-            y='0',
-            style='font-size:9px;font-style:normal;font-weight:normal;text-align:center;line-height:125%;letter-spacing:0px;word-spacing:0px;text-anchor:middle;fill:#000000;fill-opacity:1;stroke:none;font-family:sans-serif;dominant-baseline:{0}'.format(baseline),
-        )
+        ekwargs['id'] = 'code-text'
+        t = ET.Element('text', **ekwargs)
         t.set('xml:space', 'preserve')
         tspan = ET.Element('tspan', x='0', y='0', id='code-text-tspan')
         tspan.text = str(self.asset_tag.code)
