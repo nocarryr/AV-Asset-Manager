@@ -148,12 +148,16 @@ def print_tags(request):
             q = AssetTag.objects.filter(code__in=codes)
             page_tmpl = data['page_template']
             tag_tmpl = data['tag_template']
-            use_pdf = data['render_as'] == 'pdf'
+            pdf_preview = data['pdf_preview']
+            use_pdf = pdf_preview or data['render_as'] == 'pdf'
             if use_pdf:
                 use_png = True
-                dpi = 72.
+                if pdf_preview:
+                    dpi = 96.
+                else:
+                    dpi = 72.
                 page_box = page_tmpl.get_full_area(dpi)
-                print_box = page_box
+                print_box = page_tmpl.get_printable_area(dpi)
             else:
                 use_png = False
                 dpi = 96.
@@ -173,7 +177,7 @@ def print_tags(request):
                 cell_iter=data['page_template'].iter_cells(tag_imgs),
             )
             template_name = 'assettags/assettag-table.html'
-            if use_pdf:
+            if use_pdf and not pdf_preview:
                 return render_pdf(template_name, context)
             else:
                 return render(request, template_name, context)
