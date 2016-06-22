@@ -13,7 +13,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.contenttypes.models import ContentType
 from django.contrib import messages
 
-from xhtml2pdf import pisa
+import weasyprint
 
 from assettags.models import (
     AssetTag,
@@ -185,11 +185,11 @@ def print_tags(request):
     else:
         form = TagPrintForm()
     return render(request, 'assettags/print-tags.html', {'form':form})
-    
+
 def render_pdf(template_name, context_data):
-    html = render_to_string(template_name, context_data)
+    html = weasyprint.HTML(string=render_to_string(template_name, context_data))
     fh = StringIO()
-    pdf = pisa.pisaDocument(html, dest=fh)
+    pdf = html.write_pdf(fh)
     r = HttpResponse(fh.getvalue(), content_type='application/pdf')
     fh.close()
     return r
