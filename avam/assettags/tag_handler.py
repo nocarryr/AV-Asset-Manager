@@ -5,6 +5,7 @@ from base64 import b64encode
 
 import qrcode
 from qrcode.image.svg import SvgPathFillImage
+from wand.image import Image as WandImage
 
 from assettags import settings
 
@@ -85,13 +86,22 @@ class AssetTagImage(object):
         if png is None:
             png = self._png = build_qr_png(self.asset_tag.code)
         return png._img
-    def get_png_string(self):
+    def get_png_string(self, full_tag=False):
         fh = BytesIO()
-        self.png.save(fh, 'PNG')
-        return fh.getvalue()
-    def get_png_b64_string(self):
-        s = self.get_png_string()
+        if full_tag:
+            with WandImage(blob=self.qr_svg_bytes, format='svg') as img:
+                img.format = 'png'
+                img.save(file=fh)
+        else:
+            self.png.save(fh, 'PNG')
+        s = fh.getvalue()
+        fh.close()
+        return s
+    def get_png_b64_string(self, full_tag=False):
+        s = self.get_png_string(full_tag)
         return b64encode(s)
+    def get_full_png_b64_string(self):
+        return self.get_png_b64_string(full_tag=True)
     def build_svg(self):
         vw = self.template.width
         vh = self.template.height
