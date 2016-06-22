@@ -158,14 +158,18 @@ def print_tags(request):
                     dpi = 72.
                 page_box = page_tmpl.get_full_area(dpi)
                 print_box = page_tmpl.get_printable_area(dpi)
+                template_name = 'assettags/assettag-sheet.svg.html'
+                root_tag = 'g'
             else:
                 use_png = False
                 dpi = 96.
                 page_box = page_tmpl.get_full_area(dpi)
                 print_box = page_tmpl.get_printable_area(dpi)
+                template_name = 'assettags/assettag-table.html'
+                root_tag = 'svg'
             cell = page_tmpl.get_cells(dpi)[0]
             tag_scale = [u.to_other('px') for u in [cell.w, cell.h]]
-            tag_imgs = [AssetTagImage(asset_tag=t, template=tag_tmpl, scale=tag_scale) for t in q]
+            tag_imgs = [AssetTagImage(asset_tag=t, template=tag_tmpl, scale=tag_scale, root_tag=root_tag) for t in q]
             context = dict(
                 use_png=use_png,
                 use_pdf=use_pdf,
@@ -177,7 +181,6 @@ def print_tags(request):
                 padding=page_tmpl.get_html_padding(dpi),
                 cell_iter=data['page_template'].iter_page_row_col_cell(tag_imgs, dpi=dpi),
             )
-            template_name = 'assettags/assettag-table.html'
             if use_pdf and not pdf_preview:
                 return render_pdf(template_name, context)
             else:

@@ -67,6 +67,7 @@ class AssetTagImage(object):
         self.asset_tag = kwargs.get('asset_tag')
         self.template = kwargs.get('template')
         self.scale = kwargs.get('scale')
+        self.root_tag = kwargs.get('root_tag', 'svg')
         self.image_format = kwargs.get('image_format', 'svg')
         self.qr_img = build_qr_svg(self.asset_tag.code)
         self.qr_img._img.set('width', '100%')
@@ -114,7 +115,7 @@ class AssetTagImage(object):
         else:
             w, h = '{}px'.format(vw), '{}px'.format(vh)
         root = ET.Element(
-            'svg',
+            self.root_tag,
             width=w,
             height=h,
             viewBox='0 0 %s %s' % (vw, vh),

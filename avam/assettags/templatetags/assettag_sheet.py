@@ -13,25 +13,42 @@ def assettag_new_row(context):
 
 @register.simple_tag(takes_context=True)
 def assettag_new_page(context):
+    if context['use_pdf']:
+        tag = 'svg'
+        tag_attrs = dict(
+            width=context['page_box'].w,
+            height=context['page_box'].h,
+            version='1.1',
+            viewBox='0 0 {} {}'.format(context['page_box'].w.to_pixels().value, context['page_box'].h.to_pixels().value),
+        )
+    else:
+        tag = 'table'
+        tag_attrs = {'class':'tag-table'}
     lines = []
     if not context['forloop']['first']:
         lines.extend([
-            '  </table>',
+            '  </{}>'.format(tag),
             '</div>',
         ])
+    attr_str = ' '.join(['{}="{}"'.format(k, v) for k, v in tag_attrs.items()])
     lines.extend([
         '<div class="tag-page">',
-        '  <table class="tag-table">',
+        '  <{} {}>'.format(tag, attr_str),
     ])
     return mark_safe('\n'.join(lines))
 
 @register.simple_tag(takes_context=True)
 def assettag_endfor(context):
-    lines = [
-        '    </tr>',
-        '  </table>',
-        '</div>',
-    ]
     if context['use_pdf']:
-        lines.append('<pdf:nextpage>')
+        lines = [
+            '    </svg>',
+            '</div>',
+            '<pdf:nextpage>'
+        ]
+    else:
+        lines = [
+            '    </tr>',
+            '  </table>',
+            '</div>',
+        ]
     return mark_safe('\n'.join(lines))

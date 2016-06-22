@@ -119,6 +119,10 @@ class Pixel(Unit):
                 return self.value
         else:
             return self.value
+    def to_inches(self):
+        return Inch(self.to_other('in'), self.dpi)
+    def to_pixels(self):
+        return self
 
 class Inch(Unit):
     unit_label = 'in'
@@ -131,3 +135,7 @@ class Inch(Unit):
             return self.dpi * float(self.value)
         else:
             return self.value
+    def to_inches(self):
+        return self
+    def to_pixels(self):
+        return Pixel(self.to_other('px'), self.dpi)
