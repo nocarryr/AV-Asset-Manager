@@ -26,16 +26,28 @@ class SvgScaledImage(SvgPathFillImage):
     def to_string(self):
         self._img.append(self.make_path())
         return ET.tostring(self._img)
-    def get_path_centered(self):
-        main_g = ET.Element('g', id='qr-box-outer')
+    def _get_path_centered(self, x_pos=0, y_pos=0):
+        xy = [-14.5, -14.5]
+        for i, pos in enumerate([x_pos, y_pos]):
+            if pos < 0:
+                xy[i] -= 14.5 * 2
+            elif pos > 0:
+                xy[i] += 14.5 * 2
+        main_g = ET.Element('g', id='qr-box-outer', width='63px', height='63px')
         inner_g = ET.Element(
             'g',
             id='qr-box-inner',
-            transform='translate(-14.5, -14.5)',
+            transform='translate({}, {})'.format(*xy),
         )
         inner_g.append(self.make_path())
         main_g.append(inner_g)
         return main_g
+    def get_path_centered(self):
+        return self._get_path_centered(0, 0)
+    def get_path_left(self):
+        return self._get_path_centered(-1, 0)
+    def get_path_right(self):
+        return self._get_path_centered(1, 0)
 #    def _svg(self, viewBox=None, **kwargs):
 #        elem = super(SvgScaledImage, self)._svg(viewBox, **kwargs)
 #        elem.set('width', self.scale)
@@ -155,13 +167,20 @@ class AssetTagImage(object):
     def build_qr_group(self):
         w = self.template.width
         h = self.template.height
-        loc = self.template.get_code_text_location_display()
+        h_loc = self.template.get_header_text_location_display()
+        text_loc = self.template.get_code_text_location_display()
         x = w / 2.
         y = h / 2.
-        if loc == 'Above':
+        qr_x = 0
+        qr_y = 0
+        if h_loc == 'Left' and text_loc != 'Right':
+            qr_x = 1
+        elif h_loc == 'Right' and text_loc != 'Left':
+            qr_x = -1
+        if text_loc == 'Above':
             y += h * .1
         scale = 3
-        g = self.qr_img.get_path_centered()
+        g = self.qr_img._get_path_centered(qr_x, qr_y)
         g.set('transform', 'matrix(%s, 0, 0, %s, %s, %s)' % (scale, scale, x, y))
         return g
 
