@@ -21,6 +21,7 @@ from assettags.models import (
 )
 from assettags.forms import TagPrintForm, TagScanForm
 from assettags.tag_handler import AssetTagImage, AssetTagSheet
+from assettags.rlpdfgen import Document
 
 class AssetTagImageView(LoginRequiredMixin, DetailView):
     model = AssetTag
@@ -159,7 +160,7 @@ def print_tags(request):
                 page_box = page_tmpl.get_full_area(dpi)
                 print_box = page_tmpl.get_printable_area(dpi)
                 template_name = 'assettags/assettag-sheet.svg.html'
-                root_tag = 'g'
+                root_tag = 'svg'
             else:
                 use_png = False
                 dpi = 96.
@@ -190,9 +191,8 @@ def print_tags(request):
     return render(request, 'assettags/print-tags.html', {'form':form})
 
 def render_pdf(template_name, context_data):
-    html = weasyprint.HTML(string=render_to_string(template_name, context_data))
-    fh = StringIO()
-    pdf = html.write_pdf(fh)
-    r = HttpResponse(fh.getvalue(), content_type='application/pdf')
-    fh.close()
-    return r
+    doc = Document(context_data)
+    with doc:
+        with open(doc.filename, 'rb') as f:
+            s = f.read()
+    return HttpResponse(s, content_type='application/pdf')
