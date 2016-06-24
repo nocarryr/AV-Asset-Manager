@@ -1,8 +1,3 @@
-try:
-    from StringIO import StringIO
-except ImportError:
-    from io import StringIO
-
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
@@ -12,8 +7,6 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.contenttypes.models import ContentType
 from django.contrib import messages
-
-import weasyprint
 
 from assettags.models import (
     AssetTag,
