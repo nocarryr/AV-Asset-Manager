@@ -20,7 +20,7 @@ from assettags.models import (
     AssetTagImageTemplate,
 )
 from assettags.forms import TagPrintForm, TagScanForm
-from assettags.tag_handler import AssetTagImage, AssetTagSheet
+from assettags.tag_handler import AssetTagImage
 from assettags import inkscape_export
 
 class AssetTagImageView(LoginRequiredMixin, DetailView):
