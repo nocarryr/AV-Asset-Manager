@@ -1,8 +1,3 @@
-try:
-    from StringIO import StringIO
-except ImportError:
-    from io import StringIO
-
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
@@ -13,14 +8,13 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.contenttypes.models import ContentType
 from django.contrib import messages
 
-from xhtml2pdf import pisa
-
 from assettags.models import (
     AssetTag,
     AssetTagImageTemplate,
 )
 from assettags.forms import TagPrintForm, TagScanForm
-from assettags.tag_handler import AssetTagImage, AssetTagSheet
+from assettags.tag_handler import AssetTagImage
+from assettags import inkscape_export
 
 class AssetTagImageView(LoginRequiredMixin, DetailView):
     model = AssetTag
@@ -148,20 +142,28 @@ def print_tags(request):
             q = AssetTag.objects.filter(code__in=codes)
             page_tmpl = data['page_template']
             tag_tmpl = data['tag_template']
-            use_pdf = data['render_as'] == 'pdf'
+            pdf_preview = data['pdf_preview']
+            use_pdf = pdf_preview or data['render_as'] == 'pdf'
             if use_pdf:
                 use_png = True
-                dpi = 72.
+                if pdf_preview:
+                    dpi = 96.
+                else:
+                    dpi = 96.
                 page_box = page_tmpl.get_full_area(dpi)
-                print_box = page_box
+                print_box = page_tmpl.get_printable_area(dpi)
+                template_name = 'assettags/assettag-sheet.svg.html'
+                root_tag = 'g'
             else:
                 use_png = False
                 dpi = 96.
                 page_box = page_tmpl.get_full_area(dpi)
                 print_box = page_tmpl.get_printable_area(dpi)
+                template_name = 'assettags/assettag-table.html'
+                root_tag = 'svg'
             cell = page_tmpl.get_cells(dpi)[0]
-            tag_tmpl = AssetTagImageTemplate.get_resized(tag_tmpl, width=cell.w, height=cell.h)
-            tag_imgs = [AssetTagImage(asset_tag=t, template=tag_tmpl) for t in q]
+            tag_scale = [u.to_other('px') for u in [cell.w, cell.h]]
+            tag_imgs = [AssetTagImage(asset_tag=t, template=tag_tmpl, scale=tag_scale, root_tag=root_tag) for t in q]
             context = dict(
                 use_png=use_png,
                 use_pdf=use_pdf,
@@ -169,22 +171,20 @@ def print_tags(request):
                 page_template=page_tmpl,
                 page_box=page_box,
                 print_box=print_box,
+                tag_box=cell,
                 padding=page_tmpl.get_html_padding(dpi),
-                cell_iter=data['page_template'].iter_cells(tag_imgs),
+                cell_iter=data['page_template'].iter_page_row_col_cell(tag_imgs, dpi=dpi),
+                dpi=dpi,
             )
-            template_name = 'assettags/assettag-table.html'
-            if use_pdf:
+            if use_pdf and not pdf_preview:
                 return render_pdf(template_name, context)
             else:
                 return render(request, template_name, context)
     else:
         form = TagPrintForm()
     return render(request, 'assettags/print-tags.html', {'form':form})
-    
+
 def render_pdf(template_name, context_data):
     html = render_to_string(template_name, context_data)
-    fh = StringIO()
-    pdf = pisa.pisaDocument(html, dest=fh)
-    r = HttpResponse(fh.getvalue(), content_type='application/pdf')
-    fh.close()
-    return r
+    s = inkscape_export.render_from_html(html, context_data)
+    return HttpResponse(s, content_type='application/pdf')

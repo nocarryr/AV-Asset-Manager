@@ -1,0 +1,21 @@
+{% extends "assettags/assettag-table.html" %}
+{% load assettag_sheet %}
+
+{% block body %}
+{% for page, row, col, tag, cell in cell_iter %}
+{% ifchanged page %}{% assettag_new_page %}{% endifchanged %}
+    {% with px_w=cell.w.to_pixels px_h=cell.h.to_pixels px_x=cell.x.to_pixels px_y=cell.y.to_pixels %}
+    <g width="{{ px_w.value }}" height="{{ px_h.value }}"
+       transform="translate({{ px_x.value }}, {{ px_y.value }})">
+    {% if tag %}
+        {% if False %}
+          <image xlink:href="url({{ tag.qr_svg_data_url|safe }})" x="0" y="0" width="{{ px_w.value }}" height="{{ px_h.value }}" />
+        {% else %}
+          {{ tag.qr_svg_bytes|safe }}
+        {% endif %}
+    {% endif %}
+    {% endwith %}
+    </g>
+{% if forloop.last %}{% assettag_endfor %}{% endif %}
+{% endfor %}
+{% endblock %}

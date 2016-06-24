@@ -21,7 +21,8 @@ class TagPrintForm(forms.Form):
         ),
         initial='html',
     )
-    
+    pdf_preview = forms.BooleanField(required=False)
+
 class TagScanForm(forms.Form):
     tagcode = forms.CharField(label='Tag Code', max_length=50)
     content_type_id = forms.IntegerField(

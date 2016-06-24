@@ -7,6 +7,7 @@ from django.contrib.contenttypes.models import ContentType
 from django.utils.encoding import python_2_unicode_compatible
 
 from assettags import tag_handler
+from assettags.units import Unit, Inch, Pixel
 
 class AssetTagError(Exception):
     def __init__(self, msg, asset_tag=None):
@@ -40,7 +41,7 @@ class AssetTagManager(models.Manager):
             except AssetTag.DoesNotExist:
                 return None
         return asset_tag.content_object
-    
+
 @python_2_unicode_compatible
 class AssetTag(models.Model):
     code = models.CharField(max_length=50, unique=True)
@@ -83,7 +84,7 @@ class AssetTag(models.Model):
         return url
     def __str__(self):
         return self.code
-    
+
 class AssetTaggedMixin(object):
     @property
     def asset_tag(self):
@@ -181,10 +182,29 @@ class AssetTagImageTemplate(models.Model):
 
 class Box(object):
     def __init__(self, **kwargs):
-        self.x = kwargs.get('x', 0.)
-        self.y = kwargs.get('y', 0.)
-        self.w = kwargs.get('w')
-        self.h = kwargs.get('h')
+        self._dpi = kwargs.get('dpi')
+        kwargs.setdefault('x', '0px')
+        kwargs.setdefault('y', '0px')
+        for key in ['x', 'y', 'w', 'h']:
+            val = kwargs.get(key)
+            if val is None:
+                obj = Unit(0., dpi=self.dpi)
+            elif isinstance(val, Unit):
+                obj = val.copy()
+            else:
+                obj = Unit.unit_from_label(val, dpi=self.dpi)
+            setattr(self, key, obj)
+    @property
+    def dpi(self):
+        return self._dpi
+    @dpi.setter
+    def dpi(self, value):
+        if value == self._dpi:
+            return
+        self._dpi = value
+        for key in ['x', 'y', 'w', 'h']:
+            obj = getattr(self, key)
+            obj.dpi = value
     @property
     def right(self):
         return self.x + self.w
@@ -200,6 +220,7 @@ class Box(object):
     def __mul__(self, other):
         keys = ['x', 'y', 'w', 'h']
         kwargs = {k:getattr(self, k) * other for k in keys}
+        kwargs.setdefault('dpi', self.dpi)
         return Box(**kwargs)
     def __imul__(self, other):
         self.x *= other
@@ -222,17 +243,25 @@ class PaperFormat(models.Model):
     bottom_margin = models.FloatField(default=0.5)
     left_margin = models.FloatField(default=0.2)
     right_margin = models.FloatField(default=0.2)
-    def get_full_area(self):
-        return Box(x=0., y=0., w=self.width, h=self.height)
-    def get_printable_area(self):
+    def get_full_area(self, dpi=72):
+        kwargs = dict(x=0., y=0., w=self.width, h=self.height)
+        for key in kwargs.keys():
+            kwargs[key] = '{}in'.format(kwargs[key])
+        kwargs['dpi'] = dpi
+        return Box(**kwargs)
+    def get_printable_area(self, dpi=72):
         w = self.width
         h = self.height
         w -= self.left_margin + self.right_margin
         h -= self.top_margin + self.bottom_margin
-        return Box(x=self.left_margin, y=self.top_margin, w=w, h=h)
+        kwargs = dict(x=self.left_margin, y=self.top_margin, w=w, h=h)
+        for key in kwargs.keys():
+            kwargs[key] = '{}in'.format(kwargs[key])
+        kwargs['dpi'] = dpi
+        return Box(**kwargs)
     def __str__(self):
         return self.name
-    
+
 @python_2_unicode_compatible
 class AssetTagPrintTemplate(models.Model):
     name = models.CharField(max_length=30, unique=True)
@@ -257,19 +286,14 @@ class AssetTagPrintTemplate(models.Model):
         if dpi is None:
             dpi = self.dpi
         def parse(s):
-            if not s:
-                return 0.
-            val = None
-            units = ['in', '"']
-            for unit in units:
-                if unit in s.lower():
-                    val = float(s.lower().split(unit)[0])
-                    break
-            if val is not None:
-                return val * dpi
-            if 'px' in s.lower():
-                s = s.lower().split('px')[0]
-            return float(s)
+            if s is None:
+                s = '0px'
+            elif s.endswith('"'):
+                s = s.rstrip('"')
+                s = '{}in'.format(s)
+            elif not s.endswith('px') and not s.endswith('in'):
+                s = '{}px'.format(s)
+            return Unit.unit_from_label(s, dpi)
         d = {}
         for attr in ['column_spacing', 'row_spacing']:
             val = parse(getattr(self, attr))
@@ -278,14 +302,12 @@ class AssetTagPrintTemplate(models.Model):
     def get_full_area(self, dpi=None):
         if dpi is None:
             dpi = self.dpi
-        box = self.paper_format.get_full_area()
-        box *= dpi
+        box = self.paper_format.get_full_area(dpi)
         return box
     def get_printable_area(self, dpi=None):
         if dpi is None:
             dpi = self.dpi
-        box = self.paper_format.get_printable_area()
-        box *= dpi
+        box = self.paper_format.get_printable_area(dpi)
         return box
     def get_html_padding(self, dpi=96):
         spacing = self.get_spacing(dpi)
@@ -299,18 +321,19 @@ class AssetTagPrintTemplate(models.Model):
             for padkey in padkeys:
                 d[padkey] = val
         return d
-    def get_cells(self, dpi=None):
+    def iter_cells(self, dpi=None):
         full_box = self.get_printable_area(dpi)
         spacing = self.get_spacing(dpi)
         num_cols = self.columns_per_row
         col_gaps = num_cols - 1
         col_size = full_box.w / num_cols
-        col_size -= col_gaps * spacing['column_spacing'] / num_cols
+        if spacing['column_spacing'] > 0:
+            col_size -= col_gaps * spacing['column_spacing'] / num_cols
         num_rows = self.rows_per_page
         row_gaps = num_rows - 1
         row_size = full_box.h / num_rows
-        row_size -= row_gaps * spacing['row_spacing'] / num_rows
-        cells = []
+        if spacing['row_spacing'] > 0:
+            row_size -= row_gaps * spacing['row_spacing'] / num_rows
         y = full_box.y
         for r in range(num_rows):
             last_col = None
@@ -319,11 +342,12 @@ class AssetTagPrintTemplate(models.Model):
                     x = last_col.right + spacing['column_spacing']
                 else:
                     x = full_box.x
-                last_col = Box(x=x, y=y, w=col_size, h=row_size)
-                cells.append(last_col)
+                last_col = Box(x=x, y=y, w=col_size, h=row_size, dpi=dpi)
+                yield last_col
             y += row_size + spacing['row_spacing']
-        return cells
-    def iter_cells(self, asset_tags=None, full_page=True):
+    def get_cells(self, dpi=None):
+        return [cell for cell in self.iter_cells(dpi)]
+    def iter_page_row_col(self, asset_tags=None, full_page=True):
         rows = self.rows_per_page
         cols = self.columns_per_row
         if asset_tags is not None:
@@ -357,5 +381,21 @@ class AssetTagPrintTemplate(models.Model):
             if tag is None:
                 tag = False
             page += 1
+    def iter_page_row_col_cell(self, asset_tags=None, full_page=True, dpi=None):
+        cell_iter = self.iter_cells(dpi)
+        last_page = 0
+        for t in self.iter_page_row_col(asset_tags, full_page):
+            page = t[0]
+            if page > last_page:
+                cell_iter = self.iter_cells(dpi)
+                last_page = page
+            cell = next(cell_iter)
+            if asset_tags is not None:
+                page, row, col, tag = t
+                yield page, row, col, tag, cell
+            else:
+                page, row, col = t
+                yield page, row, col, cell
+
     def __str__(self):
         return self.name

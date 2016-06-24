@@ -6,39 +6,36 @@
 {% addtoblock "css" %}
 <style>
   .tag-page{
-    width: {{ print_box.w }}px;
-    height: {{ print_box.h }}px;
-    padding-left: {{ print_box.x }}px;
-    padding-top: {{ print_box.y }}px;
+    width: {{ page_box.w }};
+    height: {{ page_box.h }};
+    padding-left: {{ print_box.x }};
+    padding-top: {{ print_box.y }};
   }
   .tag-table {
     border-collapse: collapse;
-    /*border-style: solid;*/
     border-width: 0px;
     text-align: center;
   }
   .tag-table td {
-    padding-top: {{ padding.top }}px;
-    padding-bottom: {{ padding.bottom }}px;
-    padding-left: {{ padding.left }}px;
-    padding-right: {{ padding.right }}px;
+    padding-top: {{ padding.top }};
+    padding-bottom: {{ padding.bottom }};
+    padding-left: {{ padding.left }};
+    padding-right: {{ padding.right }};
   }
   .tag-table tr:first-child td{padding-top: 0px;}
   .tag-table tr:last-child td{padding-bottom: 0px;}
   .tag-table td:first-child{padding-left: 0px;}
   .tag-table td:last-child{padding-right: 0px;}
   .tag-img-placeholder{
-    width: {{ tag_template.width }}px;
-    height: {{ tag_template.height }}px;
+    width: {{ tag_box.w }};
+    height: {{ tag_box.h }};
     border-style: solid;
     border-width: 1px;
   }
 </style>
-{% if use_pdf %}
-<style>
+<style media="print">
   {% include 'assettags/includes/pdf-page-css.html' %}
 </style>
-{% endif %}
 {% if use_png %}
 <style>
   {% include 'assettags/includes/png-image-css.html' %}
@@ -48,7 +45,7 @@
 {% endblock %}
 
 {% block body %}
-{% for page, row, col, tag in cell_iter %}
+{% for page, row, col, tag, cell in cell_iter %}
 {% ifchanged page %}{% assettag_new_page %}{% endifchanged %}
   {% ifchanged row %}{% assettag_new_row %}{% endifchanged %}
     <td>

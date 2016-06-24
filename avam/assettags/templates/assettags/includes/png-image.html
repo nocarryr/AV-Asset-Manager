@@ -1,12 +1,3 @@
 <div class="assettag-png-image">
-  {% if tag_template.header_text %}
-    <h6>{{ tag_template.header_text }}</h6>
-  {% endif %}
-  {% if tag_template.code_text_location == "a" %}
-    <p>{{ tag.asset_tag.code }}</p>
-  {% endif %}
-  <img src="data:image/png;base64,{{ tag.get_png_b64_string|safe }}">
-  {% if tag_template.code_text_location == "b" %}
-    <p>{{ tag.asset_tag.code }}</p>
-  {% endif %}
+    <img src="{{ tag.qr_svg_data_url|safe }}">
 </div>
