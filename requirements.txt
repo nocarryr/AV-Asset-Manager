@@ -4,6 +4,5 @@ django-safe-project
 qrcode
 django-sekizai
 Wand
-WeasyPrint
-git+https://github.com/nocarryr/svglib.git@master#egg=svglib
+html5lib
 beautifulsoup4

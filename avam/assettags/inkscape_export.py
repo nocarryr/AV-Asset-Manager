@@ -42,5 +42,5 @@ def render_from_html(s, context_data):
             f.write(str(svg))
         do_export(svg_fn, pdf_fn, dpi)
     s = merge_pdfs(pdfs)
-    #shutil.rmtree(tmp_dir)
+    shutil.rmtree(tmp_dir)
     return s
