@@ -21,7 +21,7 @@ from assettags.models import (
 )
 from assettags.forms import TagPrintForm, TagScanForm
 from assettags.tag_handler import AssetTagImage, AssetTagSheet
-from assettags.rlpdfgen import Document
+from assettags import inkscape_export
 
 class AssetTagImageView(LoginRequiredMixin, DetailView):
     model = AssetTag
@@ -156,11 +156,11 @@ def print_tags(request):
                 if pdf_preview:
                     dpi = 96.
                 else:
-                    dpi = 72.
+                    dpi = 96.
                 page_box = page_tmpl.get_full_area(dpi)
                 print_box = page_tmpl.get_printable_area(dpi)
                 template_name = 'assettags/assettag-sheet.svg.html'
-                root_tag = 'svg'
+                root_tag = 'g'
             else:
                 use_png = False
                 dpi = 96.
@@ -181,6 +181,7 @@ def print_tags(request):
                 tag_box=cell,
                 padding=page_tmpl.get_html_padding(dpi),
                 cell_iter=data['page_template'].iter_page_row_col_cell(tag_imgs, dpi=dpi),
+                dpi=dpi,
             )
             if use_pdf and not pdf_preview:
                 return render_pdf(template_name, context)
@@ -191,8 +192,6 @@ def print_tags(request):
     return render(request, 'assettags/print-tags.html', {'form':form})
 
 def render_pdf(template_name, context_data):
-    doc = Document(context_data)
-    with doc:
-        with open(doc.filename, 'rb') as f:
-            s = f.read()
+    html = render_to_string(template_name, context_data)
+    s = inkscape_export.render_from_html(html, context_data)
     return HttpResponse(s, content_type='application/pdf')
