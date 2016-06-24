@@ -2,11 +2,15 @@ import os
 import tempfile
 import json
 import shutil
+import xml.dom.minidom
 
 from reportlab.pdfgen.canvas import Canvas
 from reportlab import platypus
-from reportlab.platypus.figures import ImageFigure
+from reportlab.platypus.figures import ImageFigure, FlexFigure
 from reportlab.lib import units as rl_units
+from reportlab.graphics import renderPDF
+
+from svglib import svglib
 
 def unit_to_rl(*units):
     for unit in units:
@@ -26,6 +30,15 @@ def unit_to_str(*units):
         else:
             yield str(unit)
 
+class DrawingFigure(FlexFigure):
+    def __init__(self, drawing):
+        self.drawing = drawing
+        FlexFigure.__init__(self, drawing.height, drawing.width, '', None)
+        self.growToFit = 1
+    def drawFigure(self):
+        self.canv.scale(self._scaleFactor, self._scaleFactor)
+        self.drawing.drawOn(self.canv, 0, 0)
+
 class Document(object):
     def __init__(self, context_data):
         self.context_data = context_data
@@ -42,7 +55,7 @@ class Document(object):
         self.filename = os.path.join(self.temp_dir, 'tag_sheet.pdf')
     def close(self):
         if self.temp_dir is not None:
-            shutil.rmtree(self.temp_dir)
+            #shutil.rmtree(self.temp_dir)
             self.temp_dir = None
     def __enter__(self):
         self.open()
@@ -122,14 +135,45 @@ class Tag(object):
         if page_obj is None:
             page_obj = doc.add_page(page)
         self.page = page_obj
+    def build_drawing(self):
+        cell = self.cell
+        tag = self.tag
+        doc = xml.dom.minidom.parseString(tag.qr_svg_bytes)
+        svg = doc.documentElement
+        renderer = svglib.SvgRenderer()
+        renderer.render(svg)
+        #drawing = renderer.drawing
+        #drawing.add(renderer.mainGroup)
+        drawing = renderer.finish()
+        return drawing
+    def write_debug(self, drawing):
+        fn = os.path.join(self.doc.tag_dir, 'tags.txt')
+        #dprops = drawing.getProperties()
+        #dkeys = sorted(dprops.keys())
+        #data = [str(dprops[key]) for key in dkeys]
+        data = [str(v) for v in [
+            self.id,
+            drawing.getBounds(),
+            self.cell.w.to_pixels(),
+            self.cell.h.to_pixels(),
+            self.cell.x.to_pixels(),
+            self.cell.y.to_pixels(),
+        ]]
+        s = '\t'.join(data) + '\n'
+        if not os.path.exists(fn):
+            header = ['id', 'bounds', 'cW', 'cH', 'cX', 'xY']
+            header = '\t'.join(header)
+            s = '\n'.join([header, s])
+        with open(fn, 'a') as f:
+            f.write(s)
+        fn = '{}.pdf'.format(self.tag.asset_tag.code)
+        fn = os.path.join(self.doc.tag_dir, fn)
+        renderPDF.drawToFile(drawing, fn)
     def render(self):
         if self.tag is None:
             return
-        fn = '.'.join([self.tag.asset_tag.code, 'png'])
-        fn = os.path.join(self.doc.tag_dir, fn)
-        s = self.tag.get_png_string(full_tag=True)
-        with open(fn, 'wb') as f:
-            f.write(s)
-        w, h = [v for v in unit_to_rl(self.cell.w, self.cell.h)]
-        image = ImageFigure(fn, caption='')#, width=w, height=h)
-        self.frame.frame.addFromList([image], self.doc.canvas)
+        drawing = self.build_drawing()
+        self.write_debug(drawing)
+        #image = ImageFigure(fn, caption='')#, width=w, height=h)
+        figure = DrawingFigure(drawing)
+        self.frame.frame.addFromList([figure], self.doc.canvas)

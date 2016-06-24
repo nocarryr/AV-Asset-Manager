@@ -5,3 +5,4 @@ qrcode
 django-sekizai
 Wand
 WeasyPrint
+git+https://github.com/nocarryr/svglib.git@master#egg=svglib
