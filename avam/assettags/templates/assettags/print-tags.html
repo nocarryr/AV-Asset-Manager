@@ -23,7 +23,7 @@
       </div>
       <form id="print-form" method="post">
       {% for field in form %}
-        {% if field.name == 'reprint_unassigned' %}
+        {% if field.name == 'reprint_unassigned' or field.name == 'pdf_preview' %}
           <div class="checkbox">
             <label>
               <input type="checkbox" name="{{ field.name }}" id="{{ field.id_for_label }}"{% if field.value %} checked{% endif %}> {{ field.label }}
