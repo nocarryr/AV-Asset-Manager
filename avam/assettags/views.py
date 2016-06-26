@@ -1,3 +1,5 @@
+import json
+
 from django.core.urlresolvers import reverse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
@@ -11,6 +13,7 @@ from django.contrib import messages
 from assettags.models import (
     AssetTag,
     AssetTagImageTemplate,
+    AssetTagPrintTemplate,
 )
 from assettags.forms import TagPrintForm, TagScanForm
 from assettags.tag_handler import AssetTagImage
@@ -182,7 +185,14 @@ def print_tags(request):
                 return render(request, template_name, context)
     else:
         form = TagPrintForm()
-    return render(request, 'assettags/print-tags.html', {'form':form})
+    template_map = {}
+    for p_id, t_id in AssetTagPrintTemplate.objects.all().values_list('pk', 'asset_tag_template'):
+        template_map[str(p_id)] = str(t_id)
+    context = {
+        'form':form,
+        'template_map':json.dumps(template_map),
+    }
+    return render(request, 'assettags/print-tags.html', context)
 
 def render_pdf(template_name, context_data):
     html = render_to_string(template_name, context_data)

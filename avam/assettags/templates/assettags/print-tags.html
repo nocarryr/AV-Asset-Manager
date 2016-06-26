@@ -6,7 +6,17 @@
 {% addtoblock "js-foot" %}
 <script type="text/javascript">
   $(function(){
+    var $pageSelect = $("#{{ form.page_template.id_for_label }}"),
+        $tagSelect = $("#{{ form.tag_template.id_for_label }}"),
+        template_map = {{ template_map|safe }};
     $("form select,textarea,input:not([type=checkbox])").addClass('form-control');
+    $pageSelect.change(function(){
+      var selected = $pageSelect.val(),
+          tagId = template_map[selected];
+      if (typeof(tagId) != 'undefined'){
+        $tagSelect.val(tagId).change();
+      }
+    });
   });
 </script>
 {% endaddtoblock %}
