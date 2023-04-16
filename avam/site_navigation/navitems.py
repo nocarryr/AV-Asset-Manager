@@ -1,11 +1,7 @@
-import sys
-from collections import Iterable
+from typing import Iterable
 
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
-PY2 = sys.version_info.major == 2
-if not PY2:
-    basestring = str
 
 page_navitems = {}
 navitems_by_href = {}
@@ -17,7 +13,7 @@ class NavItem(object):
         self.login_required = kwargs.get('login_required', False)
         perms = kwargs.get('required_permissions')
         if perms is not None:
-            if isinstance(perms, basestring) or not isinstance(perms, Iterable):
+            if isinstance(perms, str) or not isinstance(perms, Iterable):
                 perms = [perms]
         self.required_permissions = perms
         href = kwargs.get('href')
@@ -68,7 +64,7 @@ class NavItem(object):
         self._login_required = value
     def check_permissions(self, user):
         if self.login_required:
-            if not user.is_authenticated():
+            if not user.is_authenticated:
                 return False
             if not user.is_active:
                 return False

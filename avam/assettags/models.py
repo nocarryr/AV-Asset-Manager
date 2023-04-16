@@ -1,10 +1,8 @@
-from __future__ import unicode_literals
 
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.db import models
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
-from django.utils.encoding import python_2_unicode_compatible
 
 from assettags import tag_handler
 from assettags.units import Unit, Inch, Pixel
@@ -42,7 +40,7 @@ class AssetTagManager(models.Manager):
                 return None
         return asset_tag.content_object
 
-@python_2_unicode_compatible
+
 class AssetTag(models.Model):
     code = models.CharField(max_length=50, unique=True)
     content_type = models.ForeignKey(
@@ -105,7 +103,7 @@ class AssetTaggedMixin(object):
         ))
 
 
-@python_2_unicode_compatible
+
 class AssetTagImageTemplate(models.Model):
     name = models.CharField(max_length=30, unique=True)
     width = models.IntegerField()
@@ -234,7 +232,7 @@ class Box(object):
         return str([getattr(self, k) for k in ['x', 'y', 'w', 'h']])
 
 
-@python_2_unicode_compatible
+
 class PaperFormat(models.Model):
     name = models.CharField(max_length=30, unique=True)
     width = models.FloatField(default=8.5, help_text='Page Width (inches)')
@@ -262,7 +260,7 @@ class PaperFormat(models.Model):
     def __str__(self):
         return self.name
 
-@python_2_unicode_compatible
+
 class AssetTagPrintTemplate(models.Model):
     name = models.CharField(max_length=30, unique=True)
     paper_format = models.ForeignKey(

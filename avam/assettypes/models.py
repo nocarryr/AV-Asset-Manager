@@ -1,17 +1,15 @@
-from __future__ import unicode_literals
 
 from django.db import models
-from django.utils.encoding import python_2_unicode_compatible
 
 from categories.models import CategorizedMixin
 
-@python_2_unicode_compatible
+
 class Manufacturer(models.Model):
     name = models.CharField(max_length=100, unique=True)
     def __str__(self):
         return self.name
     
-@python_2_unicode_compatible
+
 class ModelBase(models.Model, CategorizedMixin):
     model_name = models.CharField(max_length=100)
     manufacturer = models.ForeignKey(
@@ -35,13 +33,13 @@ class VideoModelBase(ModelBase):
     class Meta(ModelBase.Meta):
         abstract = True
 
-@python_2_unicode_compatible
+
 class LightingProfile(models.Model):
     name = models.CharField(max_length=100)
     def __str__(self):
         return self.name
 
-@python_2_unicode_compatible
+
 class LightingProfileChannel(models.Model):
     profile = models.ForeignKey(
         LightingProfile,
@@ -84,7 +82,7 @@ class FilterModelBase(AccessoryModel):
     class Meta(AccessoryModel.Meta):
         abstract = True
 
-@python_2_unicode_compatible
+
 class LensMountType(models.Model):
     name = models.CharField(max_length=30, unique=True)
     def __str__(self):

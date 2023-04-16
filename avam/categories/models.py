@@ -1,19 +1,12 @@
-from __future__ import unicode_literals
-import sys
 
 from django.db import models
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
-from django.utils.encoding import python_2_unicode_compatible
 
 from categories.queryutils import GenericFKManager
 
-PY2 = sys.version_info.major == 2
 
-if not PY2:
-    basestring = str
 
-@python_2_unicode_compatible
 class Category(models.Model):
     name = models.CharField(max_length=100)
     parent_category = models.ForeignKey(
@@ -114,7 +107,7 @@ class CategorizedMixin(object):
         """
         for category_defs in self.get_default_categories():
             for category_def in category_defs:
-                if isinstance(category_def, basestring):
+                if isinstance(category_def, str):
                     category_def = [category_def]
                 parent = None
                 for name in category_def:
@@ -132,13 +125,9 @@ class CategorizedMixin(object):
                     yield iter_bases(cls__)
         for _cls in iter_bases(cls):
             f = getattr(_cls, 'get_default_categories', None)
-            if PY2:
-                im_func = 'im_func'
-            else:
-                im_func = '__func__'
             if (hasattr(_cls, 'get_default_categories') and
                     _cls is not CategorizedMixin and
-                    getattr(f, im_func).__module__ != 'categories.models'):
+                    f.__func__.__module__ != 'categories.models'):
                 yield _cls.get_default_categories()
             elif hasattr(_cls, 'default_categories'):
                 yield _cls.default_categories

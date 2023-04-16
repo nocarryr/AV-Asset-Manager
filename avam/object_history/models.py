@@ -1,4 +1,3 @@
-from __future__ import unicode_literals
 
 import datetime
 
@@ -7,8 +6,7 @@ from django.db import models
 from django.contrib.admin.models import LogEntry
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
-from django.core.urlresolvers import reverse
-from django.utils.encoding import python_2_unicode_compatible
+from django.urls import reverse
 
 from object_history.utils import (
     iter_fields, get_query_value, value_to_str, str_to_value
@@ -16,7 +14,7 @@ from object_history.utils import (
 
 class WatchedModel(models.Model):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
-    def __unicode__(self):
+    def __str__(self):
         return self.content_type.name
     
 def add_model_history(*models):
@@ -37,7 +35,7 @@ class ObjectUpdateManager(models.Manager):
             q = q.filter(content_type=content_type, object_id=obj.pk)
         return q
 
-@python_2_unicode_compatible
+
 class ObjectUpdate(models.Model):
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()
@@ -146,7 +144,7 @@ class ObjectUpdate(models.Model):
     def __str__(self):
         return u'%s: %s' % (self.content_object, self.datetime)
 
-@python_2_unicode_compatible
+
 class ObjectChange(models.Model):
     update = models.ForeignKey(
         ObjectUpdate,

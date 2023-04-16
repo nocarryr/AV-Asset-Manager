@@ -1,4 +1,3 @@
-import sys
 
 from django.db import models
 from django import template
@@ -6,9 +5,6 @@ from django.utils.safestring import mark_safe
 
 register = template.Library()
 
-PY2 = sys.version_info.major == 2
-if not PY2:
-    basestring = str
 
 @register.simple_tag(takes_context=True)
 def asset_field_title(context):
@@ -40,7 +36,7 @@ def asset_item_field(context):
         field_val = obj
     else:
         field_val = getattr(asset, field_name, getattr(asset_instance, field_name))
-    if isinstance(field_val, basestring):
+    if isinstance(field_val, str):
         cell = field_val
     elif isinstance(field_val, bool):
         if field_val:

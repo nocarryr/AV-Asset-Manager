@@ -1,5 +1,3 @@
-from __future__ import unicode_literals
-import sys
 import datetime
 
 from django.db import models
@@ -7,8 +5,7 @@ from django.dispatch import receiver
 from django.db.models.signals import post_save
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
-from django.utils.encoding import python_2_unicode_compatible
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.contrib.contenttypes.models import ContentType
 
 from locations.models import Location
@@ -16,7 +13,6 @@ from assettypes import models as asset_models
 from assettags.models import AssetTaggedMixin
 from categories.models import CategorizedMixin
 
-PY2 = sys.version_info.major == 2
 
 class Asset(models.Model, AssetTaggedMixin, CategorizedMixin):
     in_use = models.BooleanField(default=True)
@@ -69,7 +65,7 @@ def on_asset_base_post_save(sender, **kwargs):
         obj.date_acquired = timezone.now()
         obj.save()
 
-@python_2_unicode_compatible
+
 class AssetBase(Asset):
     location = models.ForeignKey(Location, on_delete=models.CASCADE)
     class Meta:

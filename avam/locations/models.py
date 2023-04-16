@@ -1,15 +1,13 @@
-from __future__ import unicode_literals
 
 from django.db import models
-from django.utils.encoding import python_2_unicode_compatible
 
-@python_2_unicode_compatible
+
 class Building(models.Model):
     name = models.CharField(max_length=100, unique=True)
     def __str__(self):
         return self.name
     
-@python_2_unicode_compatible
+
 class Room(models.Model):
     name = models.CharField(max_length=100)
     building = models.ForeignKey(
@@ -22,7 +20,7 @@ class Room(models.Model):
     def __str__(self):
         return '{0} > {1}'.format(self.building, self.name)
     
-@python_2_unicode_compatible
+
 class Location(models.Model):
     name = models.CharField(max_length=100)
     room = models.ForeignKey(

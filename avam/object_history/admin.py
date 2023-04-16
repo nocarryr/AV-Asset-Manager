@@ -1,4 +1,3 @@
-import sys
 from django.contrib import admin
 
 from object_history.models import (
@@ -7,7 +6,6 @@ from object_history.models import (
     ObjectChange,
 )
 
-PY2 = sys.version_info.major == 2
 
 @admin.register(WatchedModel)
 class WatchedModelAdmin(admin.ModelAdmin):
@@ -26,10 +24,7 @@ class ContentObjectFilter(admin.SimpleListFilter):
             for obj_id in obj_ids:
                 qstr = '%s_%s' % (ctype, obj_id)
                 object_update = q.filter(content_type__id=ctype, object_id=obj_id).first()
-                if PY2:
-                    lbl = unicode(object_update.content_object)
-                else:
-                    lbl = str(object_update.content_object)
+                lbl = str(object_update.content_object)
                 l.append((qstr, lbl))
         return l
     def queryset(self, request, queryset):

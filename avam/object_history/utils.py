@@ -1,11 +1,9 @@
-import sys
 import datetime
 import json
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.utils import timezone
 
-PY2 = sys.version_info.major == 2
 
 def iter_fields(obj, query_lookup=None):
     m = obj._meta
@@ -52,8 +50,6 @@ PY_TYPES = dict(
     NoneType=None,
 )
 
-if PY2:
-    PY_TYPES['unicode'] = unicode
 
 def str_to_value(s, py_type):
     if 'datetime' in py_type:
@@ -80,8 +76,6 @@ def str_to_value(s, py_type):
     else:
         if py_type == 'bool':
             return {'True':True, 'False':False}.get(s)
-        if py_type == 'unicode' and not PY2:
-            py_type = 'str'
         py_type = PY_TYPES.get(py_type)
         if py_type is None:
             value = None
@@ -94,6 +88,4 @@ def value_to_str(value):
         return json.dumps(value)
     if isinstance(value, datetime.timedelta):
         value = value.total_seconds()
-    if PY2:
-        return unicode(value)
     return str(value)
