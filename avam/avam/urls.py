@@ -14,7 +14,7 @@ Including another URLconf
     2. Import the include() function: from django.conf.urls import url, include
     3. Add a URL to urlpatterns:  url(r'^blog/', include(blog_urls))
 """
-from django.conf.urls import url, include
+from django.urls import path, include
 from django.contrib import admin
 
 from site_navigation import urls as site_urls
@@ -24,34 +24,10 @@ from assettags import urls as assettags_urls
 from categories import urls as categories_urls
 
 urlpatterns = [
-    url(r'^', include(site_urls)),
-    url(r'^assets/',
-        include(
-            asset_urls,
-            namespace='assets',
-            app_name='assets',
-        )
-    ),
-    url(r'^admin/', admin.site.urls),
-    url(r'^object_history/',
-        include(
-            object_history_urls,
-            namespace='object_history',
-            app_name='object_history',
-        )
-    ),
-    url(r'^assettags/',
-        include(
-            assettags_urls,
-            namespace='assettags',
-            app_name='assettags',
-        )
-    ),
-    url(r'^categories/',
-        include(
-            categories_urls,
-            namespace='categories',
-            app_name='categories',
-        )
-    ),
+    path('', include(site_urls)),
+    path('assets/', include(asset_urls)),
+    path('admin/', admin.site.urls),
+    path('object_history/', include(object_history_urls)),
+    path('assettags/', include(assettags_urls)),
+    path('categories/', include(categories_urls)),
 ]

@@ -1,13 +1,14 @@
-from django.conf.urls import url
+from django.urls import path
 
 from assets import views
 
+app_name = 'assets'
 urlpatterns = [
-    url(r'^$',
+    path('',
         views.AssetList.as_view(),
         name='asset_list',
     ),
-    url(r'^detail/(?P<pk>[0-9]+)/$',
+    path('detail/<int:pk>/',
         views.AssetDetail.as_view(),
         name='asset_detail',
     ),

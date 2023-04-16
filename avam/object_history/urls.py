@@ -1,9 +1,10 @@
-from django.conf.urls import url
+from django.urls import path
 
 from object_history import views
 
+app_name = 'object_history'
 urlpatterns = [
-    url(r'^object_history/(?P<pk>[0-9]+)/$',
+    path('object_history/<int:pk>/',
         views.ObjectHistory.as_view(),
         name='object_history',
     ),
