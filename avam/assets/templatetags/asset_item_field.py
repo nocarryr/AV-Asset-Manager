@@ -5,6 +5,7 @@ from django.utils.safestring import mark_safe
 
 register = template.Library()
 
+from ..models import GenericAsset
 
 @register.simple_tag(takes_context=True)
 def asset_field_title(context):
@@ -16,8 +17,11 @@ def asset_field_title(context):
     asset = context.get('asset')
     if asset is None:
         asset = context['asset_list'].first()
-    asset_instance = asset.asset_instance
-    f = asset_instance._meta.get_field(field_name)
+        if asset is None:
+            meta = GenericAsset._meta
+        else:
+            meta = asset.asset_instance._meta
+    f = meta.get_field(field_name)
     return f.verbose_name.title()
 
 @register.simple_tag(takes_context=True)
