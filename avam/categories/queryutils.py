@@ -15,7 +15,15 @@ class GenericFKQuerySet(models.query.QuerySet):
             else:
                 qexp = qexp | Q(**qkwargs)
         return qexp
-    def _filter_or_exclude(self, negate, *args, **kwargs):
+    def _filter_or_exclude(self, negate, args, kwargs):
+        args, kwargs = self._get_content_object_from_query_args(negate, args, kwargs)
+        return super()._filter_or_exclude(negate, args, kwargs)
+
+    def _filter_or_exclude_inplace(self, negate, args, kwargs):
+        args, kwargs = self._get_content_object_from_query_args(negate, args, kwargs)
+        return super()._filter_or_exclude_inplace(negate, args, kwargs)
+
+    def _get_content_object_from_query_args(self, negate, args, kwargs):
         content_objects = kwargs.pop('content_object__in', [])
         content_object = kwargs.pop('content_object', None)
         if content_object is not None:
@@ -25,7 +33,9 @@ class GenericFKQuerySet(models.query.QuerySet):
             qexp = self._filter_or_exclude_content_objects(negate, *content_objects)
             args = list(args)
             args.append(qexp)
-        return super(GenericFKQuerySet, self)._filter_or_exclude(negate, *args, **kwargs)
+            args = tuple(args)
+        return args, kwargs
+
 
 class GenericFKManager(models.Manager):
     def get_queryset(self):
