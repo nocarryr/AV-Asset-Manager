@@ -15,7 +15,7 @@ from object_history.utils import (
 )
 
 class WatchedModel(models.Model):
-    content_type = models.ForeignKey(ContentType)
+    content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     def __unicode__(self):
         return self.content_type.name
     
@@ -43,7 +43,11 @@ class ObjectUpdate(models.Model):
     object_id = models.PositiveIntegerField()
     content_object = GenericForeignKey('content_type', 'object_id')
     datetime = models.DateTimeField(auto_now_add=True)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, null=True)
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True,
+        on_delete=models.SET_NULL,
+    )
     objects = ObjectUpdateManager()
     class Meta:
         ordering = ['-datetime']
@@ -144,7 +148,11 @@ class ObjectUpdate(models.Model):
 
 @python_2_unicode_compatible
 class ObjectChange(models.Model):
-    update = models.ForeignKey(ObjectUpdate, related_name='changes')
+    update = models.ForeignKey(
+        ObjectUpdate,
+        related_name='changes',
+        on_delete=models.CASCADE,
+    )
     field_name = models.CharField(max_length=100)
     py_type = models.CharField(max_length=100)
     str_value = models.CharField(max_length=300)
@@ -207,5 +215,3 @@ class ObjectChange(models.Model):
         return v
     def __str__(self):
         return u' = '.join([self.field_name, self.str_value])
-
-    

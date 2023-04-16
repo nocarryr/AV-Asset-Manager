@@ -71,7 +71,7 @@ def on_asset_base_post_save(sender, **kwargs):
 
 @python_2_unicode_compatible
 class AssetBase(Asset):
-    location = models.ForeignKey(Location)
+    location = models.ForeignKey(Location, on_delete=models.CASCADE)
     class Meta:
         abstract = True
     @classmethod
@@ -113,12 +113,14 @@ class GenericAsset(AssetBase):
     asset_model = models.ForeignKey(
         asset_models.GenericModel,
         related_name='assets',
+        on_delete=models.CASCADE,
     )
 
 class GenericAccessory(AssetBase):
     asset_model = models.ForeignKey(
         asset_models.GenericAccessoryModel,
         related_name='assets',
+        on_delete=models.CASCADE,
     )
 
 class LampBase(LifeTrackedAsset, Installable):
@@ -137,28 +139,33 @@ class Projector(AssetBase):
     asset_model = models.ForeignKey(
         asset_models.ProjectorModel,
         related_name='assets',
+        on_delete=models.CASCADE,
     )
 
 class ProjectorLamp(LampBase):
     asset_model = models.ForeignKey(
         asset_models.ProjectorLampModel,
         related_name='assets',
+        on_delete=models.CASCADE,
     )
     installed_in = models.ForeignKey(Projector,
         related_name='lamps',
         blank=True,
         null=True,
+        on_delete=models.SET_NULL,
     )
 
 class ProjectorFilter(FilterBase):
     asset_model = models.ForeignKey(
         asset_models.ProjectorFilterModel,
         related_name='assets',
+        on_delete=models.CASCADE,
     )
     installed_in = models.ForeignKey(Projector,
         related_name='filters',
         blank=True,
         null=True,
+        on_delete=models.SET_NULL,
     )
 
 class ProjectorLens(LensBase):
@@ -167,11 +174,13 @@ class ProjectorLens(LensBase):
     asset_model = models.ForeignKey(
         asset_models.ProjectorLensModel,
         related_name='assets',
+        on_delete=models.CASCADE,
     )
     installed_in = models.OneToOneField(Projector,
         related_name='lens',
         blank=True,
         null=True,
+        on_delete=models.SET_NULL,
     )
 
 class LightingAssetBase(AssetBase):
@@ -180,6 +189,7 @@ class LightingAssetBase(AssetBase):
         'assettypes.LightingProfile',
         blank=True,
         null=True,
+        on_delete=models.SET_NULL,
     )
     ## TODO: add 'limit_choices_to'
     class Meta:
@@ -189,30 +199,35 @@ class MovingLight(LightingAssetBase):
     asset_model = models.ForeignKey(
         asset_models.MovingLightModel,
         related_name='assets',
+        on_delete=models.CASCADE,
     )
 
 class MovingLightLamp(LampBase):
     asset_model = models.ForeignKey(
         asset_models.MovingLightLampModel,
         related_name='assets',
+        on_delete=models.CASCADE,
     )
     installed_in = models.ForeignKey(
         MovingLight,
         related_name='lamps',
         blank=True,
         null=True,
+        on_delete=models.SET_NULL,
     )
 
 class LEDLight(LightingAssetBase):
     asset_model = models.ForeignKey(
         asset_models.LEDLightModel,
         related_name='assets',
+        on_delete=models.CASCADE,
     )
 
 class VideoCamera(AssetBase):
     asset_model = models.ForeignKey(
         asset_models.VideoCameraModel,
         related_name='assets',
+        on_delete=models.CASCADE,
     )
 
 class VideoCameraLens(LensBase):
@@ -221,9 +236,11 @@ class VideoCameraLens(LensBase):
     asset_model = models.ForeignKey(
         asset_models.CameraLensModel,
         related_name='assets',
+        on_delete=models.CASCADE,
     )
     installed_in = models.OneToOneField(VideoCamera,
         related_name='lens',
         blank=True,
         null=True,
+        on_delete=models.SET_NULL,
     )

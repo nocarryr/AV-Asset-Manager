@@ -265,8 +265,14 @@ class PaperFormat(models.Model):
 @python_2_unicode_compatible
 class AssetTagPrintTemplate(models.Model):
     name = models.CharField(max_length=30, unique=True)
-    paper_format = models.ForeignKey(PaperFormat)
-    asset_tag_template = models.ForeignKey(AssetTagImageTemplate)
+    paper_format = models.ForeignKey(
+        PaperFormat,
+        on_delete=models.CASCADE,
+    )
+    asset_tag_template = models.ForeignKey(
+        AssetTagImageTemplate,
+        on_delete=models.CASCADE,
+    )
     dpi = models.FloatField(default=300.0, help_text='Dots per inch')
     columns_per_row = models.IntegerField()
     column_spacing = models.CharField(

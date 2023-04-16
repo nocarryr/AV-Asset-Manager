@@ -14,7 +14,10 @@ class Manufacturer(models.Model):
 @python_2_unicode_compatible
 class ModelBase(models.Model, CategorizedMixin):
     model_name = models.CharField(max_length=100)
-    manufacturer = models.ForeignKey(Manufacturer)
+    manufacturer = models.ForeignKey(
+        Manufacturer,
+        on_delete=models.CASCADE,
+    )
     other_accessories = models.ManyToManyField('assettypes.GenericAccessoryModel', blank=True)
     class Meta:
         unique_together = ('manufacturer', 'model_name')
@@ -40,7 +43,11 @@ class LightingProfile(models.Model):
 
 @python_2_unicode_compatible
 class LightingProfileChannel(models.Model):
-    profile = models.ForeignKey(LightingProfile, related_name='channels')
+    profile = models.ForeignKey(
+        LightingProfile,
+        related_name='channels',
+        on_delete=models.CASCADE,
+    )
     index = models.IntegerField()
     name = models.CharField(max_length=30)
     class Meta:
@@ -100,20 +107,36 @@ class ProjectorFilterModel(FilterModelBase):
 
 class ProjectorModel(VideoModelBase):
     lamp_count = models.PositiveIntegerField(default=1)
-    lamp_type = models.ForeignKey(ProjectorLampModel)
-    filter_type = models.ForeignKey(ProjectorFilterModel, blank=True, null=True)
+    lamp_type = models.ForeignKey(
+        ProjectorLampModel,
+        on_delete=models.CASCADE,
+    )
+    filter_type = models.ForeignKey(
+        ProjectorFilterModel,
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+    )
 
 class MovingLightLampModel(LampModelBase):
     default_categories = ['Lighting', ['Lighting', 'Accessories']]
 
 class MovingLightModel(LightingModelBase):
-    lamp_type = models.ForeignKey(MovingLightLampModel)
+    lamp_type = models.ForeignKey(
+        MovingLightLampModel,
+        on_delete=models.CASCADE,
+    )
 
 class LEDLightModel(LightingModelBase):
     pass
 
 class CameraLensModel(LensModelBase):
-    mount_type = models.ForeignKey(LensMountType, blank=True, null=True)
+    mount_type = models.ForeignKey(
+        LensMountType,
+        blank=True,
+        null=True,
+        on_delete=models.CASCADE,
+    )
     focal_length_wide = models.DecimalField(max_digits=6, decimal_places=2)
     focal_length_tele = models.DecimalField(max_digits=6, decimal_places=2)
     fstop_wide = models.DecimalField(max_digits=4, decimal_places=2)
