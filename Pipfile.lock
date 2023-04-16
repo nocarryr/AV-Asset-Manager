@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "838fbf1c588a747610358c119c64fc58e6341e21729c7b51db95da60000d27fd"
+            "sha256": "8f3dec6e3e9b92ac49ca0eda3c72e670ab4ea393e2885a3133bc39cdd98d0f19"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -40,6 +40,10 @@
             ],
             "index": "pypi",
             "version": "==4.2"
+        },
+        "django-av-asset-manager": {
+            "editable": true,
+            "path": "."
         },
         "django-classy-tags": {
             "hashes": [

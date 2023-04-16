@@ -70,7 +70,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'avam.urls'
+ROOT_URLCONF = 'avam.avam.urls'
 
 TEMPLATES = [
     {
@@ -90,7 +90,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'avam.wsgi.application'
+WSGI_APPLICATION = 'avam.avam.wsgi.application'
 
 
 # Database

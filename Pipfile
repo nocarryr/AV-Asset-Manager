@@ -11,6 +11,7 @@ wand = "*"
 beautifulsoup4 = "*"
 html5lib = "*"
 pypdf2 = "*"
+django-av-asset-manager = {editable = true, path = "."}
 
 [dev-packages]
 ipython = "*"
