@@ -58,6 +58,8 @@ docs/_build/
 target/
 
 venv/
+.venv/
+.env
 .eric6project/
 .ropeproject/
 staticroot/

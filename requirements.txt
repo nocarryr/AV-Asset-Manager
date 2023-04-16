@@ -1,8 +1,0 @@
-django>=1.9
-pytz
-django-safe-project
-qrcode
-django-sekizai
-Wand
-html5lib
-beautifulsoup4

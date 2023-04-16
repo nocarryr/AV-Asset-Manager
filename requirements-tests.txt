@@ -1,5 +1,0 @@
-pytz
-qrcode
-django-sekizai
-Wand
-WeasyPrint
